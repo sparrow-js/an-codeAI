@@ -1,16 +1,39 @@
 import { Component } from 'react';
+import { TipContainer, observer } from '@alilc/lowcode-editor-core';
+import classNames from 'classnames';
 import { Skeleton } from '../skeleton';
-import { observer } from 'mobx-react';
+
+import Toolbar from './toolbar';
+import MainArea from './main-area';
+import './workbench.less';
+import { SkeletonContext } from '../context';
+import { EditorConfig, PluginClassSet } from '@alilc/lowcode-types';
 
 @observer
-export class Workbench extends Component<{ skeleton: Skeleton}> {
-    constructor(props: any) {
-        super(props);
-    }
+export class Workbench extends Component<{ skeleton: Skeleton; config?: EditorConfig; components?: PluginClassSet; className?: string; topAreaItemClassName?: string }> {
+  constructor(props: any) {
+    super(props);
+    const { config, components, skeleton } = this.props;
+    skeleton.buildFromConfig(config, components);
+  }
 
-    render() {
-        return (
-          <div>Workbench</div>
-        );
-    }
+  // componentDidCatch(error: any) {
+  //   globalContext.get(Editor).emit('editor.skeleton.workbench.error', error);
+  // }
+
+  render() {
+    const { skeleton, className, topAreaItemClassName } = this.props;
+    return (
+      <div className={classNames('lc-workbench', className)}>
+        <SkeletonContext.Provider value={this.props.skeleton}>
+          <div className="lc-workbench-body">
+            <div className="lc-workbench-center">
+              <MainArea area={skeleton.mainArea} />
+            </div>
+          </div>
+          <TipContainer />
+        </SkeletonContext.Provider>
+      </div>
+    );
+  }
 }

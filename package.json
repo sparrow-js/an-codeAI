@@ -33,12 +33,6 @@
     "watchdog:build": "node ./scripts/watchdog.js",
     "sync": "./scripts/sync.sh"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "f2elint commit-file-scan",
-      "commit-msg": "f2elint commit-msg-scan"
-    }
-  },
   "devDependencies": {
     "del": "^6.1.1",
     "execa": "^5.1.1",

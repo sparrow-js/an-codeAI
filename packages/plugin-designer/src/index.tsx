@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Editor } from '@firefly/auto-editor-core';
 import { Asset } from '@alilc/lowcode-utils';
-import { DesignerView, Designer } from '@alilc/lowcode-designer';
+import { DesignerView, Designer } from '@firefly/auto-designer';
 
 import './index.less';
 
@@ -73,7 +73,9 @@ export default class DesignerPlugin extends PureComponent<PluginProps, DesignerP
             locale,
         );
         return (
-          <div>plugin-desiginer</div>
+          <div>
+            <DesignerView />
+          </div>
         );
     }
 }

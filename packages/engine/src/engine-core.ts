@@ -10,11 +10,14 @@ import {
   ILowCodePluginContext,
   PluginPreference,
 } from '@firefly/auto-designer';
-import { Editor } from '@firefly/auto-editor-core';
+import { Editor, globalContext } from '@firefly/auto-editor-core';
 import getSkeletonCabin from './modules/skeleton-cabin';
 import DesignerPlugin from '@firefly/auto-plugin-designer';
 
 const editor = new Editor();
+globalContext.register(editor, Editor);
+globalContext.register(editor, 'editor');
+
 const innerSkeleton = new InnerSkeleton(editor);
 const skeletonCabin = getSkeletonCabin(innerSkeleton);
 const { Workbench } = skeletonCabin;

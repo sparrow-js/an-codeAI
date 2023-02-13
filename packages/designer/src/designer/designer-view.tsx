@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { ProjectView } from '../project';
 
 import { Designer, DesignerProps } from './designer';
+import './designer.less';
 
 export class DesignerView extends Component<DesignerProps & {
     designer?: Designer;

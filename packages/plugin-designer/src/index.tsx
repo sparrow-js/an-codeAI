@@ -74,14 +74,12 @@ export default class DesignerPlugin extends PureComponent<PluginProps, DesignerP
             locale,
         );
         return (
-          <div>
-            <DesignerView
-              editor={editor}
-              simulatorProps={{
+          <DesignerView
+            editor={editor}
+            simulatorProps={{
                     simulatorUrl: 'http://localhost:5173/',
                 }}
-            />
-          </div>
+          />
         );
     }
 }

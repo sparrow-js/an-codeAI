@@ -40,9 +40,9 @@ export class Project {
     // this.load(schema);
   }
 
-//   @computed get currentDocument() {
-//     return this.documents.find((doc) => doc.active);
-//   }
+  @computed get currentDocument() {
+    return this.documents.find((doc) => doc.active);
+  }
 
   @obx private _config: any = {};
   @computed get config(): any {

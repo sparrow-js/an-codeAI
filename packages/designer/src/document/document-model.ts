@@ -58,6 +58,29 @@ export class DocumentModel {
    * @deprecated
    */
   private _addons: Array<{ name: string; exportData: any }> = [];
+  @obx.ref private _opened = false;
+
+  @obx.ref private _suspensed = false;
+  /**
+   * 是否为非激活状态
+   */
+   get suspensed(): boolean {
+    return this._suspensed || !this._opened;
+  }
+
+  /**
+   * 与 suspensed 相反，是否为激活状态，这个函数可能用的更多一点
+   */
+  get active(): boolean {
+    return !this._suspensed;
+  }
+
+  /**
+   * @deprecated 兼容
+   */
+  get actived(): boolean {
+    return this.active;
+  }
 
   /**
    * 模拟器

@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
-import { Editor } from '@firefly/auto-editor-core';
+import { Editor, globalContext } from '@firefly/auto-editor-core';
 import { Asset } from '@alilc/lowcode-utils';
 import { DesignerView, Designer } from '@firefly/auto-designer';
-
 import './index.less';
 
 export interface PluginProps {
@@ -46,6 +45,8 @@ export default class DesignerPlugin extends PureComponent<PluginProps, DesignerP
 
 
     render(): React.ReactNode {
+        const editor = globalContext.get('editor');
+
         const {
             componentMetadatas,
             // utilsMetadata,
@@ -74,7 +75,12 @@ export default class DesignerPlugin extends PureComponent<PluginProps, DesignerP
         );
         return (
           <div>
-            <DesignerView />
+            <DesignerView
+              editor={editor}
+              simulatorProps={{
+                    simulatorUrl: 'http://localhost:5173/',
+                }}
+            />
           </div>
         );
     }

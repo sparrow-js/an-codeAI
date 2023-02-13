@@ -98,10 +98,11 @@ class Content extends Component<{ host: BuiltinSimulatorHost }> {
     if (disabledEvents) {
       frameStyle.pointerEvents = 'none';
     }
-
+    console.log('***', sim.get('simulatorUrl'));
     return (
       <div className="lc-simulator-content">
         <iframe
+          src={sim.get('simulatorUrl')}
           name="SimulatorRenderer"
           className="lc-simulator-content-frame"
           style={frameStyle}

@@ -1,5 +1,5 @@
 {
-  "name": "@firefly/auto-plugin-designer",
+  "name": "@firefly/auto-plugin-locator",
   "version": "1.0.13",
   "description": "alibaba lowcode editor designer plugin",
   "files": [

@@ -1,3 +1,5 @@
+import { Hotkey } from '@firefly/auto-editor-core';
+
 export type PreferenceValueType = string | number | boolean;
 
 export interface ILowCodePluginPreferenceDeclarationProperty {
@@ -64,7 +66,7 @@ export interface IPluginPreferenceMananger {
 
 export interface ILowCodePluginContext {
     // skeleton: any;
-    // hotkey: any;
+    hotkey: Hotkey;
     logger: any;
     // plugins: ILowCodePluginManager;
     // setters: any;

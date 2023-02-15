@@ -13,7 +13,7 @@ import {
 import { Editor, globalContext } from '@firefly/auto-editor-core';
 import getSkeletonCabin from './modules/skeleton-cabin';
 import DesignerPlugin from '@firefly/auto-plugin-designer';
-
+import LocatorPlugin from '@firefly/auto-plugin-locator';
 const editor = new Editor();
 globalContext.register(editor, Editor);
 globalContext.register(editor, 'editor');
@@ -27,6 +27,16 @@ const plugins = new AutoCodePluginManager(editor).toProxy();
 let engineInited = false;
 
 (async function registerPlugins() {
+  const locatorRegistry = (ctx: ILowCodePluginContext) => {
+    return {
+      init() {
+        LocatorPlugin(ctx);
+      },
+    };
+  };
+  locatorRegistry.pluginName = '__locator__';
+  await plugins.register(locatorRegistry);
+
   const defaultPanelRegistry = (ctx: ILowCodePluginContext) => {
     return {
       init() {

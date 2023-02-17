@@ -1,5 +1,7 @@
+import { createElement } from 'react';
+import { render } from 'react-dom';
+import { RunView } from './run';
 
-import ReactDOM from 'react-dom';
 import {
     ILowCodePluginContext,
 } from '@firefly/auto-designer';
@@ -63,4 +65,8 @@ export default function init(cxt: ILowCodePluginContext) {
 
   document.body.appendChild(wrapper);
   document.head.appendChild(globalStyle);
+  render(
+    createElement(RunView, {}),
+    layer,
+  );
 }

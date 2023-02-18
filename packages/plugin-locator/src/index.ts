@@ -5,6 +5,7 @@ import { RunView } from './run';
 import {
     ILowCodePluginContext,
 } from '@firefly/auto-designer';
+import { Locator } from './locator';
 
 export const MAX_ZINDEX = 2147483647;
 
@@ -15,9 +16,14 @@ export default function init(cxt: ILowCodePluginContext) {
     if (document.getElementById('locatorjs-wrapper')) {
         return;
     }
+    const locator = new Locator();
     cxt.hotkey.bind('option', () => {
-
+        locator.active = true;
     });
+
+    cxt.hotkey.bind('option', () => {
+        locator.active = false;
+    }, 'keyup');
 
     const style = document.createElement('style');
     style.id = 'locator';
@@ -66,7 +72,9 @@ export default function init(cxt: ILowCodePluginContext) {
   document.body.appendChild(wrapper);
   document.head.appendChild(globalStyle);
   render(
-    createElement(RunView, {}),
+    createElement(RunView, {
+        locator,
+    }),
     layer,
   );
 }

@@ -1,11 +1,15 @@
 import { Component } from 'react';
+import { Locator } from './locator';
+import { observer } from '@firefly/auto-editor-core';
 
-export class RunView extends Component {
+@observer
+export class RunView extends Component<{ locator: Locator }> {
     render() {
-        return (
+        const { locator } = this.props;
+        return locator.active ? (
           <div>
             test
           </div>
-        );
+        ) : null;
     }
 }

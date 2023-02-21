@@ -1,6 +1,7 @@
 import { createElement } from 'react';
 import { render } from 'react-dom';
 import { RunView } from './run';
+import { allTargets } from './shared';
 
 import {
     ILowCodePluginContext,
@@ -71,9 +72,23 @@ export default function init(cxt: ILowCodePluginContext) {
 
   document.body.appendChild(wrapper);
   document.head.appendChild(globalStyle);
+
+  function mouseOverListener(e: MouseEvent) {
+    const { target } = e;
+    if (target && target instanceof HTMLElement) {
+        if (locator.active) {
+            locator.currentElement = target;
+        }
+    }
+  }
+  document.addEventListener('mouseover', mouseOverListener, {
+    capture: true,
+  });
+
   render(
     createElement(RunView, {
         locator,
+        targets: allTargets,
     }),
     layer,
   );

@@ -10,7 +10,7 @@ export class RunView extends Component<{ locator: Locator; targets: Targets }> {
         const { locator } = this.props;
         return locator.active ? (
           <div>
-            <OutLineView locator={{locator}}/>
+            <OutLineView locator={locator} />
           </div>
         ) : null;
     }

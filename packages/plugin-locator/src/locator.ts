@@ -3,7 +3,7 @@ import { obx, computed, makeObservable, action } from '@firefly/auto-editor-core
 export class Locator {
     @obx.ref private _active: boolean = false;
 
-    @obx private _currentElement: HTMLElement;
+    @obx.ref private _currentElement: HTMLElement = window.document.getElementById('root') as HTMLElement;
 
     constructor() {
         makeObservable(this);

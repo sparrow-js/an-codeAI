@@ -76,7 +76,10 @@ export default function init(cxt: ILowCodePluginContext) {
   function mouseOverListener(e: MouseEvent) {
     const { target } = e;
     if (target && target instanceof HTMLElement) {
+        console.log('*****8');
         if (locator.active) {
+            locator.active = true;
+            console.log('*****7');
             locator.currentElement = target;
         }
     }

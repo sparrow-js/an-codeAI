@@ -2,6 +2,8 @@ import { createElement } from 'react';
 import { render } from 'react-dom';
 import { RunView } from './run';
 import { allTargets } from './shared';
+import { getElementInfo } from './adapters/getElementInfo';
+import { goToLinkProps } from './functions/goTo';
 
 import {
     ILowCodePluginContext,
@@ -74,19 +76,42 @@ export default function init(cxt: ILowCodePluginContext) {
   document.head.appendChild(globalStyle);
 
   function mouseOverListener(e: MouseEvent) {
+    e.preventDefault();
     const { target } = e;
-    if (target && target instanceof HTMLElement) {
-        console.log('*****8');
+    if (target) {
         if (locator.active) {
             locator.active = true;
-            console.log('*****7');
-            locator.currentElement = target;
+            locator.currentElement = target as HTMLElement;
         }
+    }
+  }
+  function clickListener(e: MouseEvent) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const elInfo = getElementInfo(locator.currentElement, undefined);
+    console.log('**1***', elInfo);
+
+    if (elInfo) {
+      const linkProps = elInfo.thisElement.link;
+      if (linkProps) {
+        goToLinkProps(linkProps, allTargets, locator.ProjectOptions);
+      }
     }
   }
   document.addEventListener('mouseover', mouseOverListener, {
     capture: true,
   });
+  document.addEventListener('click', clickListener, { capture: true });
+    setTimeout(() => {
+        locator.iframeBox = (window.frames[0] as any).frameElement.getBoundingClientRect();
+        window.frames[0].document.addEventListener('mouseover', mouseOverListener, {
+            capture: true,
+        });
+
+        window.frames[0].document.addEventListener('click', clickListener, { capture: true });
+    }, 1000);
+
 
   render(
     createElement(RunView, {

@@ -1,17 +1,17 @@
-import { findDebugSource } from "./findDebugSource";
-import { findFiberByHtmlElement } from "./findFiberByHtmlElement";
-import { getFiberLabel } from "./getFiberLabel";
-import { getAllWrappingParents } from "./getAllWrappingParents";
-import { deduplicateLabels } from "../../functions/deduplicateLabels";
-import { LabelData } from "../../types/LabelData";
-import { getFiberOwnBoundingBox } from "./getFiberOwnBoundingBox";
-import { getAllParentsElementsAndRootComponent } from "./getAllParentsElementsAndRootComponent";
-import { isStyledElement } from "./isStyled";
-import { AdapterObject, FullElementInfo, TreeState } from "../adapterApi";
-import { Source } from "@locator/shared";
-import { TreeNode, TreeNodeComponent } from "../../types/TreeNode";
-import { goUpByTheTree } from "../goUpByTheTree";
-import { HtmlElementTreeNode } from "../HtmlElementTreeNode";
+import { findDebugSource } from './findDebugSource';
+import { findFiberByHtmlElement } from './findFiberByHtmlElement';
+import { getFiberLabel } from './getFiberLabel';
+import { getAllWrappingParents } from './getAllWrappingParents';
+import { deduplicateLabels } from '../../functions/deduplicateLabels';
+import { LabelData } from '../../types/LabelData';
+import { getFiberOwnBoundingBox } from './getFiberOwnBoundingBox';
+import { getAllParentsElementsAndRootComponent } from './getAllParentsElementsAndRootComponent';
+import { isStyledElement } from './isStyled';
+import { AdapterObject, FullElementInfo, TreeState } from '../adapterApi';
+import { Source } from '../../shared';
+import { TreeNode, TreeNodeComponent } from '../../types/TreeNode';
+import { goUpByTheTree } from '../goUpByTheTree';
+import { HtmlElementTreeNode } from '../HtmlElementTreeNode';
 
 export function getElementInfo(found: HTMLElement): FullElementInfo | null {
   // Instead of labels, return this element, parent elements leading to closest component, its component labels, all wrapping components labels.
@@ -36,7 +36,7 @@ export function getElementInfo(found: HTMLElement): FullElementInfo | null {
       if (fiberWithSource) {
         const label = getFiberLabel(
           fiberWithSource.fiber,
-          fiberWithSource.source
+          fiberWithSource.source,
         );
         labels.push(label);
       }
@@ -54,7 +54,7 @@ export function getElementInfo(found: HTMLElement): FullElementInfo | null {
         ...thisLabel,
       },
       htmlElement: found,
-      parentElements: parentElements,
+      parentElements,
       componentBox,
       componentsLabels: deduplicateLabels(labels),
     };
@@ -83,7 +83,7 @@ export class ReactTreeNodeElement extends HtmlElementTreeNode {
     if (componentFiber) {
       const fiberLabel = getFiberLabel(
         componentFiber,
-        findDebugSource(componentFiber)?.source
+        findDebugSource(componentFiber)?.source,
       );
 
       return {

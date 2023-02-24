@@ -51,3 +51,18 @@ export type LinkProps = {
   line: number;
   column: number;
 };
+
+export type ProjectOptions = {
+  projectPath?: string;
+  templateOrTemplateId?: string;
+  adapterId?: string;
+  replacePath?: {
+      from: string;
+      to: string;
+  };
+  disabled?: boolean;
+  showIntro?: boolean;
+  welcomeScreenDismissed?: boolean;
+  hrefTarget?: '_blank' | '_self';
+};
+

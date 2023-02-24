@@ -13,9 +13,7 @@ export class ComponentOutLineView extends Component {
                 border: '2px solid #e90139',
                 borderRadius: '8px',
             }}
-          >
-            ComponentOutLineView
-          </div>
+          />
         );
     }
 }

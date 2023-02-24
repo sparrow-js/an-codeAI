@@ -22,6 +22,7 @@ import {
     IReactionOptions,
     IReactionDisposer,
     makeObservable,
+    hotkey,
   } from '@firefly/auto-editor-core';
 import {
     ComponentMetadata,
@@ -129,7 +130,9 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     }
 
     async mountContentFrame(iframe: HTMLIFrameElement | null) {
-        console.log('*');
+        if (iframe) {
+            hotkey.mount(iframe.contentWindow as Window);
+        }
     }
 
     setSuspense(suspensed: boolean): void {

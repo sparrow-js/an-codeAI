@@ -1,25 +1,25 @@
-import { Targets } from "@locator/shared";
-import { OptionsStore } from "./optionsStore";
+import { Targets } from '../shared';
+import { ProjectOptions } from '../types/types';
 
 export const getLinkTypeOrTemplate = (
   targets: Targets,
-  options: OptionsStore,
-  localLinkTypeOrTemplate?: string
+  options: ProjectOptions,
+  localLinkTypeOrTemplate?: string,
 ) =>
   localLinkTypeOrTemplate ||
-  options.getOptions().templateOrTemplateId ||
+  options.templateOrTemplateId ||
   document.documentElement.dataset.locatorTarget ||
   Object.entries(targets)[0]![0];
 
 export function linkTemplateUrl(
   targets: Targets,
-  options: OptionsStore,
-  localLinkTypeOrTemplate?: string
+  options: ProjectOptions,
+  localLinkTypeOrTemplate?: string,
 ): string {
   const templateOrType = getLinkTypeOrTemplate(
     targets,
     options,
-    localLinkTypeOrTemplate
+    localLinkTypeOrTemplate,
   );
   const target = targets[templateOrType];
   if (target) {

@@ -1,24 +1,24 @@
-import { linkTemplateUrl } from "./linkTemplateUrl";
-import { evalTemplate } from "./evalTemplate";
-import { LinkProps, Source } from "../types/types";
-import { Targets } from "@locator/shared";
-import { OptionsStore } from "./optionsStore";
-import { transformPath } from "./transformPath";
+import { linkTemplateUrl } from './linkTemplateUrl';
+import { evalTemplate } from './evalTemplate';
+import { LinkProps, Source, ProjectOptions } from '../types/types';
+import { Targets } from '../shared';
+import { OptionsStore } from './optionsStore';
+import { transformPath } from './transformPath';
 
 let internalProjectPath: string | null = null;
 export function setInternalProjectPath(projectPath: string) {
   internalProjectPath = projectPath;
 }
 
-export function getSavedProjectPath(options: OptionsStore) {
-  return options.getOptions().projectPath || internalProjectPath;
+export function getSavedProjectPath(options: ProjectOptions) {
+  return options.projectPath || internalProjectPath;
 }
 
 export function buildLink(
   linkProps: LinkProps,
   targets: Targets,
-  options: OptionsStore,
-  localLinkTypeOrTemplate?: string
+  options: ProjectOptions,
+  localLinkTypeOrTemplate?: string,
 ): string {
   const params = {
     filePath: linkProps.filePath,
@@ -28,14 +28,14 @@ export function buildLink(
   };
 
   const template = linkTemplateUrl(targets, options, localLinkTypeOrTemplate);
-  const replacePathObj = options.getOptions().replacePath;
+  const replacePathObj = options.replacePath;
   let evaluated = evalTemplate(template, params);
 
   if (replacePathObj) {
     evaluated = transformPath(
       evaluated,
       replacePathObj.from,
-      replacePathObj.to
+      replacePathObj.to,
     );
   }
   return evaluated;
@@ -44,16 +44,16 @@ export function buildLink(
 export function buildLinkFromSource(
   source: Source,
   targets: Targets,
-  options: OptionsStore
+  options: ProjectOptions,
 ): string {
   return buildLink(
     {
       filePath: source.fileName,
-      projectPath: source.projectPath || "",
+      projectPath: source.projectPath || '',
       line: source.lineNumber,
       column: source.columnNumber || 0,
     },
     targets,
-    options
+    options,
   );
 }

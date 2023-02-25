@@ -13,7 +13,7 @@ import { Locator } from './locator';
 export const MAX_ZINDEX = 2147483647;
 
 export default function init(cxt: ILowCodePluginContext) {
-    if (typeof window === 'undefined' || typeof document == 'undefined') {
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
         return;
     }
     if (document.getElementById('locatorjs-wrapper')) {
@@ -22,10 +22,27 @@ export default function init(cxt: ILowCodePluginContext) {
     const locator = new Locator();
     cxt.hotkey.bind('option', () => {
         locator.active = true;
+        document.addEventListener('mouseover', mouseOverListener, {
+          capture: true,
+        });
+        document.addEventListener('click', clickListener, { capture: true });
+        if (!locator.iframeBox) {
+          locator.iframeBox = (window.frames[0] as any).frameElement.getBoundingClientRect();
+        }
+        window.frames[0].document.addEventListener('mouseover', mouseOverListener, {
+            capture: true,
+        });
+
+        window.frames[0].document.addEventListener('click', clickListener, { capture: true });
     });
 
     cxt.hotkey.bind('option', () => {
         locator.active = false;
+        window.frames[0].document.removeEventListener('mouseover', mouseOverListener, {
+          capture: true,
+        });
+
+        window.frames[0].document.removeEventListener('click', clickListener, { capture: true });
     }, 'keyup');
 
     const style = document.createElement('style');
@@ -77,6 +94,13 @@ export default function init(cxt: ILowCodePluginContext) {
 
   function mouseOverListener(e: MouseEvent) {
     e.preventDefault();
+    if (e.altKey === false) {
+      locator.active = false;
+      window.frames[0].document.removeEventListener('mouseover', mouseOverListener, {
+        capture: true,
+      });
+      window.frames[0].document.removeEventListener('click', clickListener, { capture: true });
+    }
     const { target } = e;
     if (target) {
         if (locator.active) {
@@ -90,8 +114,6 @@ export default function init(cxt: ILowCodePluginContext) {
     e.preventDefault();
 
     const elInfo = getElementInfo(locator.currentElement, undefined);
-    console.log('**1***', elInfo);
-
     if (elInfo) {
       const linkProps = elInfo.thisElement.link;
       if (linkProps) {
@@ -99,18 +121,6 @@ export default function init(cxt: ILowCodePluginContext) {
       }
     }
   }
-  document.addEventListener('mouseover', mouseOverListener, {
-    capture: true,
-  });
-  document.addEventListener('click', clickListener, { capture: true });
-    setTimeout(() => {
-        locator.iframeBox = (window.frames[0] as any).frameElement.getBoundingClientRect();
-        window.frames[0].document.addEventListener('mouseover', mouseOverListener, {
-            capture: true,
-        });
-
-        window.frames[0].document.addEventListener('click', clickListener, { capture: true });
-    }, 1000);
 
 
   render(

@@ -131,7 +131,9 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
 
     async mountContentFrame(iframe: HTMLIFrameElement | null) {
         if (iframe) {
-            hotkey.mount(iframe.contentWindow as Window);
+            iframe.addEventListener('load', () => {
+                hotkey.mount(iframe.contentWindow as Window);
+            });
         }
     }
 

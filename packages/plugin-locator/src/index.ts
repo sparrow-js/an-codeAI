@@ -21,6 +21,7 @@ export default function init(cxt: ILowCodePluginContext) {
     }
     const locator = new Locator();
     cxt.hotkey.bind('option', () => {
+      console.log('*********8****');
         locator.active = true;
         document.addEventListener('mouseover', mouseOverListener, {
           capture: true,

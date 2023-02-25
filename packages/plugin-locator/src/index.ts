@@ -37,12 +37,7 @@ export default function init(cxt: ILowCodePluginContext) {
     });
 
     cxt.hotkey.bind('option', () => {
-        locator.active = false;
-        window.frames[0].document.removeEventListener('mouseover', mouseOverListener, {
-          capture: true,
-        });
-
-        window.frames[0].document.removeEventListener('click', clickListener, { capture: true });
+      clearLocatorListener();
     }, 'keyup');
 
     const style = document.createElement('style');
@@ -84,22 +79,28 @@ export default function init(cxt: ILowCodePluginContext) {
   const layer = document.createElement('div');
   layer.setAttribute('id', 'locatorjs-layer');
 
-  // wrapper.appendChild(style);
-  // wrapper.appendChild(layer);
   shadow.appendChild(style);
   shadow.appendChild(layer);
 
   document.body.appendChild(wrapper);
   document.head.appendChild(globalStyle);
 
+  function clearLocatorListener() {
+    locator.active = false;
+    document.removeEventListener('mouseover', mouseOverListener, {
+      capture: true,
+    });
+    document.removeEventListener('click', clickListener, { capture: true });
+    window.frames[0].document.removeEventListener('mouseover', mouseOverListener, {
+      capture: true,
+    });
+    window.frames[0].document.removeEventListener('click', clickListener, { capture: true });
+  }
+
   function mouseOverListener(e: MouseEvent) {
     e.preventDefault();
     if (e.altKey === false) {
-      locator.active = false;
-      window.frames[0].document.removeEventListener('mouseover', mouseOverListener, {
-        capture: true,
-      });
-      window.frames[0].document.removeEventListener('click', clickListener, { capture: true });
+      clearLocatorListener();
     }
     const { target } = e;
     if (target) {

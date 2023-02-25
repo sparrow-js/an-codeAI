@@ -23,7 +23,7 @@ export class OutLineView extends Component<{ locator: Locator }> {
                   top: `${box.y}px`,
                   width: `${box.width}px`,
                   height: `${box.height}px`,
-                  backgroundColor: 'rgba(222, 0, 0, 0.3)',
+                  backgroundColor: 'rgba(24, 114, 255, 0.6)',
                   textShadow:
                     '-1px 1px 0 #fff, 1px 1px 0 #fff, 1px -1px 0 #fff, -1px -1px 0 #fff',
                     textOverflow: 'ellipsis',

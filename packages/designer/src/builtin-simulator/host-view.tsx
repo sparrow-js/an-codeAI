@@ -100,8 +100,6 @@ class Content extends Component<{ host: BuiltinSimulatorHost }> {
     }
     return (
       <div className="lc-simulator-content">
-        <div>tttttt</div>
-        <div>hello</div>
         <iframe
           src={sim.get('simulatorUrl')}
           name="SimulatorRenderer"

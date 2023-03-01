@@ -2,7 +2,8 @@ import { Component } from 'react';
 import { TipContainer, observer } from '@alilc/lowcode-editor-core';
 import classNames from 'classnames';
 import { Skeleton } from '../skeleton';
-
+import LeftArea from './left-area';
+import LeftFloatPane from './left-float-pane';
 import Toolbar from './toolbar';
 import MainArea from './main-area';
 import './workbench.less';
@@ -27,6 +28,8 @@ export class Workbench extends Component<{ skeleton: Skeleton; config?: EditorCo
       <div className={classNames('lc-workbench', className)}>
         <SkeletonContext.Provider value={this.props.skeleton}>
           <div className="lc-workbench-body">
+            <LeftArea area={skeleton.leftArea} />
+            <LeftFloatPane area={skeleton.leftFloatArea} />
             <div className="lc-workbench-center">
               <MainArea area={skeleton.mainArea} />
             </div>

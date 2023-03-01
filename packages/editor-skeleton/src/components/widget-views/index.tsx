@@ -1,7 +1,7 @@
 import { Component, ReactElement } from 'react';
 import { Icon } from '@alifd/next';
 import classNames from 'classnames';
-import { Title, observer, Tip, globalContext, Editor } from '@alilc/lowcode-editor-core';
+import { Title, observer, Tip, globalContext, Editor } from '@firefly/auto-editor-core';
 import { DockProps } from '../../types';
 import PanelDock from '../../widget/panel-dock';
 import { composeTitle } from '../../widget/utils';

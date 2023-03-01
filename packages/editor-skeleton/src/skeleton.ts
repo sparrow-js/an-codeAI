@@ -41,6 +41,9 @@ export class Skeleton {
 
   private containers = new Map<string, WidgetContainer<any>>();
 
+  readonly leftArea: Area<DockConfig | PanelDockConfig | DialogDockConfig>;
+
+  readonly leftFloatArea: Area<PanelConfig, Panel>;
 
   readonly mainArea: Area<WidgetConfig | PanelConfig, Widget | Panel>;
 
@@ -48,6 +51,31 @@ export class Skeleton {
 
   constructor(readonly editor: Editor) {
     makeObservable(this);
+
+    this.leftArea = new Area(
+      this,
+      'leftArea',
+      (config) => {
+        if (isWidget(config)) {
+          return config;
+        }
+        return this.createWidget(config);
+      },
+      false,
+    );
+
+    this.leftFloatArea = new Area(
+      this,
+      'leftFloatArea',
+      (config) => {
+        if (isPanel(config)) {
+          return config;
+        }
+        return this.createPanel(config);
+      },
+      true,
+    );
+
     this.mainArea = new Area(
       this,
       'mainArea',
@@ -283,11 +311,16 @@ export class Skeleton {
       }
     }
     switch (area) {
+      case 'leftArea':
+      case 'left':
+        return this.leftArea.add(parsedConfig as PanelDockConfig);
       case 'mainArea':
       case 'main':
       case 'center':
       case 'centerArea':
         return this.mainArea.add(parsedConfig as PanelConfig);
+      case 'leftFloatArea':
+        return this.leftFloatArea.add(parsedConfig as PanelConfig);
       case 'stages':
         return this.stages.add(parsedConfig as StageConfig);
       default:

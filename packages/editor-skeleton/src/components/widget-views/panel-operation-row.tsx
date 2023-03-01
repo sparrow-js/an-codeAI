@@ -1,6 +1,6 @@
 import { Component, Fragment } from 'react';
 import { Button, Icon } from '@alifd/next';
-import { action, makeObservable } from '@alilc/lowcode-editor-core';
+import { action, makeObservable } from '@firefly/auto-editor-core';
 import { IconFix } from '../../icons/fix';
 import { IconFloat } from '../../icons/float';
 import Panel from '../../widget/panel';

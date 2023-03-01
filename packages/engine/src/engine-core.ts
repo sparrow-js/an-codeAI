@@ -14,6 +14,10 @@ import { Editor, globalContext } from '@firefly/auto-editor-core';
 import getSkeletonCabin from './modules/skeleton-cabin';
 import DesignerPlugin from '@firefly/auto-plugin-designer';
 import LocatorPlugin from '@firefly/auto-plugin-locator';
+import { IconOutline } from './IconOutline';
+import { OutlinePane } from './OutlinePane';
+
+
 const editor = new Editor();
 globalContext.register(editor, Editor);
 globalContext.register(editor, 'editor');
@@ -45,6 +49,24 @@ let engineInited = false;
           name: 'designer',
           type: 'Widget',
           content: DesignerPlugin,
+        });
+
+        innerSkeleton.add({
+          area: 'leftArea',
+          name: 'outlinePane',
+          type: 'PanelDock',
+          content: {
+            name: 'outline-pane',
+            props: {
+              icon: IconOutline,
+              description: null,
+            },
+            content: OutlinePane,
+          },
+          panelProps: {
+            area: 'leftFloatArea',
+            keepVisibleWhileDragging: true,
+          },
         });
       },
     };

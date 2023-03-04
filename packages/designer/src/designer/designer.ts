@@ -16,7 +16,7 @@ import { Project } from '../project';
 import { DocumentModel } from '../document';
 import { INodeSelector, Component } from '../simulator';
 // import { Scroller, IScrollable } from './scroller';
-// import { Dragon, isDragNodeObject, isDragNodeDataObject, LocateEvent, DragObject } from './dragon';
+import { Dragon, isDragNodeObject, isDragNodeDataObject, LocateEvent, DragObject } from './dragon';
 // import { ActiveTracker } from './active-tracker';
 // import { Detecting } from './detecting';
 // import { DropLocation, LocationData, isLocationChildrenDetail } from './location';
@@ -54,6 +54,7 @@ export interface DesignerProps {
 }
 
 export class Designer {
+  readonly dragon = new Dragon(this);
 
   readonly project: Project;
 

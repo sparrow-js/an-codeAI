@@ -82,10 +82,10 @@ export interface DeviceStyleProps {
 export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProps> {
     isSimulator: true;
     viewport: IViewport;
-    contentWindow?: Window | undefined;
-    contentDocument?: Document | undefined;
     renderer?: any;
     readonly project: Project;
+    private _iframe?: HTMLIFrameElement;
+
 
     readonly designer: Designer;
 
@@ -101,6 +101,18 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
 
     @computed get device(): string {
         return this.get('device') || 'default';
+    }
+
+    @obx.ref private _contentWindow?: Window;
+
+    get contentWindow() {
+      return this._contentWindow;
+    }
+
+    @obx.ref private _contentDocument?: Document;
+
+    get contentDocument() {
+      return this._contentDocument;
     }
 
     constructor(project: Project) {
@@ -130,12 +142,32 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     }
 
     async mountContentFrame(iframe: HTMLIFrameElement | null) {
-        if (iframe) {
-            iframe.addEventListener('load', () => {
-                hotkey.mount(iframe.contentWindow as Window);
-            });
+        if (!iframe || this._iframe === iframe) {
+            return;
         }
+        this._iframe = iframe;
+
+        this._contentWindow = iframe.contentWindow!;
+        this._contentDocument = this._contentWindow.document;
+
+        iframe.addEventListener('load', () => {
+            hotkey.mount(iframe.contentWindow as Window);
+            this.setupEvents();
+        });
     }
+
+    setupEvents() {
+        this.setupDetecting();
+    }
+
+      /**
+   * 设置悬停处理
+   */
+  setupDetecting() {
+    const doc = this.contentDocument!;
+    const { detecting, dragon } = this.designer;
+
+  }
 
     setSuspense(suspensed: boolean): void {
         throw new Error('Method not implemented.');

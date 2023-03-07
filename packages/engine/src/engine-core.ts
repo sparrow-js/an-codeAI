@@ -18,6 +18,7 @@ import { IconOutline } from './IconOutline';
 import { OutlinePane } from './OutlinePane';
 
 
+
 const editor = new Editor();
 globalContext.register(editor, Editor);
 globalContext.register(editor, 'editor');

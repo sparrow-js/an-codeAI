@@ -44,7 +44,10 @@ import {
 
 import {
     Designer,
-  } from '../designer';
+} from '../designer';
+import { BuiltinSimulatorRenderer, SimulatorRendererContainer } from './renderer';
+
+import { createSimulator } from './create-simulator';
 
 import { Project } from '../project';
 
@@ -82,7 +85,6 @@ export interface DeviceStyleProps {
 export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProps> {
     isSimulator: true;
     viewport: IViewport;
-    renderer?: any;
     readonly project: Project;
     private _iframe?: HTMLIFrameElement;
 
@@ -115,9 +117,17 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
       return this._contentDocument;
     }
 
+    @computed get designMode(): 'live' | 'design' | 'preview' {
+        // renderer 依赖
+        // TODO: 需要根据 design mode 不同切换鼠标响应情况
+        return this.get('designMode') || 'design';
+    }
+
+
     constructor(project: Project) {
         makeObservable(this);
         this.project = project;
+        this.designer = project?.designer;
     }
 
     /**
@@ -141,16 +151,36 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         throw new Error('Method not implemented.');
     }
 
+      /**
+   * 有 Renderer 进程连接进来，设置同步机制
+   */
+  connect(
+    renderer: BuiltinSimulatorRenderer,
+    effect: (reaction: IReactionPublic) => void, options?: IReactionOptions,
+  ) {
+    this._renderer = renderer;
+    return autorun(effect, options);
+  }
+
+  private _renderer?: BuiltinSimulatorRenderer;
+
+  get renderer() {
+    return this._renderer;
+  }
+
+
     async mountContentFrame(iframe: HTMLIFrameElement | null) {
         if (!iframe || this._iframe === iframe) {
             return;
         }
         this._iframe = iframe;
-
-        this._contentWindow = iframe.contentWindow!;
-        this._contentDocument = this._contentWindow.document;
-
-        iframe.addEventListener('load', () => {
+        const renderer = await createSimulator(this, iframe);
+        const simulatorRenderer = new SimulatorRendererContainer()
+        simulatorRenderer.dispose();
+        iframe.addEventListener('load', async () => {
+            this._contentWindow = iframe.contentWindow!;
+            this._contentDocument = this._contentWindow.document;
+            // wait 准备 iframe 内容、依赖库注入
             hotkey.mount(iframe.contentWindow as Window);
             this.setupEvents();
         });
@@ -160,13 +190,64 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         this.setupDetecting();
     }
 
-      /**
+/**
    * 设置悬停处理
    */
   setupDetecting() {
     const doc = this.contentDocument!;
     const { detecting, dragon } = this.designer;
+    const hover = (e: MouseEvent) => {
+        if (!detecting.enable || this.designMode !== 'design') {
+            return;
+        }
+        const nodeInst = this.getNodeInstanceFromElement(e.target as Element);
+        if (nodeInst?.node) {
+          let node = nodeInst.node;
+          const focusNode = node.document?.focusNode;
+          if (node.contains(focusNode)) {
+            node = focusNode;
+          }
+          detecting.capture(node);
+        } else {
+          detecting.capture(null);
+        }
+        if (!engineConfig.get('enableMouseEventPropagationInCanvas', false) || dragon.dragging) {
+          e.stopPropagation();
+        }
 
+    };
+    const leave = () => detecting.leave(this.project.currentDocument);
+    doc.addEventListener('mouseover', hover, true);
+    doc.addEventListener('mouseleave', leave, false);
+
+    // doc.addEventListener(
+    //     'mousemove',
+    //     (e: Event) => {
+    //       if (!engineConfig.get('enableMouseEventPropagationInCanvas', false) || dragon.dragging) {
+    //         e.stopPropagation();
+    //       }
+    //     },
+    //     true,
+    // );
+  }
+
+  getNodeInstanceFromElement(target: Element | null): NodeInstance<ComponentInstance> | null {
+    if (!target) {
+      return null;
+    }
+
+    const nodeIntance = this.getClosestNodeInstance(target);
+    console.log('********7', nodeIntance);
+    if (!nodeIntance) {
+      return null;
+    }
+    const { docId } = nodeIntance;
+    const doc = this.project.getDocument(docId)!;
+    // const node = doc.getNode(nodeIntance.nodeId);
+    return {
+      ...nodeIntance,
+    //   node,
+    };
   }
 
     setSuspense(suspensed: boolean): void {
@@ -202,9 +283,16 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     getComponentContext(node: Node): object | null {
         throw new Error('Method not implemented.');
     }
-    getClosestNodeInstance(from: ComponentInstance, specId?: string | undefined): NodeInstance<ComponentInstance> | null {
-        throw new Error('Method not implemented.');
+    /**
+   * @see ISimulator
+   */
+   getClosestNodeInstance(
+        from: ComponentInstance,
+        specId?: string,
+    ): NodeInstance<ComponentInstance> | null {
+        return this.renderer?.getClosestNodeInstance(from, specId) || null;
     }
+
     computeRect(node: Node): DOMRect | null {
         throw new Error('Method not implemented.');
     }

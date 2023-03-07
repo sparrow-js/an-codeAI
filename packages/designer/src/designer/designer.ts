@@ -18,7 +18,7 @@ import { INodeSelector, Component } from '../simulator';
 // import { Scroller, IScrollable } from './scroller';
 import { Dragon, isDragNodeObject, isDragNodeDataObject, LocateEvent, DragObject } from './dragon';
 // import { ActiveTracker } from './active-tracker';
-// import { Detecting } from './detecting';
+import { Detecting } from './detecting';
 // import { DropLocation, LocationData, isLocationChildrenDetail } from './location';
 // import { OffsetObserver, createOffsetObserver } from './offset-observer';
 // import { focusing } from './focusing';
@@ -55,6 +55,8 @@ export interface DesignerProps {
 
 export class Designer {
   readonly dragon = new Dragon(this);
+
+  readonly detecting = new Detecting();
 
   readonly project: Project;
 

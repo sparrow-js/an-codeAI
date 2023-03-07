@@ -34,6 +34,14 @@ export function isDragNodeDataObject(obj: any): obj is DragNodeDataObject {
  * Drag-on 拖拽引擎
  */
  export class Dragon {
+    @obx.ref private _dragging = false;
+
+    @obx.ref private _canDrop = false;
+
+    get dragging(): boolean {
+        return this._dragging;
+    }
+
     constructor(readonly designer: Designer) {
         makeObservable(this);
     }

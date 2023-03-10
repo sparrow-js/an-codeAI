@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { observer, globalContext } from '@firefly/auto-editor-core';
 import { BuiltinSimulatorHost, BuiltinSimulatorProps } from './host';
-
-
+import { BemTools } from './bem-tools';
 import { Project } from '../project';
 import './host.less';
 
@@ -52,6 +51,7 @@ class Canvas extends Component<{ host: BuiltinSimulatorHost }> {
       <div className={className} style={canvas}>
         {/* ref={(elmt) => sim.mountViewport(elmt)} */}
         <div className="lc-simulator-canvas-viewport" style={viewport}>
+          <BemTools host={sim} />
           <Content host={sim} />
         </div>
       </div>

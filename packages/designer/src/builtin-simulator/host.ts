@@ -201,20 +201,19 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
             return;
         }
         const nodeInst = this.getNodeInstanceFromElement(e.target as Element);
-        if (nodeInst?.node) {
-          let node = nodeInst.node;
-          const focusNode = node.document?.focusNode;
-          if (node.contains(focusNode)) {
-            node = focusNode;
-          }
-          detecting.capture(node);
+        if (nodeInst) {
+        //   let node = nodeInst.node;
+        //   const focusNode = node.document?.focusNode;
+        //   if (node.contains(focusNode)) {
+        //     node = focusNode;
+        //   }
+          detecting.capture(nodeInst);
         } else {
           detecting.capture(null);
         }
         if (!engineConfig.get('enableMouseEventPropagationInCanvas', false) || dragon.dragging) {
           e.stopPropagation();
         }
-
     };
     const leave = () => detecting.leave(this.project.currentDocument);
     doc.addEventListener('mouseover', hover, true);
@@ -237,7 +236,6 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     }
 
     const nodeIntance = this.getClosestNodeInstance(target);
-    console.log('********7', nodeIntance);
     if (!nodeIntance) {
       return null;
     }

@@ -20,7 +20,7 @@ import { Dragon, isDragNodeObject, isDragNodeDataObject, LocateEvent, DragObject
 // import { ActiveTracker } from './active-tracker';
 import { Detecting } from './detecting';
 // import { DropLocation, LocationData, isLocationChildrenDetail } from './location';
-// import { OffsetObserver, createOffsetObserver } from './offset-observer';
+import { OffsetObserver, createOffsetObserver } from './offset-observer';
 // import { focusing } from './focusing';
 // import { SettingTopEntry } from './setting';
 // import { BemToolsManager } from '../builtin-simulator/bem-tools/manager';
@@ -186,6 +186,27 @@ export class Designer {
     return this.props?.globalComponentActions || null;
   }
 
+  private oobxList: OffsetObserver[] = [];
+
+  createOffsetObserver(nodeInstance: INodeSelector): OffsetObserver | null {
+    const oobx = createOffsetObserver(nodeInstance);
+    this.clearOobxList();
+    if (oobx) {
+      this.oobxList.push(oobx);
+    }
+    return oobx;
+  }
+
+  private clearOobxList(force?: boolean) {
+    let l = this.oobxList.length;
+    if (l > 20 || force) {
+      while (l-- > 0) {
+        if (this.oobxList[l].isPurged()) {
+          this.oobxList.splice(l, 1);
+        }
+      }
+    }
+  }
 
   @computed get componentsMap(): { [key: string]: NpmInfo | Component } {
     const maps: any = {};

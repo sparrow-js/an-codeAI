@@ -184,6 +184,6 @@ export type Component = ComponentType<any> | object;
 export type ComponentInstance = Element | ReactComponent<any> | object;
 
 export interface INodeSelector {
-  node: Node;
+  node?: Node;
   instance?: ComponentInstance;
 }

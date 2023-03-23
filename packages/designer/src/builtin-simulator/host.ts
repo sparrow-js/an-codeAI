@@ -187,10 +187,23 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     }
 
     setupEvents() {
+        this.setupDragAndClick();
         this.setupDetecting();
     }
 
-/**
+    setupDragAndClick() {
+        const { designer } = this;
+        const doc = this.contentDocument!;
+        doc.addEventListener(
+            'mousedown', (downEvent: MouseEvent) => {
+                const checkSelect = (e: MouseEvent) => {};
+
+                doc.addEventListener('mouseup', checkSelect, true);
+            },
+        );
+    }
+
+    /**
    * 设置悬停处理
    */
   setupDetecting() {
@@ -272,8 +285,33 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     getComponent(componentName: string) {
         throw new Error('Method not implemented.');
     }
+
+    @obx private instancesMap: {
+        [docId: string]: Map<string, ComponentInstance[]>;
+    } = {};
+
+    setInstance(docId: string, id: string, instances: ComponentInstance[] | null) {
+        if (!hasOwnProperty(this.instancesMap, docId)) {
+            this.instancesMap[docId] = new Map();
+        }
+        if (instances == null) {
+            this.instancesMap[docId].delete(id);
+        } else {
+            this.instancesMap[docId].set(id, instances.slice());
+        }
+    }
+
     getComponentInstances(node: Node): ComponentInstance[] | null {
-        throw new Error('Method not implemented.');
+        const docId = node.document.id;
+        const instances = this.instancesMap[docId]?.get(node.id) || null;
+        if (!instances || !context) {
+        return instances;
+        }
+
+        // filter with context
+        return instances.filter((instance) => {
+            return this.getClosestNodeInstance(instance, context.nodeId)?.instance === context.instance;
+        });
     }
     createComponent(schema: NodeSchema): Component | null {
         throw new Error('Method not implemented.');

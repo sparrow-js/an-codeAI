@@ -60,9 +60,8 @@ export class BorderSelectingForNode extends Component<{ host: BuiltinSimulatorHo
     }
 
     render() {
-
         const { designer } = this.host;
-        const instance = this.instances && this.instances[0];
+        const instance = this.instances && this.instances[0] || undefined;
         const observed = designer.createOffsetObserver({
             instance,
         });
@@ -83,7 +82,7 @@ export class BorderSelecting extends Component<{ host: BuiltinSimulatorHost }> {
     render() {
         return (
           <Fragment>
-            <BorderSelectingForNode key={'2'} host={this.props.host} node={node} />
+            <BorderSelectingForNode key={'2'} host={this.props.host} />
           </Fragment>
         );
     }

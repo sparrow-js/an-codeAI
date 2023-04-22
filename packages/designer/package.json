@@ -18,7 +18,7 @@
     "@firefly/auto-editor-core": "1.0.13",
     "@alilc/lowcode-shell": "1.0.13",
     "@alilc/lowcode-types": "1.0.13",
-    "@alilc/lowcode-utils": "1.0.13",
+    "@firefly/auto-utils": "1.0.13",
     "classnames": "^2.2.6",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.5",

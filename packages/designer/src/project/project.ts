@@ -240,50 +240,50 @@ export class Project {
 //     return this.documents.find((doc) => doc.fileName === fileName) || null;
 //   }
 
-//   @action
-//   createDocument(data?: RootSchema): DocumentModel {
-//     const doc = new DocumentModel(this, data || this?.data?.componentsTree?.[0]);
-//     this.documents.push(doc);
-//     this.documentsMap.set(doc.id, doc);
-//     return doc;
-//   }
+  @action
+  createDocument(data?: RootSchema): DocumentModel {
+    const doc = new DocumentModel(this, data || this?.data?.componentsTree?.[0]);
+    this.documents.push(doc);
+    this.documentsMap.set(doc.id, doc);
+    return doc;
+  }
 
-//   open(doc?: string | DocumentModel | RootSchema): DocumentModel | null {
-//     if (!doc) {
-//       const got = this.documents.find((item) => item.isBlank());
-//       if (got) {
-//         return got.open();
-//       }
-//       doc = this.createDocument();
-//       return doc.open();
-//     }
-//     if (typeof doc === 'string') {
-//       const got = this.documents.find((item) => item.fileName === doc || item.id === doc);
-//       if (got) {
-//         return got.open();
-//       }
+  open(doc?: string | DocumentModel | RootSchema): DocumentModel | null {
+    // if (!doc) {
+    //   const got = this.documents.find((item) => item.isBlank());
+    //   if (got) {
+    //     return got.open();
+    //   }
+    //   doc = this.createDocument();
+    //   return doc.open();
+    // }
+    if (typeof doc === 'string') {
+      const got = this.documents.find((item) => item.fileName === doc || item.id === doc);
+      if (got) {
+        return got.open();
+      }
 
-//       const data = this.data.componentsTree.find((data) => data.fileName === doc);
-//       if (data) {
-//         doc = this.createDocument(data);
-//         return doc.open();
-//       }
+      const data = this.data.componentsTree.find((data) => data.fileName === doc);
+      if (data) {
+        doc = this.createDocument(data);
+        return doc.open();
+      }
 
-//       return null;
-//     } else if (isDocumentModel(doc)) {
-//       return doc.open();
-//     }
-//     //  else if (isPageSchema(doc)) {
-//     // 暂时注释掉，影响了 diff 功能
-//     // const foundDoc = this.documents.find(curDoc => curDoc?.rootNode?.id && curDoc?.rootNode?.id === doc?.id);
-//     // if (foundDoc) {
-//     //   foundDoc.remove();
-//     // }
-//     // }
+      return null;
+    } else if (isDocumentModel(doc)) {
+      return doc.open();
+    }
+    //  else if (isPageSchema(doc)) {
+    // 暂时注释掉，影响了 diff 功能
+    // const foundDoc = this.documents.find(curDoc => curDoc?.rootNode?.id && curDoc?.rootNode?.id === doc?.id);
+    // if (foundDoc) {
+    //   foundDoc.remove();
+    // }
+    // }
 
-//     doc = this.createDocument(doc);
-//     return doc.open();
-//   }
+    doc = this.createDocument(doc);
+    return doc.open();
+  }
 
 //   checkExclusive(activeDoc: DocumentModel) {
 //     this.documents.forEach((doc) => {
@@ -320,7 +320,7 @@ export class Project {
   private mountSimulator(simulator: ISimulatorHost) {
     // TODO: 多设备 simulator 支持
     this._simulator = simulator;
-    // this.designer.editor.set('simulator', simulator);
+    this.designer.editor.set('simulator', simulator);
     this.emitter.emit('lowcode_engine_simulator_ready', simulator);
   }
 

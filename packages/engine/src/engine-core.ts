@@ -18,10 +18,12 @@ import { IconOutline } from './IconOutline';
 import { OutlinePane } from './OutlinePane';
 
 
-
 const editor = new Editor();
 globalContext.register(editor, Editor);
 globalContext.register(editor, 'editor');
+
+const designer = new Designer({ editor });
+editor.set('designer' as any, designer);
 
 const innerSkeleton = new InnerSkeleton(editor);
 const skeletonCabin = getSkeletonCabin(innerSkeleton);
@@ -74,6 +76,28 @@ let engineInited = false;
   };
   defaultPanelRegistry.pluginName = '___default_panel___';
   await plugins.register(defaultPanelRegistry);
+
+  const editorInit = (ctx: ILowCodePluginContext) => {
+    return {
+      name: 'editor-init',
+      async init() {
+        // 修改面包屑组件的分隔符属性setter
+        // const assets = await (
+        //   await fetch(
+        //     `https://alifd.alicdn.com/npm/@alilc/lowcode-materials/build/lowcode/assets-prod.json`
+        //   )
+        // ).json();
+        // 设置物料描述
+        const { project } = ctx;
+
+        // 加载 schema
+        project.open();
+      },
+    };
+  };
+  editorInit.pluginName = 'editorInit';
+  await plugins.register(editorInit);
+
 })();
 
 export async function init(

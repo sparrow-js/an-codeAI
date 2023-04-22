@@ -92,6 +92,20 @@ export class DocumentModel {
   get nodesMap(): Map<string, Node> {
     return this._nodesMap;
   }
+
+  constructor(project: Project, schema?: RootSchema) {
+    makeObservable(this);
+    this.project = project;
+    this.designer = this.project?.designer;
+    this.emitter = new EventEmitter();
+  }
+
+  open(): DocumentModel {
+    const originState = this._opened;
+    this._opened = true;
+
+    return this;
+  }
 }
 
 export function isDocumentModel(obj: any): obj is DocumentModel {

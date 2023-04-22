@@ -2,7 +2,7 @@ import { Component as ReactComponent, ComponentType } from 'react';
 import { ComponentMetadata, NodeSchema } from '@alilc/lowcode-types';
 // import { ISensor, Point, ScrollTarget, IScrollable, LocateEvent, LocationData } from './designer';
 import { BuiltinSimulatorRenderer } from './builtin-simulator/renderer';
-// import { Node, ParentalNode } from './document';
+import { Node } from './document';
 
 export type AutoFit = '100%';
 // eslint-disable-next-line no-redeclare
@@ -187,3 +187,4 @@ export interface INodeSelector {
   node?: Node;
   instance?: ComponentInstance;
 }
+

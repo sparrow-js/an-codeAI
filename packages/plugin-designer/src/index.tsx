@@ -76,6 +76,7 @@ export default class DesignerPlugin extends PureComponent<PluginProps, DesignerP
         return (
           <DesignerView
             editor={editor}
+            designer={editor.get('designer')}
             simulatorProps={{
                     simulatorUrl: 'http://localhost:5173/',
                 }}

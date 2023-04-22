@@ -44,12 +44,15 @@ import {
 
 import {
     Designer,
+    isShaken,
 } from '../designer';
 import { BuiltinSimulatorRenderer, SimulatorRendererContainer } from './renderer';
 
 import { createSimulator } from './create-simulator';
 
 import { Project } from '../project';
+import { Node } from '../document';
+import { getClosestClickableNode } from './utils/clickable';
 
 export interface LibraryItem extends Package{
     package: string;
@@ -156,7 +159,7 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
    */
   connect(
     renderer: BuiltinSimulatorRenderer,
-    effect: (reaction: IReactionPublic) => void, options?: IReactionOptions,
+    effect: (reaction: IReactionPublic) => void, options?: any,
   ) {
     this._renderer = renderer;
     return autorun(effect, options);
@@ -196,7 +199,28 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         const doc = this.contentDocument!;
         doc.addEventListener(
             'mousedown', (downEvent: MouseEvent) => {
-                const checkSelect = (e: MouseEvent) => {};
+                const documentModel = this.project.currentDocument;
+                if (!documentModel) {
+                    return;
+                }
+                const { selection } = documentModel;
+                const nodeInst = this.getNodeInstanceFromElement(downEvent.target as Element);
+                const node = getClosestClickableNode(nodeInst, downEvent);
+                if (!node) {
+                    return;
+                }
+
+                downEvent.stopPropagation();
+                downEvent.preventDefault();
+
+                const checkSelect = (e: MouseEvent) => {
+                    doc.removeEventListener('mouseup', checkSelect, true);
+                    if (!isShaken(downEvent, e)) {
+                        let { id } = node;
+                        selection.select(id);
+                        console.log('*******3456******');
+                    }
+                };
 
                 doc.addEventListener('mouseup', checkSelect, true);
             },
@@ -301,11 +325,11 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         }
     }
 
-    getComponentInstances(node: Node): ComponentInstance[] | null {
-        const docId = node.document.id;
+    getComponentInstances(node: Node, context?: NodeInstance): ComponentInstance[] | null {
+        const docId = 0;
         const instances = this.instancesMap[docId]?.get(node.id) || null;
         if (!instances || !context) {
-        return instances;
+            return instances;
         }
 
         // filter with context
@@ -316,9 +340,13 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     createComponent(schema: NodeSchema): Component | null {
         throw new Error('Method not implemented.');
     }
-    getComponentContext(node: Node): object | null {
+    /**
+     * @see ISimulator
+     */
+    getComponentContext(/* node: Node */): any {
         throw new Error('Method not implemented.');
     }
+
     /**
    * @see ISimulator
    */

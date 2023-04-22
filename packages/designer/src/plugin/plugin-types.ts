@@ -1,5 +1,5 @@
 import { Hotkey } from '@firefly/auto-editor-core';
-
+import { Project } from '@firefly/auto-designer';
 export type PreferenceValueType = string | number | boolean;
 
 export interface ILowCodePluginPreferenceDeclarationProperty {
@@ -73,7 +73,7 @@ export interface ILowCodePluginContext {
     // config: any;
     // material: any;
     // event: Event;
-    // project: any;
+    project: Project;
     preference: IPluginPreferenceMananger;
 }
 

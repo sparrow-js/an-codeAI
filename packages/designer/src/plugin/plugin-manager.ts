@@ -27,9 +27,9 @@ export class AutoCodePluginManager implements ILowCodePluginManager {
     private pluginsMap: Map<string, ILowCodePlugin> = new Map();
     private pluginPreference?: PluginPreference = new Map();
 
-    private editor: any;
+    private editor: Editor;
 
-    constructor(editor: any) {
+    constructor(editor: Editor) {
         this.editor = editor;
     }
 

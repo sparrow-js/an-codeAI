@@ -207,7 +207,6 @@ export class Skeleton {
     let widget: IWidget;
     if (isDockConfig(config)) {
       if (isPanelDockConfig(config)) {
-        console.log('********', config);
         // outline-pane
         widget = new PanelDock(this, config);
         if (config.name === 'outline-pane') {

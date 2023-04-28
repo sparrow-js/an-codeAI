@@ -16,7 +16,6 @@ export function initOptions(): OptionsStore {
 
   // This listens on localStorage changes, but the changes go only from scripts other than the current one and current one's content scripts
   listenOnOptionsChanges((newOptions) => {
-    console.log('*******789*******', newOptions);
     setSignalOptions(newOptions);
   });
 

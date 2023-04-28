@@ -53,8 +53,6 @@ import { createSimulator } from './create-simulator';
 import { Project } from '../project';
 import { Node } from '../document';
 import { getClosestClickableNode } from './utils/clickable';
-import { ReactInstance } from 'react';
-import { findDOMNode } from 'react-dom';
 
 export interface LibraryItem extends Package{
     package: string;
@@ -212,7 +210,6 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
                 const { selection } = documentModel;
                 const nodeInst = this.getNodeInstanceFromElement(downEvent.target as Element);
                 const nodeSchea = getClosestClickableNode(nodeInst, downEvent);
-                console.log('*****8', nodeSchea);
                 const node = documentModel.createNode(nodeSchea);
                 if (!node) {
                     return;
@@ -226,7 +223,6 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
                     if (!isShaken(downEvent, e)) {
                         let { id } = node;
                         selection.select(id);
-                        console.log('*******3456******');
                     }
                 };
 

@@ -68,12 +68,10 @@ export class BorderSelectingForNode extends Component<{ host: BuiltinSimulatorHo
             node,
             instance: node.instance,
         });
-        console.log('*********3******');
 
         if (!observed) {
             return null;
         }
-        console.log('*********2******');
         return (
           <Fragment>
             <BorderSelectingInstance key={observed.id} dragging={this.dragging} observed={observed} />;
@@ -104,7 +102,6 @@ export class BorderSelecting extends Component<{ host: BuiltinSimulatorHost }> {
   }
 
   render() {
-    console.log('***1*****', this.selecting);
     if (!this.selecting || this.selecting.length < 1) {
       return null;
     }

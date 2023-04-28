@@ -4,7 +4,7 @@ import { EventEmitter } from 'events';
 import { Project } from '../project';
 import { ISimulatorHost } from '../simulator';
 // import { ComponentMeta } from '../component-meta';
-// import { Node, insertChildren, insertChild, isNode, RootNode, ParentalNode } from './node/node';
+import { Node } from './node/node';
 import { Selection } from './selection';
 // import { History } from './history';
 // import { TransformStage, ModalNodesManager } from './node';
@@ -105,6 +105,25 @@ export class DocumentModel {
     this._opened = true;
 
     return this;
+  }
+
+  createNode<T extends Node = Node, C = undefined>(data: GetDataType<C, T>, checkId: boolean = true): T {
+    let schema: any;
+    let node: Node | null = null;
+    schema = data;
+
+    node = new Node(this, schema);
+    this._nodesMap.set(node.id, node);
+    this.nodes.add(node);
+    return node as any;
+  }
+
+
+  /**
+   * 根据 id 获取节点
+   */
+   getNode(id: string): Node | null {
+    return this._nodesMap.get(id) || null;
   }
 }
 

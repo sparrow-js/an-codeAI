@@ -17,11 +17,11 @@ export const getClosestClickableNode = (
   currentNode: NodeInstance | undefined | null,
   event: MouseEvent,
 ) => {
-  let node = new Node({
-    id: '',
+  let node = {
+    id: currentNode?.nodeId,
     componentName: '',
-    instance: currentNode,
-  });
+    instance: currentNode?.instance,
+  };
 
   // while (node) {
   //   // 判断当前节点是否可点击

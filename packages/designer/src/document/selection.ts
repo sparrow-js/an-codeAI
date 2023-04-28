@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import { obx, makeObservable } from '@alilc/lowcode-editor-core';
 import { DocumentModel } from './document-model';
+import { Node } from './node';
 
 export class Selection {
   private emitter = new EventEmitter();
@@ -117,15 +118,14 @@ export class Selection {
    * 获取选中的节点
    */
   getNodes(): Node[] {
-    // const nodes = [];
-    // for (const id of this._selected) {
-    //   const node = this.doc.getNode(id);
-    //   if (node) {
-    //     nodes.push(node);
-    //   }
-    // }
-    // return nodes;
-    return [];
+    const nodes = [];
+    for (const id of this._selected) {
+      const node = this.doc.getNode(id);
+      if (node) {
+        nodes.push(node);
+      }
+    }
+    return nodes;
   }
 
   /**

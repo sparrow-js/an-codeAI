@@ -12,6 +12,7 @@ import { observer, computed, Tip, globalContext, makeObservable } from '@firefly
 import { BuiltinSimulatorHost } from '../host';
 import classNames from 'classnames';
 import { OffsetObserver } from '../../designer';
+import { Node } from '../../document';
 
 @observer
 export class BorderSelectingInstance extends Component<{
@@ -60,15 +61,19 @@ export class BorderSelectingForNode extends Component<{ host: BuiltinSimulatorHo
     }
 
     render() {
+      const { node } = this.props;
         const { designer } = this.host;
         const instance = this.instances && this.instances[0] || undefined;
         const observed = designer.createOffsetObserver({
-            instance,
+            node,
+            instance: node.instance,
         });
-          if (!observed) {
+        console.log('*********3******');
+
+        if (!observed) {
             return null;
         }
-
+        console.log('*********2******');
         return (
           <Fragment>
             <BorderSelectingInstance key={observed.id} dragging={this.dragging} observed={observed} />;
@@ -79,11 +84,35 @@ export class BorderSelectingForNode extends Component<{ host: BuiltinSimulatorHo
 
 @observer
 export class BorderSelecting extends Component<{ host: BuiltinSimulatorHost }> {
-    render() {
-        return (
-          <Fragment>
-            <BorderSelectingForNode key={'2'} host={this.props.host} />
-          </Fragment>
-        );
+
+  get host(): BuiltinSimulatorHost {
+    return this.props.host;
+  }
+
+  get dragging(): boolean {
+    return this.host.designer.dragon.dragging;
+  }
+
+
+  @computed get selecting() {
+    const doc = this.host.currentDocument;
+    if (!doc || doc.suspensed) {
+      return null;
     }
+    const { selection } = doc;
+    return this.dragging ? selection.getTopNodes() : selection.getNodes();
+  }
+
+  render() {
+    console.log('***1*****', this.selecting);
+    if (!this.selecting || this.selecting.length < 1) {
+      return null;
+    }
+    const node = this.selecting[0];
+      return (
+        <Fragment>
+          <BorderSelectingForNode key={'2'} host={this.props.host} node={node} />
+        </Fragment>
+      );
+  }
 }

@@ -41,7 +41,7 @@ import {
     DropContainer,
     IViewport,
 } from '../simulator';
-
+import Viewport from './viewport';
 import {
     Designer,
     isShaken,
@@ -53,6 +53,8 @@ import { createSimulator } from './create-simulator';
 import { Project } from '../project';
 import { Node } from '../document';
 import { getClosestClickableNode } from './utils/clickable';
+import { ReactInstance } from 'react';
+import { findDOMNode } from 'react-dom';
 
 export interface LibraryItem extends Package{
     package: string;
@@ -87,7 +89,7 @@ export interface DeviceStyleProps {
 
 export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProps> {
     isSimulator: true;
-    viewport: IViewport;
+    readonly viewport = new Viewport();
     readonly project: Project;
     private _iframe?: HTMLIFrameElement;
 
@@ -131,6 +133,10 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         makeObservable(this);
         this.project = project;
         this.designer = project?.designer;
+    }
+
+    get currentDocument() {
+        return this.project.currentDocument;
     }
 
     /**
@@ -205,7 +211,9 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
                 }
                 const { selection } = documentModel;
                 const nodeInst = this.getNodeInstanceFromElement(downEvent.target as Element);
-                const node = getClosestClickableNode(nodeInst, downEvent);
+                const nodeSchea = getClosestClickableNode(nodeInst, downEvent);
+                console.log('*****8', nodeSchea);
+                const node = documentModel.createNode(nodeSchea);
                 if (!node) {
                     return;
                 }
@@ -327,7 +335,7 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
 
     getComponentInstances(node: Node, context?: NodeInstance): ComponentInstance[] | null {
         const docId = 0;
-        const instances = this.instancesMap[docId]?.get(node.id) || null;
+        const instances = this.instancesMap[docId]?.get(node.id) || node.instance || null;
         if (!instances || !context) {
             return instances;
         }
@@ -361,10 +369,84 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         throw new Error('Method not implemented.');
     }
     computeComponentInstanceRect(instance: ComponentInstance, selector?: string | undefined): DOMRect | null {
-        throw new Error('Method not implemented.');
+        const renderer = this.renderer!;
+        const elements = this.findDOMNodes(instance, selector);
+        if (!elements) {
+          return null;
+        }
+
+        const elems = elements.slice();
+        let rects: DOMRect[] | undefined;
+        let last: { x: number; y: number; r: number; b: number } | undefined;
+        let _computed = false;
+        while (true) {
+          if (!rects || rects.length < 1) {
+            const elem = elems.pop();
+            if (!elem) {
+              break;
+            }
+            rects = isElement(elem) ? [elem.getBoundingClientRect()] : [];
+          }
+          const rect = rects.pop();
+          if (!rect) {
+            break;
+          }
+          if (rect.width === 0 && rect.height === 0) {
+            continue;
+          }
+          if (!last) {
+            last = {
+              x: rect.left,
+              y: rect.top,
+              r: rect.right,
+              b: rect.bottom,
+            };
+            continue;
+          }
+          if (rect.left < last.x) {
+            last.x = rect.left;
+            _computed = true;
+          }
+          if (rect.top < last.y) {
+            last.y = rect.top;
+            _computed = true;
+          }
+          if (rect.right > last.r) {
+            last.r = rect.right;
+            _computed = true;
+          }
+          if (rect.bottom > last.b) {
+            last.b = rect.bottom;
+            _computed = true;
+          }
+        }
+
+        if (last) {
+          const r: any = new DOMRect(last.x, last.y, last.r - last.x, last.b - last.y);
+          r.elements = elements;
+          r.computed = _computed;
+          return r;
+        }
+
+        return null;
     }
-    findDOMNodes(instance: ComponentInstance, selector?: string | undefined): (Element | Text)[] | null {
-        throw new Error('Method not implemented.');
+    /**
+     * @see ISimulator
+     */
+    findDOMNodes(instance: ComponentInstance, selector?: string): Array<Element | Text> | null {
+        const elements = [instance as Element];
+        if (!elements) {
+            return null;
+        }
+
+        if (selector) {
+            const matched = getMatched(elements, selector);
+            if (!matched) {
+                return null;
+            }
+            return [matched];
+        }
+        return elements;
     }
     postEvent(evtName: string, evtData: any): void {
         throw new Error('Method not implemented.');
@@ -376,3 +458,57 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         throw new Error('Method not implemented.');
     }
 }
+
+function getMatched(elements: Array<Element | Text>, selector: string): Element | null {
+    let firstQueried: Element | null = null;
+    for (const elem of elements) {
+      if (isElement(elem)) {
+        if (elem.matches(selector)) {
+          return elem;
+        }
+
+        if (!firstQueried) {
+          firstQueried = elem.querySelector(selector);
+        }
+      }
+    }
+    return firstQueried;
+}
+
+// export const FIBER_KEY = '_reactInternalFiber';
+// export function isDOMNode(node: any): node is Element | Text {
+//     return node.nodeType && (node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE);
+// }
+
+// function elementsFromFiber(fiber: any, elements: Array<Element | Text>) {
+//     if (fiber) {
+//       if (fiber.stateNode && isDOMNode(fiber.stateNode)) {
+//         elements.push(fiber.stateNode);
+//       } else if (fiber.child) {
+//         // deep fiberNode.child
+//         elementsFromFiber(fiber.child, elements);
+//       }
+
+//       if (fiber.sibling) {
+//         elementsFromFiber(fiber.sibling, elements);
+//       }
+//     }
+// }
+
+// export function reactFindDOMNodes(elem: ReactInstance | null): Array<Element | Text> | null {
+//     if (!elem) {
+//       return null;
+//     }
+//     if (isElement(elem)) {
+//       return [elem];
+//     }
+//     const elements: Array<Element | Text> = [];
+//     const fiberNode = (elem as any)[FIBER_KEY];
+//     elementsFromFiber(fiberNode?.child, elements);
+//     if (elements.length > 0) return elements;
+//     try {
+//       return [findDOMNode(elem)];
+//     } catch (e) {
+//       return null;
+//     }
+// }

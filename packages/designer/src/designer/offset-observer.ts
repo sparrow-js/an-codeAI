@@ -1,6 +1,7 @@
 import { obx, computed, makeObservable } from '@alilc/lowcode-editor-core';
 import { uniqueId } from '@alilc/lowcode-utils';
 import { INodeSelector, IViewport } from '../simulator';
+import { Node } from '../document';
 
 export class OffsetObserver {
   readonly id = uniqueId('oobx');
@@ -100,19 +101,12 @@ export class OffsetObserver {
   readonly compute: () => void;
 
   constructor(readonly nodeInstance: INodeSelector) {
-    const { instance } = nodeInstance;
-    // this.node = node;
-    // const doc = node.document;
-    // const host = doc.simulator!;
-    // const focusNode = doc.focusNode;
-    // this.isRoot = node.contains(focusNode!);
-    this.isRoot = false;
-    // this.viewport = host.viewport;
+    const { node, instance } = nodeInstance;
+    this.node = node;
+    const doc = node.document;
+    const host = doc.simulator!;
+    this.viewport = host.viewport;
     makeObservable(this);
-    if (this.isRoot) {
-      this.hasOffset = true;
-      return;
-    }
     if (!instance) {
       return;
     }
@@ -123,15 +117,8 @@ export class OffsetObserver {
         return;
       }
 
-    //   const rect = host.computeComponentInstanceRect(instance!, node.componentMeta.rootSelector);
-      const rect = {
-        height: 10,
-        width: 10,
-        left: 100,
-        top: 100,
-        right: 100,
-        bottom: 100,
-      };
+      const rect = host.computeComponentInstanceRect(instance!);
+
       if (!rect) {
         this.hasOffset = false;
       } else if (!this.viewport.scrolling || !this.hasOffset) {

@@ -1,9 +1,11 @@
 
 import { obx, computed, autorun, makeObservable, runInAction, action } from '@firefly/auto-editor-core';
+import { DocumentModel } from '../document-model';
 
 export interface NodeSchema {
     id?: string;
     componentName: string;
+    instance: any;
     props?: any;
 }
 
@@ -11,13 +13,14 @@ export interface NodeSchema {
 export class Node<Schema extends NodeSchema = NodeSchema> {
     readonly id: string;
     readonly componentName: string;
+    readonly instance: any;
 
 
-    constructor(nodeSchema: Schema) {
+    constructor(readonly document: DocumentModel, nodeSchema: Schema) {
         // makeObservable(this);
-        const { id, componentName } = nodeSchema;
+        const { id, componentName, instance } = nodeSchema;
         this.id = id || '';
         this.componentName = componentName;
-        console.log('1');
+        this.instance = instance;
     }
 }

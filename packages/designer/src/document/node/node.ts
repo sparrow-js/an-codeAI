@@ -1,6 +1,7 @@
 
 import { obx, computed, autorun, makeObservable, runInAction, action } from '@firefly/auto-editor-core';
 import { DocumentModel } from '../document-model';
+import { NodeChildren } from './node-children';
 
 export interface NodeSchema {
     id?: string;
@@ -9,6 +10,9 @@ export interface NodeSchema {
     props?: any;
 }
 
+export interface ParentalNode<T extends NodeSchema = NodeSchema> extends Node<T> {
+    readonly children: NodeChildren;
+}
 
 export class Node<Schema extends NodeSchema = NodeSchema> {
     readonly id: string;

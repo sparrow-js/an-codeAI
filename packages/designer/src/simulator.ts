@@ -1,6 +1,6 @@
 import { Component as ReactComponent, ComponentType } from 'react';
 import { ComponentMetadata, NodeSchema } from '@alilc/lowcode-types';
-// import { ISensor, Point, ScrollTarget, IScrollable, LocateEvent, LocationData } from './designer';
+import { ISensor, Point, ScrollTarget, IScrollable, LocateEvent, LocationData } from './designer';
 import { BuiltinSimulatorRenderer } from './builtin-simulator/renderer';
 import { Node } from './document';
 
@@ -59,7 +59,7 @@ export interface IViewport {
   /**
    * 本地坐标系转化为全局坐标系
    */
-//   toGlobalPoint(point: Point): Point;
+  toGlobalPoint(point: Point): Point;
 }
 
 export interface DropContainer {
@@ -70,7 +70,7 @@ export interface DropContainer {
 /**
  * 模拟器控制进程协议
  */
-export interface ISimulatorHost<P = object> {
+export interface ISimulatorHost<P = object> extends ISensor {
   readonly isSimulator: true;
   /**
    * 获得边界维度等信息

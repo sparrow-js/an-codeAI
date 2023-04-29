@@ -9,7 +9,8 @@ import { Selection } from './selection';
 // import { History } from './history';
 // import { TransformStage, ModalNodesManager } from './node';
 import { uniqueId, isPlainObject, compatStage } from '@alilc/lowcode-utils';
-import { Designer } from '../designer';
+import { isDragNodeDataObject, DragNodeObject, DragNodeDataObject, DropLocation, Designer } from '../designer';
+
 
 export type GetDataType<T, NodeType> = T extends undefined
   ? NodeType extends {
@@ -125,6 +126,14 @@ export class DocumentModel {
    getNode(id: string): Node | null {
     return this._nodesMap.get(id) || null;
   }
+  @obx.ref private _dropLocation: DropLocation | null = null;
+
+   /**
+   * 内部方法，请勿调用
+   */
+    internalSetDropLocation(loc: DropLocation | null) {
+      this._dropLocation = loc;
+    }
 }
 
 export function isDocumentModel(obj: any): obj is DocumentModel {

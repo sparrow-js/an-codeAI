@@ -4,6 +4,8 @@ import { NodeSchema } from '@alilc/lowcode-types';
 import { computed, observable as obx, untracked, makeObservable, configure } from 'mobx';
 import {
   isElement,
+  setNativeSelection,
+  cursor,
 } from '@alilc/lowcode-utils';
 import { BuiltinSimulatorHost } from './host';
 
@@ -82,18 +84,23 @@ export class SimulatorRendererContainer implements BuiltinSimulatorRenderer {
   getClientRects(element: Element | Text): DOMRect[] {
     throw new Error('Method not implemented.');
   }
-  setNativeSelection(enableFlag: boolean): void {
-    throw new Error('Method not implemented.');
+
+  setNativeSelection(enableFlag: boolean) {
+    setNativeSelection(enableFlag);
   }
-  setDraggingState(state: boolean): void {
-    throw new Error('Method not implemented.');
+
+  setDraggingState(state: boolean) {
+    cursor.setDragging(state);
   }
-  setCopyState(state: boolean): void {
-    throw new Error('Method not implemented.');
+
+  setCopyState(state: boolean) {
+    cursor.setCopy(state);
   }
-  clearState(): void {
-    throw new Error('Method not implemented.');
+
+  clearState() {
+    cursor.release();
   }
+
   run(): void {
     throw new Error('Method not implemented.');
   }

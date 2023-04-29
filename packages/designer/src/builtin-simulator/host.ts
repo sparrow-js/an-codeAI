@@ -45,6 +45,7 @@ import Viewport from './viewport';
 import {
     Designer,
     isShaken,
+    DragObjectType,
 } from '../designer';
 import { BuiltinSimulatorRenderer, SimulatorRendererContainer } from './renderer';
 
@@ -225,6 +226,15 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
                         selection.select(id);
                     }
                 };
+                let nodes: Node[] = [node];
+                designer.dragon.boost(
+                  {
+                    type: DragObjectType.Node,
+                    nodes,
+                  },
+                  downEvent,
+                  undefined,
+                );
 
                 doc.addEventListener('mouseup', checkSelect, true);
             },
@@ -292,18 +302,44 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     setSuspense(suspensed: boolean): void {
         throw new Error('Method not implemented.');
     }
-    setNativeSelection(enableFlag: boolean): void {
-        throw new Error('Method not implemented.');
+
+    /**
+     * @see ISimulator
+     */
+    setNativeSelection(enableFlag: boolean) {
+      this.renderer?.setNativeSelection(enableFlag);
     }
-    setDraggingState(state: boolean): void {
-        throw new Error('Method not implemented.');
+
+    /**
+     * @see ISimulator
+     */
+    setDraggingState(state: boolean) {
+      this.renderer?.setDraggingState(state);
     }
-    setCopyState(state: boolean): void {
-        throw new Error('Method not implemented.');
+
+    /**
+     * @see ISimulator
+     */
+    setCopyState(state: boolean) {
+      this.renderer?.setCopyState(state);
     }
-    clearState(): void {
-        throw new Error('Method not implemented.');
+
+    /**
+     * @see ISimulator
+     */
+    clearState() {
+      this.renderer?.clearState();
     }
+
+    private _sensorAvailable = true;
+
+    /**
+     * @see ISensor
+     */
+    get sensorAvailable(): boolean {
+      return this._sensorAvailable;
+    }
+
     scrollToNode(node: Node, detail?: any): void {
         throw new Error('Method not implemented.');
     }
@@ -444,6 +480,8 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         }
         return elements;
     }
+
+
     postEvent(evtName: string, evtData: any): void {
         throw new Error('Method not implemented.');
     }

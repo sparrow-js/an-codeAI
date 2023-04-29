@@ -19,7 +19,7 @@ import { INodeSelector, Component } from '../simulator';
 import { Dragon, isDragNodeObject, isDragNodeDataObject, LocateEvent, DragObject } from './dragon';
 // import { ActiveTracker } from './active-tracker';
 import { Detecting } from './detecting';
-// import { DropLocation, LocationData, isLocationChildrenDetail } from './location';
+import { DropLocation, LocationData, isLocationChildrenDetail } from './location';
 import { OffsetObserver, createOffsetObserver } from './offset-observer';
 // import { focusing } from './focusing';
 // import { SettingTopEntry } from './setting';
@@ -75,32 +75,32 @@ export class Designer {
   }
 
   constructor(props: DesignerProps) {
-    makeObservable(this);
-    const { editor } = props;
-    this.editor = editor;
-    this.setProps(props);
+      makeObservable(this);
+      const { editor } = props;
+      this.editor = editor;
+      this.setProps(props);
 
-    this.project = new Project(this, props.defaultSchema);
+      this.project = new Project(this, props.defaultSchema);
 
-    let startTime: any;
-    let src = '';
+      let startTime: any;
+      let src = '';
 
-    let historyDispose: undefined | (() => void);
-    const setupHistory = () => {
-      if (historyDispose) {
-        historyDispose();
-        historyDispose = undefined;
-      }
-    };
-    this.project.onCurrentDocumentChange(() => {
-      this.postEvent('current-document.change', this.currentDocument);
-      this.postEvent('selection.change', this.currentSelection);
-      this.postEvent('history.change', this.currentHistory);
-       setupHistory();
-    });
-    this.postEvent('init', this);
-     setupHistory();
-}
+      let historyDispose: undefined | (() => void);
+      const setupHistory = () => {
+        if (historyDispose) {
+          historyDispose();
+          historyDispose = undefined;
+        }
+      };
+      this.project.onCurrentDocumentChange(() => {
+        this.postEvent('current-document.change', this.currentDocument);
+        this.postEvent('selection.change', this.currentSelection);
+        this.postEvent('history.change', this.currentHistory);
+        setupHistory();
+      });
+      this.postEvent('init', this);
+      setupHistory();
+  }
 
   setupSelection = () => {
     let selectionDispose: undefined | (() => void);
@@ -230,6 +230,23 @@ export class Designer {
     } else {
       this.propsReducers.set(stage, [reducer]);
     }
+  }
+
+  private _dropLocation?: DropLocation;
+
+  get dropLocation() {
+    return this._dropLocation;
+  }
+
+  /**
+   * 清除插入位置
+   */
+   clearLocation() {
+    if (this._dropLocation) {
+      this._dropLocation.document.internalSetDropLocation(null);
+    }
+    this.postEvent('dropLocation.change', undefined);
+    this._dropLocation = undefined;
   }
 
   // eslint-disable-next-line max-len

@@ -46,14 +46,27 @@ import {
     Designer,
     isShaken,
     DragObjectType,
+    LocateEvent,
+    DragNodeObject,
+    isLocationData,
+    isDragAnyObject,
+    isDragNodeObject,
+    LocationChildrenDetail,
+    LocationDetailType,
+    CanvasPoint,
+    Rect,
+    getRectTarget,
+    isChildInline,
+    isRowContainer,
 } from '../designer';
 import { BuiltinSimulatorRenderer, SimulatorRendererContainer } from './renderer';
 
 import { createSimulator } from './create-simulator';
 
 import { Project } from '../project';
-import { Node } from '../document';
+import { Node, contains, isRootNode, ParentalNode } from '../document';
 import { getClosestClickableNode } from './utils/clickable';
+import { Scroller } from '../designer/scroller';
 
 export interface LibraryItem extends Package{
     package: string;
@@ -91,7 +104,7 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     readonly viewport = new Viewport();
     readonly project: Project;
     private _iframe?: HTMLIFrameElement;
-
+    readonly scroller: Scroller;
 
     readonly designer: Designer;
 
@@ -132,6 +145,7 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         makeObservable(this);
         this.project = project;
         this.designer = project?.designer;
+        this.scroller = this.designer.createScroller(this.viewport);
     }
 
     get currentDocument() {
@@ -196,7 +210,7 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
 
     setupEvents() {
         this.setupDragAndClick();
-        this.setupDetecting();
+        // this.setupDetecting();
     }
 
     setupDragAndClick() {
@@ -292,10 +306,10 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     }
     const { docId } = nodeIntance;
     const doc = this.project.getDocument(docId)!;
-    // const node = doc.getNode(nodeIntance.nodeId);
+    const node = doc.getNode(nodeIntance.nodeId);
     return {
       ...nodeIntance,
-    //   node,
+      node,
     };
   }
 
@@ -340,6 +354,37 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
       return this._sensorAvailable;
     }
 
+    /**
+     * @see ISensor
+     */
+    fixEvent(e: LocateEvent): LocateEvent {
+      if (e.fixed) {
+        return e;
+      }
+
+      const notMyEvent = e.originalEvent.view?.document !== this.contentDocument;
+      // fix canvasX canvasY : 当前激活文档画布坐标系
+      if (notMyEvent || !('canvasX' in e) || !('canvasY' in e)) {
+        const l = this.viewport.toLocalPoint({
+          clientX: e.globalX,
+          clientY: e.globalY,
+        });
+        e.canvasX = l.clientX;
+        e.canvasY = l.clientY;
+      }
+
+      // fix target : 浏览器事件响应目标
+      if (!e.target || notMyEvent) {
+        if (!isNaN(e.canvasX!) && !isNaN(e.canvasY!)) {
+          e.target = this.contentDocument?.elementFromPoint(e.canvasX!, e.canvasY!);
+        }
+      }
+
+      // 事件已订正
+      e.fixed = true;
+      return e;
+    }
+
     scrollToNode(node: Node, detail?: any): void {
         throw new Error('Method not implemented.');
     }
@@ -367,7 +412,7 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
 
     getComponentInstances(node: Node, context?: NodeInstance): ComponentInstance[] | null {
         const docId = 0;
-        const instances = this.instancesMap[docId]?.get(node.id) || node.instance || null;
+        const instances = this.instancesMap[docId]?.get(node.id) || [node.instance] || null;
         if (!instances || !context) {
             return instances;
         }
@@ -452,7 +497,6 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
             _computed = true;
           }
         }
-
         if (last) {
           const r: any = new DOMRect(last.x, last.y, last.r - last.x, last.b - last.y);
           r.elements = elements;
@@ -481,6 +525,395 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         return elements;
     }
 
+    /**
+     * @see ISensor
+     */
+    isEnter(e: LocateEvent): boolean {
+      const rect = this.viewport.bounds;
+      return (
+        e.globalY >= rect.top &&
+        e.globalY <= rect.bottom &&
+        e.globalX >= rect.left &&
+        e.globalX <= rect.right
+      );
+    }
+
+    private sensing = false;
+
+    /**
+     * @see ISensor
+     */
+    deactiveSensor() {
+      this.sensing = false;
+      // this.scroller.cancel();
+    }
+
+
+    /**
+   * @see ISensor
+   */
+  locate(e: LocateEvent): any {
+    const { dragObject } = e;
+    const { nodes } = dragObject as DragNodeObject;
+
+    const operationalNodes = nodes;
+    // ?.filter((node) => {
+    //   const onMoveHook = node.componentMeta?.getMetadata()?.configure.advanced?.callbacks?.onMoveHook;
+    //   const canMove = onMoveHook && typeof onMoveHook === 'function' ? onMoveHook(node.internalToShellNode()) : true;
+
+    //   return canMove;
+    // });
+
+    if (nodes && (!operationalNodes || operationalNodes.length === 0)) {
+      return;
+    }
+
+    this.sensing = true;
+    this.scroller.scrolling(e);
+    const document = this.project.currentDocument;
+    if (!document) {
+      return null;
+    }
+    const dropContainer = this.getDropContainer(e);
+    const childWhitelist = dropContainer?.container?.componentMeta?.childWhitelist;
+    const lockedNode = getClosestNode(dropContainer?.container as Node, (node) => node.isLocked);
+    if (lockedNode) return null;
+    if (
+      !dropContainer ||
+      (nodes && typeof childWhitelist === 'function' && !childWhitelist(operationalNodes[0]))
+    ) {
+      return null;
+    }
+
+    if (isLocationData(dropContainer)) {
+      return this.designer.createLocation(dropContainer);
+    }
+
+
+    const { container, instance: containerInstance } = dropContainer;
+
+    const edge = this.computeComponentInstanceRect(
+      containerInstance,
+      // container.componentMeta.rootSelector,
+    );
+
+    if (!edge) {
+      return null;
+    }
+
+    const { children } = container;
+
+    const detail: LocationChildrenDetail = {
+      type: LocationDetailType.Children,
+      index: 0,
+      edge,
+    };
+
+    const locationData = {
+      target: container as ParentalNode,
+      detail,
+      source: `simulator${document.id}`,
+      event: e,
+    };
+
+    // if (
+    //   e.dragObject &&
+    //   e.dragObject.nodes &&
+    //   e.dragObject.nodes.length
+    //   // e.dragObject.nodes[0].componentMeta.isModal
+    // ) {
+    //   return this.designer.createLocation({
+    //     target: document.focusNode,
+    //     detail,
+    //     source: `simulator${document.id}`,
+    //     event: e,
+    //   });
+    // }
+
+    if (!children || children.size < 1 || !edge) {
+      return this.designer.createLocation(locationData);
+    }
+
+    let nearRect = null;
+    let nearIndex = 0;
+    let nearNode = null;
+    let nearDistance = null;
+    let minTop = null;
+    let maxBottom = null;
+
+    for (let i = 0, l = children.size; i < l; i++) {
+      const node = children.get(i)!;
+      const index = i;
+      const instances = this.getComponentInstances(node);
+      const inst = instances
+        ? instances.length > 1
+          ? instances.find(
+            (_inst) => this.getClosestNodeInstance(_inst, container.id)?.instance === containerInstance,
+          )
+          : instances[0]
+        : null;
+      const rect = inst
+        ? this.computeComponentInstanceRect(inst, undefined)
+        : null;
+      if (!rect) {
+        continue;
+      }
+
+      const distance = isPointInRect(e as any, rect) ? 0 : distanceToRect(e as any, rect);
+      if (distance === 0) {
+        nearDistance = distance;
+        nearNode = node;
+        nearIndex = index;
+        nearRect = rect;
+        break;
+      }
+
+      // 标记子节点最顶
+      if (minTop === null || rect.top < minTop) {
+        minTop = rect.top;
+      }
+      // 标记子节点最底
+      if (maxBottom === null || rect.bottom > maxBottom) {
+        maxBottom = rect.bottom;
+      }
+
+      if (nearDistance === null || distance < nearDistance) {
+        nearDistance = distance;
+        nearNode = node;
+        nearIndex = index;
+        nearRect = rect;
+      }
+    }
+
+    detail.index = nearIndex;
+    if (nearNode && nearRect) {
+      const el = getRectTarget(nearRect);
+      const inline = el ? isChildInline(el) : false;
+      const row = el ? isRowContainer(el.parentElement!) : false;
+      const vertical = inline || row;
+
+      // TODO: fix type
+      const near: any = {
+        node: nearNode,
+        pos: 'before',
+        align: vertical ? 'V' : 'H',
+      };
+      detail.near = near;
+      if (isNearAfter(e as any, nearRect, vertical)) {
+        near.pos = 'after';
+        detail.index = nearIndex + 1;
+      }
+      if (!row && nearDistance !== 0) {
+        const edgeDistance = distanceToEdge(e as any, edge);
+        if (edgeDistance.distance < nearDistance!) {
+          const { nearAfter } = edgeDistance;
+          if (minTop == null) {
+            minTop = edge.top;
+          }
+          if (maxBottom == null) {
+            maxBottom = edge.bottom;
+          }
+          near.rect = new DOMRect(edge.left, minTop, edge.width, maxBottom - minTop);
+          near.align = 'H';
+          near.pos = nearAfter ? 'after' : 'before';
+          detail.index = nearAfter ? children.size : 0;
+        }
+      }
+    }
+
+    console.log('**************9', locationData);
+
+    return this.designer.createLocation(locationData);
+  }
+
+
+  /**
+   * 查找合适的投放容器
+   */
+   getDropContainer(e: LocateEvent): DropContainer | null {
+    const { target, dragObject } = e;
+    const isAny = isDragAnyObject(dragObject);
+    const document = this.project.currentDocument!;
+    const { currentRoot } = document;
+    let container: Node;
+    let nodeInstance: NodeInstance<ComponentInstance> | undefined;
+
+    if (target) {
+      const ref = this.getNodeInstanceFromElement(target);
+      if (ref?.node) {
+        nodeInstance = ref;
+        container = ref.node;
+      } else if (isAny) {
+        return null;
+      } else {
+        container = currentRoot;
+      }
+    } else if (isAny) {
+      return null;
+    } else {
+      container = currentRoot;
+    }
+    // if (!container.isParental()) {
+    const curNodeInstance = this.getNodeInstanceFromElement(container.instance.parentElement);
+
+    if (curNodeInstance && curNodeInstance.instance) {
+      container = this.currentDocument?.createParentNode(curNodeInstance.instance as HTMLDivElement, curNodeInstance?.nodeId);
+    } else {
+      container = container.parent || currentRoot;
+    }
+    // }
+
+    // TODO: use spec container to accept specialData
+    if (isAny) {
+      // will return locationData
+      return null;
+    }
+
+    // get common parent, avoid drop container contains by dragObject
+    const drillDownExcludes = new Set<Node>();
+    if (isDragNodeObject(dragObject)) {
+      const { nodes } = dragObject;
+      let i = nodes.length;
+      let p: any = container;
+      while (i-- > 0) {
+        if (contains(nodes[i], p)) {
+          p = nodes[i].parent;
+        }
+      }
+      if (p !== container) {
+        container = p || document.focusNode;
+        drillDownExcludes.add(container);
+      }
+    }
+
+
+    let instance: any;
+    if (nodeInstance) {
+      if (nodeInstance.node === container) {
+        instance = nodeInstance.instance;
+      } else {
+        instance = this.getClosestNodeInstance(
+          nodeInstance.instance as any,
+          container.id,
+        )?.instance;
+      }
+    } else {
+      instance = this.getComponentInstances(container)?.[0];
+    }
+
+    let dropContainer: DropContainer = {
+      container: container as any,
+      instance,
+    };
+
+    let res: any;
+    let upward: DropContainer | null = null;
+    while (container) {
+      res = this.handleAccept(dropContainer, e);
+      // if (isLocationData(res)) {
+      //   return res;
+      // }
+      if (res === true) {
+        return dropContainer;
+      }
+      if (!res) {
+        drillDownExcludes.add(container);
+        if (upward) {
+          dropContainer = upward;
+          container = dropContainer.container;
+          upward = null;
+        } else if (container.parent) {
+          container = container.parent;
+          instance = this.getClosestNodeInstance(dropContainer.instance, container.id)?.instance;
+          dropContainer = {
+            container: container as ParentalNode,
+            instance,
+          };
+        } else {
+          return null;
+        }
+      } /* else if (res === DRILL_DOWN) {
+        if (!upward) {
+          container = container.parent;
+          instance = this.getClosestNodeInstance(dropContainer.instance, container.id)?.instance;
+          upward = {
+            container,
+            instance
+          };
+        }
+        dropContainer = this.getNearByContainer(dropContainer, drillDownExcludes, e);
+        if (!dropContainer) {
+          dropContainer = upward;
+          upward = null;
+        }
+      } else if (isNode(res)) {
+        // TODO:
+      } */
+    }
+    return null;
+  }
+
+  /**
+   * 控制接受
+   */
+   handleAccept({ container, instance }: DropContainer, e: LocateEvent): boolean {
+    const { dragObject } = e;
+    const document = this.currentDocument!;
+    const focusNode = document.focusNode;
+    if (isRootNode(container)) {
+      return document.checkDropTarget(focusNode, dragObject as any);
+    }
+
+    // const meta = (container as Node).componentMeta;
+
+    // FIXME: get containerInstance for accept logic use
+    // const acceptable: boolean = this.isAcceptable(container);
+    // if (!meta.isContainer && !acceptable) {
+    //   return false;
+    // }
+
+    // first use accept
+    // if (acceptable) {
+      /*
+      const view: any = this.document.getView(container);
+      if (view && '$accept' in view) {
+        if (view.$accept === false) {
+          return false;
+        }
+        if (view.$accept === AT_CHILD || view.$accept === '@CHILD') {
+          return AT_CHILD;
+        }
+        if (typeof view.$accept === 'function') {
+          const ret = view.$accept(container, e);
+          if (ret || ret === false) {
+            return ret;
+          }
+        }
+      }
+      if (proto.acceptable) {
+        const ret = proto.accept(container, e);
+        if (ret || ret === false) {
+          return ret;
+        }
+      }
+      */
+    // }
+
+    // check nesting
+    return document.checkNesting(container, dragObject as any);
+  }
+
+  isAcceptable(/* container: ParentalNode */): boolean {
+    return false;
+    /*
+    const meta = container.componentMeta;
+    const instance: any = this.document.getView(container);
+    if (instance && '$accept' in instance) {
+      return true;
+    }
+    return meta.acceptable;
+    */
+  }
 
     postEvent(evtName: string, evtData: any): void {
         throw new Error('Method not implemented.');
@@ -490,6 +923,10 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     }
     purge(): void {
         throw new Error('Method not implemented.');
+    }
+
+    mountViewport(viewport: HTMLElement | null) {
+      this.viewport.mount(viewport);
     }
 }
 
@@ -546,3 +983,49 @@ function getMatched(elements: Array<Element | Text>, selector: string): Element 
 //       return null;
 //     }
 // }
+
+function isHTMLTag(name: string) {
+  return /^[a-z]\w*$/.test(name);
+}
+
+function isPointInRect(point: CanvasPoint, rect: Rect) {
+  return (
+    point.canvasY >= rect.top &&
+    point.canvasY <= rect.bottom &&
+    point.canvasX >= rect.left &&
+    point.canvasX <= rect.right
+  );
+}
+
+function distanceToRect(point: CanvasPoint, rect: Rect) {
+  let minX = Math.min(Math.abs(point.canvasX - rect.left), Math.abs(point.canvasX - rect.right));
+  let minY = Math.min(Math.abs(point.canvasY - rect.top), Math.abs(point.canvasY - rect.bottom));
+  if (point.canvasX >= rect.left && point.canvasX <= rect.right) {
+    minX = 0;
+  }
+  if (point.canvasY >= rect.top && point.canvasY <= rect.bottom) {
+    minY = 0;
+  }
+
+  return Math.sqrt(minX ** 2 + minY ** 2);
+}
+
+function distanceToEdge(point: CanvasPoint, rect: Rect) {
+  const distanceTop = Math.abs(point.canvasY - rect.top);
+  const distanceBottom = Math.abs(point.canvasY - rect.bottom);
+
+  return {
+    distance: Math.min(distanceTop, distanceBottom),
+    nearAfter: distanceBottom < distanceTop,
+  };
+}
+
+function isNearAfter(point: CanvasPoint, rect: Rect, inline: boolean) {
+  if (inline) {
+    return (
+      Math.abs(point.canvasX - rect.left) + Math.abs(point.canvasY - rect.top) >
+      Math.abs(point.canvasX - rect.right) + Math.abs(point.canvasY - rect.bottom)
+    );
+  }
+  return Math.abs(point.canvasY - rect.top) > Math.abs(point.canvasY - rect.bottom);
+}

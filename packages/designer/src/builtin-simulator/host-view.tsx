@@ -49,8 +49,7 @@ class Canvas extends Component<{ host: BuiltinSimulatorHost }> {
 
     return (
       <div className={className} style={canvas}>
-        {/* ref={(elmt) => sim.mountViewport(elmt)} */}
-        <div className="lc-simulator-canvas-viewport" style={viewport}>
+        <div className="lc-simulator-canvas-viewport" style={viewport} ref={(elmt) => sim.mountViewport(elmt)}>
           <BemTools host={sim} />
           <Content host={sim} />
         </div>

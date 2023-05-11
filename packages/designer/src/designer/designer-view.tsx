@@ -4,6 +4,8 @@ import { ProjectView } from '../project';
 
 import { Designer, DesignerProps } from './designer';
 import './designer.less';
+import BuiltinDragGhostComponent from './drag-ghost';
+
 
 export class DesignerView extends Component<DesignerProps & {
     designer?: Designer;
@@ -48,8 +50,10 @@ export class DesignerView extends Component<DesignerProps & {
 
     render() {
         const { className, style, dragGhostComponent } = this.props;
+        const DragGhost = dragGhostComponent || BuiltinDragGhostComponent;
         return (
           <div className={classNames('lc-designer', className)} style={style}>
+            <DragGhost designer={this.designer} />
             <ProjectView designer={this.designer} />
           </div>
         );

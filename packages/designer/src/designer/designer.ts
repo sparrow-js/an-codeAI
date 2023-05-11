@@ -15,7 +15,7 @@ import { megreAssets, AssetsJson } from '@alilc/lowcode-utils';
 import { Project } from '../project';
 import { DocumentModel } from '../document';
 import { INodeSelector, Component } from '../simulator';
-// import { Scroller, IScrollable } from './scroller';
+import { Scroller, IScrollable } from './scroller';
 import { Dragon, isDragNodeObject, isDragNodeDataObject, LocateEvent, DragObject } from './dragon';
 // import { ActiveTracker } from './active-tracker';
 import { Detecting } from './detecting';
@@ -239,14 +239,32 @@ export class Designer {
   }
 
   /**
+     * 创建插入位置，考虑放到 dragon 中
+     */
+  createLocation(locationData: LocationData): DropLocation {
+    const loc = new DropLocation(locationData);
+    if (this._dropLocation && this._dropLocation.document !== loc.document) {
+      this._dropLocation.document.internalSetDropLocation(null);
+    }
+    this._dropLocation = loc;
+    this.postEvent('dropLocation.change', loc);
+    loc.document.internalSetDropLocation(loc);
+    return loc;
+  }
+
+  /**
    * 清除插入位置
    */
-   clearLocation() {
+  clearLocation() {
     if (this._dropLocation) {
       this._dropLocation.document.internalSetDropLocation(null);
     }
     this.postEvent('dropLocation.change', undefined);
     this._dropLocation = undefined;
+  }
+
+  createScroller(scrollable: IScrollable) {
+    return new Scroller(scrollable);
   }
 
   // eslint-disable-next-line max-len

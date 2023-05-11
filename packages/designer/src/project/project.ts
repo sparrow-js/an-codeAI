@@ -232,8 +232,7 @@ export class Project {
   private documentsMap = new Map<string, DocumentModel>();
 
   getDocument(id: string): DocumentModel | null {
-    // 此处不能使用 this.documentsMap.get(id)，因为在乐高 rollback 场景，document.id 会被改成其他值
-    return this.documents.find((doc) => doc.id === id) || null;
+    return this.documents.find((doc) => doc.id === id) || this.documents[0] || null;
   }
 
 //   getDocumentByFileName(fileName: string): DocumentModel | null {

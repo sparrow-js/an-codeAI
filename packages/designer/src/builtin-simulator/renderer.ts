@@ -173,9 +173,9 @@ function getClosestNodeInstance(from: ReactInstance, specId?: string): NodeInsta
       }
     }
     // get fiberNode from element
-    if (el[REACT_KEY]) {
-      return getNodeInstance(el[REACT_KEY], specId);
-    }
+    // if (el[REACT_KEY]) {
+    //   return getNodeInstance(el[REACT_KEY], specId);
+    // }
     el = el.parentElement;
   }
   return null;

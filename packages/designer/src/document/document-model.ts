@@ -4,7 +4,7 @@ import { EventEmitter } from 'events';
 import { Project } from '../project';
 import { ISimulatorHost } from '../simulator';
 // import { ComponentMeta } from '../component-meta';
-import { Node } from './node/node';
+import { Node, ParentalNode, RootNode, isNode } from './node/node';
 import { Selection } from './selection';
 // import { History } from './history';
 // import { TransformStage, ModalNodesManager } from './node';
@@ -21,6 +21,8 @@ export type GetDataType<T, NodeType> = T extends undefined
   : T;
 
 export class DocumentModel {
+  rootNode: RootNode | null;
+
   /**
    * 文档编号
    */
@@ -54,6 +56,8 @@ export class DocumentModel {
   private emitter: EventEmitter;
 
   private rootNodeVisitorMap: { [visitorName: string]: any } = {};
+
+  private _modalNode?: ParentalNode;
 
   /**
    * @deprecated
@@ -94,11 +98,47 @@ export class DocumentModel {
     return this._nodesMap;
   }
 
+  get modalNode() {
+    return this._modalNode;
+  }
+
+  @obx.ref private _drillDownNode: Node | null = null;
+
+  drillDown(node: Node | null) {
+    this._drillDownNode = node;
+  }
+
+  get focusNode() {
+    if (this._drillDownNode) {
+      return this._drillDownNode;
+    }
+    const selector = this.designer.editor?.get<((rootNode: RootNode) => Node) | null>('focusNodeSelector');
+    if (selector && typeof selector === 'function') {
+      return selector(this.rootNode!);
+    }
+    return this.rootNode;
+  }
+
+  get currentRoot() {
+    return this.modalNode || this.focusNode;
+  }
+
   constructor(project: Project, schema?: RootSchema) {
     makeObservable(this);
     this.project = project;
     this.designer = this.project?.designer;
     this.emitter = new EventEmitter();
+    // 这里需要搬走
+    setTimeout(() => {
+      this.rootNode = this.createNode<RootNode>(
+        schema || {
+          componentName: 'Page',
+          id: 'root',
+          fileName: '',
+          instance: document.getElementById('root'),
+        },
+      );
+    }, 2000);
   }
 
   open(): DocumentModel {
@@ -119,6 +159,14 @@ export class DocumentModel {
     return node as any;
   }
 
+  createParentNode(instance: HTMLElement, id: string) {
+    return this.createNode({
+      id,
+      componentName: '',
+      instance,
+    });
+  }
+
 
   /**
    * 根据 id 获取节点
@@ -133,6 +181,49 @@ export class DocumentModel {
    */
     internalSetDropLocation(loc: DropLocation | null) {
       this._dropLocation = loc;
+    }
+
+    checkDropTarget(dropTarget: ParentalNode, dragObject: DragNodeObject | DragNodeDataObject): boolean {
+      let items: Array<Node | NodeSchema>;
+      if (isDragNodeDataObject(dragObject)) {
+        items = Array.isArray(dragObject.data) ? dragObject.data : [dragObject.data];
+      } else {
+        items = dragObject.nodes;
+      }
+      return items.every((item) => this.checkNestingUp(dropTarget, item));
+    }
+
+    /**
+     * 检查对象对父级的要求，涉及配置 parentWhitelist
+     */
+    checkNestingUp(parent: ParentalNode, obj: NodeSchema | Node): boolean {
+      // if (isNode(obj) || isNodeSchema(obj)) {
+      //   const config = isNode(obj) ? obj.componentMeta : this.getComponentMeta(obj.componentName);
+      //   if (config) {
+      //     return config.checkNestingUp(obj, parent);
+      //   }
+      // }
+
+      return true;
+    }
+
+    checkNesting(dropTarget: ParentalNode, dragObject: DragNodeObject | DragNodeDataObject): boolean {
+      let items: Array<Node | NodeSchema>;
+      if (isDragNodeDataObject(dragObject)) {
+        items = Array.isArray(dragObject.data) ? dragObject.data : [dragObject.data];
+      } else {
+        items = dragObject.nodes;
+      }
+      return items.every((item) => this.checkNestingDown(dropTarget, item));
+    }
+
+    /**
+     * 检查投放位置对子级的要求，涉及配置 childWhitelist
+     */
+    checkNestingDown(parent: ParentalNode, obj: NodeSchema | Node): boolean {
+      // const config = parent.componentMeta;
+      // return config.checkNestingDown(parent, obj) &&
+      return this.checkNestingUp(parent, obj);
     }
 }
 

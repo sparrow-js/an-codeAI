@@ -210,7 +210,7 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
 
     setupEvents() {
         this.setupDragAndClick();
-        // this.setupDetecting();
+        this.setupDetecting();
     }
 
     setupDragAndClick() {
@@ -442,10 +442,18 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         return this.renderer?.getClosestNodeInstance(from, specId) || null;
     }
 
-    computeRect(node: Node): DOMRect | null {
-        throw new Error('Method not implemented.');
+    /**
+     * @see ISimulator
+     */
+    computeRect(node: Node): Rect | null {
+      const instances = this.getComponentInstances(node);
+      if (!instances) {
+        return null;
+      }
+      return this.computeComponentInstanceRect(instances[0], undefined);
     }
-    computeComponentInstanceRect(instance: ComponentInstance, selector?: string | undefined): DOMRect | null {
+
+    computeComponentInstanceRect(instance: ComponentInstance, selector?: string | undefined): Rect | null {
         const renderer = this.renderer!;
         const elements = this.findDOMNodes(instance, selector);
         if (!elements) {
@@ -720,9 +728,6 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         }
       }
     }
-
-    console.log('**************9', locationData);
-
     return this.designer.createLocation(locationData);
   }
 

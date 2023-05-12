@@ -183,6 +183,13 @@ export class DocumentModel {
       this._dropLocation = loc;
     }
 
+    /**
+     * 投放插入位置标记
+     */
+    get dropLocation() {
+      return this._dropLocation;
+    }
+
     checkDropTarget(dropTarget: ParentalNode, dragObject: DragNodeObject | DragNodeDataObject): boolean {
       let items: Array<Node | NodeSchema>;
       if (isDragNodeDataObject(dragObject)) {

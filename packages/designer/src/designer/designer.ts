@@ -84,6 +84,98 @@ export class Designer {
 
       let startTime: any;
       let src = '';
+      this.dragon.onDragstart((e) => {
+        startTime = Date.now() / 1000;
+        this.detecting.enable = false;
+        const { dragObject } = e;
+        if (isDragNodeObject(dragObject)) {
+          const node = dragObject.nodes[0]?.parent;
+          const npm = node?.componentMeta?.npm;
+          src =
+            [npm?.package, npm?.componentName].filter((item) => !!item).join('-') ||
+            node?.componentMeta?.componentName ||
+            '';
+          if (dragObject.nodes.length === 1) {
+            if (dragObject.nodes[0].parent) {
+              // ensure current selecting
+              dragObject.nodes[0].select();
+            } else {
+              this.currentSelection?.clear();
+            }
+          }
+        } else {
+          this.currentSelection?.clear();
+        }
+        if (this.props?.onDragstart) {
+          this.props.onDragstart(e);
+        }
+        this.postEvent('dragstart', e);
+      });
+
+      this.dragon.onDrag((e) => {
+        if (this.props?.onDrag) {
+          this.props.onDrag(e);
+        }
+        this.postEvent('drag', e);
+      });
+
+      this.dragon.onDragend((e) => {
+        const { dragObject, copy } = e;
+        const loc = this._dropLocation;
+        if (loc) {
+          if (isLocationChildrenDetail(loc.detail) && loc.detail.valid !== false) {
+            let nodes: Node[] | undefined;
+            if (isDragNodeObject(dragObject)) {
+              console.log('*******', loc.target, [...dragObject.nodes], loc.detail.index, copy);
+            } else if (isDragNodeDataObject(dragObject)) {
+              // process nodeData
+              const nodeData = Array.isArray(dragObject.data) ? dragObject.data : [dragObject.data];
+              const isNotNodeSchema = nodeData.find((item) => !isNodeSchema(item));
+              if (isNotNodeSchema) {
+                return;
+              }
+              console.log('*******', loc.target, nodeData, loc.detail.index);
+            }
+            if (nodes) {
+              // loc.document.selection.selectAll(nodes.map((o) => o.id));
+              // setTimeout(() => this.activeTracker.track(nodes![0]), 10);
+              // const endTime: any = Date.now() / 1000;
+              // const parent = nodes[0]?.parent;
+              // const npm = parent?.componentMeta?.npm;
+              // const dest =
+              //   [npm?.package, npm?.componentName].filter((item) => !!item).join('-') ||
+              //   parent?.componentMeta?.componentName ||
+              //   '';
+              // eslint-disable-next-line no-unused-expressions
+              // this.postEvent('drag', {
+              //   time: (endTime - startTime).toFixed(2),
+              //   selected: nodes
+              //     ?.map((n) => {
+              //       if (!n) {
+              //         return;
+              //       }
+              //       // eslint-disable-next-line no-shadow
+              //       const npm = n?.componentMeta?.npm;
+              //       return (
+              //         [npm?.package, npm?.componentName].filter((item) => !!item).join('-') ||
+              //         n?.componentMeta?.componentName
+              //       );
+              //     })
+              //     .join('&'),
+              //   align: loc?.detail?.near?.align || '',
+              //   pos: loc?.detail?.near?.pos || '',
+              //   src,
+              //   dest,
+              // });
+            }
+          }
+        }
+        if (this.props?.onDragend) {
+          this.props.onDragend(e, loc);
+        }
+        this.postEvent('dragend', e, loc);
+        this.detecting.enable = true;
+      });
 
       let historyDispose: undefined | (() => void);
       const setupHistory = () => {

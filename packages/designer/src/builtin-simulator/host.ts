@@ -196,10 +196,14 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
             return;
         }
         this._iframe = iframe;
-        const renderer = await createSimulator(this, iframe);
-        const simulatorRenderer = new SimulatorRendererContainer()
-        simulatorRenderer.dispose();
         iframe.addEventListener('load', async () => {
+            try {
+              createSimulator(this, iframe);
+            } catch (e) {
+              console.error(e);
+            }
+          const simulatorRenderer = new SimulatorRendererContainer();
+          simulatorRenderer.dispose();
             this._contentWindow = iframe.contentWindow!;
             this._contentDocument = this._contentWindow.document;
             // wait 准备 iframe 内容、依赖库注入

@@ -1,7 +1,7 @@
 /* eslint-disable no-multi-assign */
 import { Editor, EngineConfig, engineConfig, Hotkey, hotkey } from '@firefly/auto-editor-core';
 import { Designer, ILowCodePluginManager, Project } from '@firefly/auto-designer';
-import { Skeleton as InnerSkeleton } from '@firefly/auto-editor-skeleton';
+import { Skeleton } from '@firefly/auto-editor-skeleton';
 // import {
 //   Hotkey,
 //   Project,
@@ -29,7 +29,7 @@ export default class PluginContext implements ILowCodePluginContext {
 //   private readonly [skeletonSymbol]: InnerSkeleton;
   hotkey: Hotkey;
   project: Project;
-//   skeleton: Skeleton;
+  skeleton: Skeleton;
   logger: Logger;
 //   setters: Setters;
 //   material: Material;
@@ -41,13 +41,13 @@ export default class PluginContext implements ILowCodePluginContext {
   constructor(plugins: ILowCodePluginManager, options: IPluginContextOptions) {
     const editor = plugins.editor;
     const designer = editor.get('designer')!;
-    // const skeleton = this[skeletonSymbol] = editor.get('skeleton')!;
+    const skeleton = editor.get('skeleton')!;
 
     const { pluginName = 'anonymous' } = options;
     const project = designer?.project;
     this.hotkey = hotkey;
     this.project = project;
-    // this.skeleton = new Skeleton(skeleton);
+    this.skeleton = skeleton;
     // this.setters = new Setters();
     // this.material = new Material(editor);
     this.config = engineConfig;

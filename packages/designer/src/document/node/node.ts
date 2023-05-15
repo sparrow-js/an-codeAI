@@ -63,7 +63,7 @@ export function isNode(node: any): node is Node {
     return node && node.isNode;
 }
 
-const NODE_ID = 'locatorjsId';
+export const NODE_ID = 'locatorjsId';
 
 export class Node<Schema extends NodeSchema = NodeSchema> {
     readonly id: string;

@@ -310,7 +310,7 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     }
     const { docId } = nodeIntance;
     const doc = this.project.getDocument(docId)!;
-    const node = doc.getNode(nodeIntance.nodeId);
+    const node = doc.getNode(nodeIntance.nodeId, target);
     return {
       ...nodeIntance,
       node,
@@ -575,7 +575,6 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
 
     //   return canMove;
     // });
-
     if (nodes && (!operationalNodes || operationalNodes.length === 0)) {
       return;
     }

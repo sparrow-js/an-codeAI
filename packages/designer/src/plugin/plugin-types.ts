@@ -1,5 +1,6 @@
 import { Hotkey } from '@firefly/auto-editor-core';
 import { Project } from '@firefly/auto-designer';
+import { Skeleton } from '@firefly/auto-editor-skeleton';
 export type PreferenceValueType = string | number | boolean;
 
 export interface ILowCodePluginPreferenceDeclarationProperty {
@@ -65,7 +66,7 @@ export interface IPluginPreferenceMananger {
 }
 
 export interface ILowCodePluginContext {
-    // skeleton: any;
+    skeleton: Skeleton;
     hotkey: Hotkey;
     logger: any;
     // plugins: ILowCodePluginManager;

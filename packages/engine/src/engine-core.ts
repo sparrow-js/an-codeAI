@@ -16,7 +16,7 @@ import DesignerPlugin from '@firefly/auto-plugin-designer';
 import LocatorPlugin from '@firefly/auto-plugin-locator';
 import { IconOutline } from './IconOutline';
 import { OutlinePane } from './OutlinePane';
-
+import ComponentPane from '@firefly/auto-plugin-components-pane';
 
 const editor = new Editor();
 globalContext.register(editor, Editor);
@@ -28,6 +28,8 @@ editor.set('designer' as any, designer);
 const innerSkeleton = new InnerSkeleton(editor);
 const skeletonCabin = getSkeletonCabin(innerSkeleton);
 const { Workbench } = skeletonCabin;
+editor.set('skeleton' as any, innerSkeleton);
+
 
 const plugins = new AutoCodePluginManager(editor).toProxy();
 
@@ -76,6 +78,39 @@ let engineInited = false;
   };
   defaultPanelRegistry.pluginName = '___default_panel___';
   await plugins.register(defaultPanelRegistry);
+  // 组件面板
+  const componentPanelRegistry = (ctx: ILowCodePluginContext) => {
+    return {
+      init() {
+        innerSkeleton.add({
+            area: 'leftArea',
+            type: 'PanelDock',
+            name: 'componentsPane',
+            content: {
+              name: 'component-pane',
+              props: {
+                icon: IconOutline,
+                description: null,
+                editor,
+              },
+              content: ComponentPane,
+            },
+            contentProps: {
+              editor,
+            },
+            props: {
+              align: 'top',
+              icon: 'zujianku',
+              description: '组件库',
+            },
+          });
+      },
+    };
+  };
+
+  componentPanelRegistry.pluginName = '___component_panel___';
+
+  await plugins.register(componentPanelRegistry);
 
   const editorInit = (ctx: ILowCodePluginContext) => {
     return {

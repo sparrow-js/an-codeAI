@@ -217,6 +217,32 @@ function isDragEvent(e: any): e is DragEvent {
     }
 
   /**
+   * Quick listen a shell(container element) drag behavior
+   * @param shell container element
+   * @param boost boost got a drag object
+   */
+   from(shell: Element, boost: (e: MouseEvent) => DragObject | null) {
+    const mousedown = (e: MouseEvent) => {
+      // ESC or RightClick
+      if (e.which === 3 || e.button === 2) {
+        return;
+      }
+
+      // Get a new node to be dragged
+      const dragObject = boost(e);
+      if (!dragObject) {
+        return;
+      }
+
+      this.boost(dragObject, e);
+    };
+    shell.addEventListener('mousedown', mousedown as any);
+    return () => {
+      shell.removeEventListener('mousedown', mousedown as any);
+    };
+  }
+
+  /**
    * boost your dragObject for dragging(flying) 发射拖拽对象
    *
    * @param dragObject 拖拽对象
@@ -334,14 +360,17 @@ function isDragEvent(e: any): e is DragEvent {
       }
       if (sensor) {
         sensor.fixEvent(locateEvent);
+        console.log('***********3');
         sensor.locate(locateEvent);
       } else {
+        console.log('***********1');
         designer.clearLocation();
       }
       this.emitter.emit('drag', locateEvent);
     };
 
     const dragstart = () => {
+      console.log('***********5');
       this._dragging = true;
       setShaken(boostEvent);
       const locateEvent = createLocateEvent(boostEvent);
@@ -367,11 +396,13 @@ function isDragEvent(e: any): e is DragEvent {
       if (isBoostFromDragAPI) {
         e.preventDefault();
       }
+
       if (this._dragging) {
         // process dragging
         drag(e);
         return;
       }
+      console.log('************8');
 
       // first move check is shaken
       if (isShaken(boostEvent, e)) {
@@ -440,6 +471,7 @@ function isDragEvent(e: any): e is DragEvent {
       let exception;
       if (this._dragging) {
         this._dragging = false;
+        console.log('*********6');
         try {
           this.emitter.emit('dragend', { dragObject, copy });
         } catch (ex) {

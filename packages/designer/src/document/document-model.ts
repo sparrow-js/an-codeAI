@@ -4,7 +4,7 @@ import { EventEmitter } from 'events';
 import { Project } from '../project';
 import { ISimulatorHost } from '../simulator';
 // import { ComponentMeta } from '../component-meta';
-import { Node, ParentalNode, RootNode, isNode } from './node/node';
+import { Node, ParentalNode, RootNode, isNode, NODE_ID } from './node/node';
 import { Selection } from './selection';
 // import { History } from './history';
 // import { TransformStage, ModalNodesManager } from './node';
@@ -171,8 +171,20 @@ export class DocumentModel {
   /**
    * 根据 id 获取节点
    */
-   getNode(id: string): Node | null {
-    return this._nodesMap.get(id) || null;
+   getNode(id: string, instance?: any): Node | null {
+   let node = this._nodesMap.get(id);
+    if (node) {
+      return node;
+    }
+    if (instance) {
+      node = this.createNode({
+        id: instance.dataset[NODE_ID],
+        componentName: instance.tagName,
+        instance,
+      });
+      return node;
+    }
+    return null;
   }
   @obx.ref private _dropLocation: DropLocation | null = null;
 

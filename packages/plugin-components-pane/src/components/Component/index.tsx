@@ -1,6 +1,7 @@
 
 import React from 'react';
 import classNames from 'classnames';
+import './index.less';
 
 interface Props {
     data: any;

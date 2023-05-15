@@ -56,23 +56,23 @@ let engineInited = false;
           content: DesignerPlugin,
         });
 
-        innerSkeleton.add({
-          area: 'leftArea',
-          name: 'outlinePane',
-          type: 'PanelDock',
-          content: {
-            name: 'outline-pane',
-            props: {
-              icon: IconOutline,
-              description: null,
-            },
-            content: OutlinePane,
-          },
-          panelProps: {
-            area: 'leftFloatArea',
-            keepVisibleWhileDragging: true,
-          },
-        });
+        // innerSkeleton.add({
+        //   area: 'leftArea',
+        //   name: 'outlinePane',
+        //   type: 'PanelDock',
+        //   content: {
+        //     name: 'outline-pane',
+        //     props: {
+        //       icon: IconOutline,
+        //       description: null,
+        //     },
+        //     content: OutlinePane,
+        //   },
+        //   panelProps: {
+        //     area: 'leftFloatArea',
+        //     keepVisibleWhileDragging: true,
+        //   },
+        // });
       },
     };
   };
@@ -98,10 +98,9 @@ let engineInited = false;
             contentProps: {
               editor,
             },
-            props: {
-              align: 'top',
-              icon: 'zujianku',
-              description: '组件库',
+            panelProps: {
+              area: 'leftFloatArea',
+              keepVisibleWhileDragging: true,
             },
           });
       },
@@ -132,7 +131,6 @@ let engineInited = false;
   };
   editorInit.pluginName = 'editorInit';
   await plugins.register(editorInit);
-
 })();
 
 export async function init(

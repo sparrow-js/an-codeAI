@@ -360,17 +360,14 @@ function isDragEvent(e: any): e is DragEvent {
       }
       if (sensor) {
         sensor.fixEvent(locateEvent);
-        console.log('***********3');
         sensor.locate(locateEvent);
       } else {
-        console.log('***********1');
         designer.clearLocation();
       }
       this.emitter.emit('drag', locateEvent);
     };
 
     const dragstart = () => {
-      console.log('***********5');
       this._dragging = true;
       setShaken(boostEvent);
       const locateEvent = createLocateEvent(boostEvent);
@@ -402,7 +399,6 @@ function isDragEvent(e: any): e is DragEvent {
         drag(e);
         return;
       }
-      console.log('************8');
 
       // first move check is shaken
       if (isShaken(boostEvent, e)) {
@@ -471,7 +467,6 @@ function isDragEvent(e: any): e is DragEvent {
       let exception;
       if (this._dragging) {
         this._dragging = false;
-        console.log('*********6');
         try {
           this.emitter.emit('dragend', { dragObject, copy });
         } catch (ex) {

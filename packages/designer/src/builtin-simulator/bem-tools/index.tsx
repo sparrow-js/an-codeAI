@@ -14,9 +14,13 @@ import './borders.less';
 export class BemTools extends Component<{ host: BuiltinSimulatorHost }> {
     render() {
         const { host } = this.props;
-
+        const { designMode } = host;
+        const { scrollX, scrollY, scale } = host.viewport;
+        if (designMode === 'live') {
+          return null;
+        }
         return (
-          <div className="lc-bem-tools">
+          <div className="lc-bem-tools" style={{ transform: `translate(${-scrollX * scale}px,${-scrollY * scale}px)` }}>
             <InsertionView key="insertion" host={host} />
             <BorderSelecting key="selecting" host={host} />
             <BorderDetecting host={host} />

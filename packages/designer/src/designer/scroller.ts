@@ -69,7 +69,6 @@ export class Scroller {
 
   scrollTo(options: { left?: number; top?: number }) {
     this.cancel();
-
     const { scrollTarget } = this;
     if (!scrollTarget) {
       return;
@@ -122,12 +121,13 @@ export class Scroller {
 
   scrolling(point: { globalX: number; globalY: number }) {
     this.cancel();
-
     const { bounds, scale = 1 } = this.scrollable;
     const { scrollTarget } = this;
+
     if (!scrollTarget || !bounds) {
       return;
     }
+
 
     const x = point.globalX;
     const y = point.globalY;

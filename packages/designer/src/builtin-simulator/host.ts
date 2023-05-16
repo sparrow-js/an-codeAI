@@ -209,6 +209,7 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
             // wait 准备 iframe 内容、依赖库注入
             hotkey.mount(iframe.contentWindow as Window);
             this.setupEvents();
+            this.viewport.setScrollTarget(this._contentWindow);
         });
     }
 
@@ -220,6 +221,10 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     setupDragAndClick() {
         const { designer } = this;
         const doc = this.contentDocument!;
+        doc.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        });
         doc.addEventListener(
             'mousedown', (downEvent: MouseEvent) => {
                 const documentModel = this.project.currentDocument;

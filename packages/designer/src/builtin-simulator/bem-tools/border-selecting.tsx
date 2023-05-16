@@ -82,7 +82,6 @@ export class BorderSelectingForNode extends Component<{ host: BuiltinSimulatorHo
 
 @observer
 export class BorderSelecting extends Component<{ host: BuiltinSimulatorHost }> {
-
   get host(): BuiltinSimulatorHost {
     return this.props.host;
   }

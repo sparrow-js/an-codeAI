@@ -54,15 +54,15 @@ export class BorderDetecting extends Component<{ host: BuiltinSimulatorHost }> {
     }
 
     @computed get scale() {
-        return 1;
+      return this.props.host.viewport.scale;
     }
 
     @computed get scrollX() {
-        return 0;
+      return this.props.host.viewport.scrollX;
     }
 
     @computed get scrollY() {
-        return 0;
+      return this.props.host.viewport.scrollY;
     }
 
     render() {

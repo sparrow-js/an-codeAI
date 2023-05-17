@@ -60,13 +60,13 @@ export default class ComponentPane extends React.Component<ComponentPaneProps, C
           <div ref={this.registerAdditive}>
             <Component
               data={{
-                title: 'title',
+                title: 'Text',
                 icon: '',
                 snippets: [{
-                  id: 'title',
+                  id: 'Text',
                 }],
               }}
-              key={'title'}
+              key={'Text'}
             />
             <Component
               data={{

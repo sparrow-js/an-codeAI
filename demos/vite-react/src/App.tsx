@@ -1,21 +1,17 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import fireflyLogo from './assets/firefly.svg'
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
-
   return (
     <div className="App">
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
         <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
+          <img src={fireflyLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>辅助前端开发</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
@@ -25,10 +21,10 @@ function App() {
         </p>
       </div>
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+        本项目提供辅助前端开发功能，让普通的源码react、vue项目可以编辑，陆续会接入chatGPT，探索生成式落实到前端的方案，<br/>本项目是在lowcode-engine基础上做的修改，如果想了解原理可先行看lowcode-engine文档
       </p>
     </div>
+    
   )
 }
-
 export default App

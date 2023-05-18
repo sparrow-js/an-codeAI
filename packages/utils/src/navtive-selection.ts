@@ -12,4 +12,5 @@ document.addEventListener('dragstart', preventSelection, true);
 
 export function setNativeSelection(enableFlag: boolean) {
   nativeSelectionEnabled = enableFlag;
+  console.t('***')
 }

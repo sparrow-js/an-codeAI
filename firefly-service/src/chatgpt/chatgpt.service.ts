@@ -1,26 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Configuration, OpenAIApi } from 'openai';
 
-function generatePrompt(animal) {
-  const capitalizedAnimal =
-    animal[0].toUpperCase() + animal.slice(1).toLowerCase();
-  return `Suggest three names for an animal that is a superhero.
-  
-  Animal: Cat
-  Names: Captain Sharpclaw, Agent Fluffball, The Incredible Feline
-  Animal: Dog
-  Names: Ruff the Protector, Wonder Canine, Sir Barks-a-Lot
-  Animal: ${capitalizedAnimal}
-  Names:`;
-}
-
 @Injectable()
 export class ChatgptService {
   openai: any;
   configuration: any;
-  connect(): any {
+  connect(id: string): any {
     this.configuration = new Configuration({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: process.env.OPENAI_API_KEY || id,
     });
     this.openai = new OpenAIApi(this.configuration);
     return {
@@ -28,7 +15,7 @@ export class ChatgptService {
     };
   }
 
-  async generate() {
+  async generate(text: string) {
     const { configuration, openai } = this;
     if (!configuration.apiKey) {
       return {
@@ -51,7 +38,7 @@ export class ChatgptService {
     try {
       const completion = await openai.createCompletion({
         model: 'text-davinci-003',
-        prompt: '请帮我推荐几本js的书籍',
+        prompt: text,
         temperature: 0.6,
       });
       console.log(completion.data);

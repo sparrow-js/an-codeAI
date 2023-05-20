@@ -61,7 +61,7 @@ export default class ComponentPane extends React.Component<ComponentPaneProps, C
             <Component
               data={{
                 title: 'Text',
-                icon: '',
+                icon: 'https://img.alicdn.com/imgextra/i3/O1CN01n5wpxc1bi862KuXFz_!!6000000003498-55-tps-50-50.svg',
                 snippets: [{
                   id: 'Text',
                 }],
@@ -71,7 +71,7 @@ export default class ComponentPane extends React.Component<ComponentPaneProps, C
             <Component
               data={{
                 title: 'img',
-                icon: '',
+                icon: 'https://img.alicdn.com/imgextra/i3/O1CN01tnhXhk1GUIFhsXwzA_!!6000000000625-55-tps-56-56.svg',
                 snippets: [{
                   id: 'img',
                 }],

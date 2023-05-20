@@ -15,8 +15,10 @@ import getSkeletonCabin from './modules/skeleton-cabin';
 import DesignerPlugin from '@firefly/auto-plugin-designer';
 import LocatorPlugin from '@firefly/auto-plugin-locator';
 import { IconOutline } from './IconOutline';
+import { IconChatgpt } from './IconChatgpt';
 import { OutlinePane } from './OutlinePane';
 import ComponentPane from '@firefly/auto-plugin-components-pane';
+import ChatgptPane from '@firefly/auto-plugin-chatgpt';
 
 const editor = new Editor();
 globalContext.register(editor, Editor);
@@ -110,6 +112,39 @@ let engineInited = false;
   componentPanelRegistry.pluginName = '___component_panel___';
 
   await plugins.register(componentPanelRegistry);
+
+  // chatGPT面板
+  const chatGPTPanelRegistry = (ctx: ILowCodePluginContext) => {
+    return {
+      init() {
+        innerSkeleton.add({
+            area: 'leftArea',
+            type: 'PanelDock',
+            name: 'chatgptPane',
+            content: {
+              name: 'chatgpt-pane',
+              props: {
+                icon: IconChatgpt,
+                description: null,
+                editor,
+              },
+              content: ChatgptPane,
+            },
+            contentProps: {
+              editor,
+            },
+            panelProps: {
+              area: 'leftFloatArea',
+              keepVisibleWhileDragging: true,
+            },
+          });
+      },
+    };
+  };
+
+  chatGPTPanelRegistry.pluginName = '___chatgpt_panel___';
+
+  await plugins.register(chatGPTPanelRegistry);
 
   const editorInit = (ctx: ILowCodePluginContext) => {
     return {

@@ -30,6 +30,21 @@ export default class Component extends React.Component<Props, State> {
         snippet: null,
     };
 
+    renderIcon() {
+      const { icon } = this.state;
+
+      if (typeof icon === 'string') {
+        return <img src={icon} alt="" />;
+      }
+
+      if (typeof icon === 'function') {
+        const X = icon as any;
+        return <X />;
+      }
+
+      return icon;
+    }
+
     render() {
         const { data } = this.props;
         const { title } = data;
@@ -37,7 +52,7 @@ export default class Component extends React.Component<Props, State> {
 
         return (
           <div className={classNames('snippet card')} data-id={snippet.id} title={title}>
-            <div className={classNames('icon')}>{this.state.icon}</div>
+            <div className={classNames('icon')}>{this.renderIcon()}</div>
             <div className={classNames('name')}>{title}</div>
           </div>
         );

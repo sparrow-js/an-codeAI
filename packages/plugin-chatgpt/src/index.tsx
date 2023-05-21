@@ -18,6 +18,7 @@ interface ComponentPaneProps extends PluginProps {
 
 interface ComponentPaneState {
     showKeyInput: boolean;
+    chatgptKey: string;
 }
 
 export default class ChatgptPane extends React.Component<ComponentPaneProps, ComponentPaneState> {
@@ -29,10 +30,16 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
 
     state = {
         showKeyInput: false,
+        chatgptKey: ''
     };
 
-    toggle() {
-        this.setState(prevState => ({ showKeyInput: !prevState.showKeyInput }));
+    async toggle() {
+      // chatgptConnect
+      const { showKeyInput } = this.state;
+      if (showKeyInput) {
+        const res = await chatgptConnect();
+      }
+      this.setState(prevState => ({ showKeyInput: !prevState.showKeyInput }));
     }
 
     render() {
@@ -48,7 +55,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
                 })}
               </span>
               {
-                showKeyInput ? <input className={classNames('edit-input')} /> : null
+                showKeyInput ? <input className={classNames('edit-input')} value={this.state.chatgptKey} /> : null
               }
             </div>
           </div>

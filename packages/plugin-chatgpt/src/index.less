@@ -1,5 +1,6 @@
 .auto-component-panel{
     padding: 10px;
+    height: 100%;
     .edit-box{
         display: flex;
         flex-direction: row;
@@ -7,6 +8,25 @@
         .edit-input{
             flex: auto;
             margin-left: 10px;
+        }
+    }
+    .send-box{
+        position: absolute;
+        bottom: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,.1);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 80%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        padding: 0 5px;
+        .send-input{
+            flex: auto;
+            margin-right: 10px;
+        }
+        .send-btn{
+            border-width: 0;
         }
     }
 }

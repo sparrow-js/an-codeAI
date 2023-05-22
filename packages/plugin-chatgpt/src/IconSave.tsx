@@ -8,4 +8,4 @@ export function IconSave(props: IconProps) {
   );
 }
 
-IconSave.displayName = 'IconEdit';
+IconSave.displayName = 'IconSave';

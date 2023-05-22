@@ -4,9 +4,13 @@ import classNames from 'classnames';
 import { Editor } from '@firefly/auto-editor-core';
 import { IconEdit } from './IconEdit';
 import { IconSave } from './IconSave';
+import { IconSeed } from './IconSeed';
 import { chatgptConnect } from '../api';
-
 import './index.less';
+import { Input } from 'antd';
+
+const { TextArea } = Input;
+
 
 export interface PluginProps {
     editor: Editor;
@@ -30,7 +34,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
 
     state = {
         showKeyInput: false,
-        chatgptKey: ''
+        chatgptKey: '',
     };
 
     async toggle() {
@@ -39,7 +43,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
       if (showKeyInput) {
         const res = await chatgptConnect();
       }
-      this.setState(prevState => ({ showKeyInput: !prevState.showKeyInput }));
+      this.setState((prevState) => ({ showKeyInput: !prevState.showKeyInput }));
     }
 
     render() {
@@ -55,8 +59,14 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
                 })}
               </span>
               {
-                showKeyInput ? <input className={classNames('edit-input')} value={this.state.chatgptKey} /> : null
+                showKeyInput ? <Input className={classNames('edit-input')} value={this.state.chatgptKey} /> : null
               }
+            </div>
+            <div className={classNames('send-box')}>
+              <TextArea className={classNames('send-input')} autoSize bordered={false} />
+              <button className={classNames('send-btn')}>
+                {IconSeed({})}
+              </button>
             </div>
           </div>
         );

@@ -22,6 +22,7 @@
         "@alilc/lowcode-editor-core": "1.0.13",
         "@alilc/lowcode-utils": "1.0.13",
         "@umijs/max": "^4.0.69",
+        "antd": "^5.5.0",
         "axios": "^1.4.0",
         "react": "^16.8.1",
         "react-dom": "^16.8.1"

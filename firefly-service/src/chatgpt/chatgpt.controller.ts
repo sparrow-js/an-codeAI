@@ -11,12 +11,12 @@ export class ChatgptController {
   }
   @Get('connect')
   connect() {
-    const res = this.chatgptService.connect();
+    const res = this.chatgptService.connect('');
     return res;
   }
   @Get('generate')
   async generate() {
-    const res = await this.chatgptService.generate();
+    const res = await this.chatgptService.generate('');
     return res;
   }
 }

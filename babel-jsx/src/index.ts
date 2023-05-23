@@ -1,14 +1,14 @@
-import * as BabelTypes from "@babel/types";
-import { Visitor, NodePath } from "@babel/traverse";
-import { parse, parseExpression } from "@babel/parser";
-import { isDisallowedComponent } from "./isDisallowedComponent";
+import * as BabelTypes from '@babel/types';
+import { Visitor, NodePath } from '@babel/traverse';
+import { parse, parseExpression } from '@babel/parser';
+import { isDisallowedComponent } from './isDisallowedComponent';
 import {
   ComponentInfo,
   ExpressionInfo,
   FileStorage,
   SourceLocation,
   StyledDefinitionInfo,
-} from "@locator/shared";
+} from '@locator/shared';
 
 export interface PluginOptions {
   opts?: {
@@ -34,7 +34,7 @@ export default function transformLocatorJsComponents(babel: Babel): {
 } {
   // there was some weird caching error when using babel.env() on Vite
   // Vite has NODE_ENV undefined when doing first dev build
-  const env = process.env.BABEL_ENV || process.env.NODE_ENV || "development";
+  const env = process.env.BABEL_ENV || process.env.NODE_ENV || 'development';
 
   const t = babel.types;
   let fileStorage: FileStorage | null = null;
@@ -56,7 +56,7 @@ export default function transformLocatorJsComponents(babel: Babel): {
       lastExpressionId++;
       return id;
     } else {
-      throw new Error("No fileStorage");
+      throw new Error('No fileStorage');
     }
   }
 
@@ -67,7 +67,7 @@ export default function transformLocatorJsComponents(babel: Babel): {
       lastStyledId++;
       return id;
     } else {
-      throw new Error("No fileStorage");
+      throw new Error('No fileStorage');
     }
   }
 
@@ -78,7 +78,7 @@ export default function transformLocatorJsComponents(babel: Babel): {
       lastComponentId++;
       return id;
     } else {
-      throw new Error("No fileStorage");
+      throw new Error('No fileStorage');
     }
   }
 
@@ -102,13 +102,13 @@ export default function transformLocatorJsComponents(babel: Babel): {
           lastExpressionId = 0;
           lastStyledId = 0;
           if (!state?.filename) {
-            throw new Error("No file name");
+            throw new Error('No file name');
           }
-          if (state.filename.includes("node_modules")) {
+          if (state.filename.includes('node_modules')) {
             fileStorage = null;
           } else {
             fileStorage = {
-              filePath: state.filename.replace(state.cwd, ""),
+              filePath: state.filename.replace(state.cwd, ''),
               projectPath: state.cwd,
               expressions: [],
               styledDefinitions: [],
@@ -127,15 +127,14 @@ export default function transformLocatorJsComponents(babel: Babel): {
                 if (!path || !path.node || !path.node.id || !path.node.loc) {
                   return;
                 }
-                const name = path.node.id.name;
+                const { name } = path.node.id;
 
                 wrappingComponent = {
                   name,
                   locString:
-                    path.node.loc.start.line + ":" + path.node.loc.start.column,
+                    `${path.node.loc.start.line}:${path.node.loc.start.column}`,
                   loc: path.node.loc,
                 };
-                console.log('**********',wrappingComponent);
                 currentWrappingComponentId =
                   addComponentToStorage(wrappingComponent);
               },
@@ -146,14 +145,14 @@ export default function transformLocatorJsComponents(babel: Babel): {
                 if (!path || !path.node || !path.node.id || !path.node.loc) {
                   return;
                 }
-                const name = path.node.id.name;
+                const { name } = path.node.id;
 
                 // Reset wrapping component
                 if (
                   wrappingComponent &&
                   wrappingComponent.name === name &&
                   wrappingComponent.locString ===
-                    path.node.loc.start.line + ":" + path.node.loc.start.column
+                    `${path.node.loc.start.line}:${path.node.loc.start.column}`
                 ) {
                   wrappingComponent = null;
                 }
@@ -163,43 +162,43 @@ export default function transformLocatorJsComponents(babel: Babel): {
               if (!fileStorage) {
                 return;
               }
-              const tag = path.node.tag;
-              if (tag.type === "MemberExpression") {
-                const property = tag.property;
-                const object = tag.object;
+              const { tag } = path.node;
+              if (tag.type === 'MemberExpression') {
+                const { property } = tag;
+                const { object } = tag;
                 if (
-                  object.type === "Identifier" &&
-                  object.name === "styled" &&
-                  property.type === "Identifier"
+                  object.type === 'Identifier' &&
+                  object.name === 'styled' &&
+                  property.type === 'Identifier'
                 ) {
                   let name = null;
-                  const parent = path.parent;
-                  if (parent.type === "VariableDeclarator") {
-                    if (parent.id.type === "Identifier") {
+                  const { parent } = path;
+                  if (parent.type === 'VariableDeclarator') {
+                    if (parent.id.type === 'Identifier') {
                       name = parent.id.name;
                     }
                   }
 
                   if (path.node.loc) {
                     const id = addStyledToStorage({
-                      name: name,
+                      name,
                       loc: path.node.loc,
                       htmlTag: property.name,
                     });
                     console.log('*********8', path.node);
                     path.node.tag = t.callExpression(
-                      t.memberExpression(tag, t.identifier("attrs")),
+                      t.memberExpression(tag, t.identifier('attrs')),
                       [
                         t.arrowFunctionExpression(
                           [],
                           t.objectExpression([
                             t.objectProperty(
-                              t.stringLiteral("data-locatorjs-styled"),
-                              t.stringLiteral(createDataId(fileStorage, id))
+                              t.stringLiteral('data-locatorjs-styled'),
+                              t.stringLiteral(createDataId(fileStorage, id)),
                             ),
-                          ])
+                          ]),
                         ),
-                      ]
+                      ],
                     );
                   }
                 }
@@ -213,16 +212,16 @@ export default function transformLocatorJsComponents(babel: Babel): {
                 el:
                   | BabelTypes.JSXIdentifier
                   | BabelTypes.JSXMemberExpression
-                  | BabelTypes.JSXNamespacedName
+                  | BabelTypes.JSXNamespacedName,
               ): string {
-                if (el.type === "JSXIdentifier") {
+                if (el.type === 'JSXIdentifier') {
                   return el.name;
-                } else if (el.type === "JSXMemberExpression") {
-                  return getName(el.object) + "." + el.property.name;
-                } else if (el.type === "JSXNamespacedName") {
-                  return el.namespace.name + "." + el.name.name;
+                } else if (el.type === 'JSXMemberExpression') {
+                  return `${getName(el.object)}.${el.property.name}`;
+                } else if (el.type === 'JSXNamespacedName') {
+                  return `${el.namespace.name}.${el.name.name}`;
                 }
-                return "";
+                return '';
               }
               let name = getName(path.node.openingElement.name);
 
@@ -233,23 +232,35 @@ export default function transformLocatorJsComponents(babel: Babel): {
               ) {
                 if (path.node.loc) {
                   const id = addExpressionToStorage({
-                    name: name,
+                    name,
                     loc: path.node.loc,
                     wrappingComponentId: currentWrappingComponentId,
                   });
-                  console.log('************3', path.node);
+                  console.log('******3', JSON.stringify(path.node, null, 2));
                   const newAttr = t.jSXAttribute(
-                    t.jSXIdentifier("data-locatorjs-id"),
+                    t.jSXIdentifier('data-locatorjs-id'),
                     t.jSXExpressionContainer(
                       t.stringLiteral(
                         // this is stored by projectPath+filePath because that's the only unique identifier
-                        createDataId(fileStorage, id)
-                      )
+                        createDataId(fileStorage, id),
+                      ),
                       // t.ObjectExpression([
                       // ])
-                    )
+                    ),
                   );
-                  path.node.openingElement.attributes.push(newAttr);
+
+                  const dataUnique = t.jSXAttribute(
+                    t.jSXIdentifier('data-unique'),
+                    t.jSXExpressionContainer(
+                      t.stringLiteral(
+                        // this is stored by projectPath+filePath because that's the only unique identifier
+                        `${path.node.start}::${path.node.end}`,
+                      ),
+                      // t.ObjectExpression([
+                      // ])
+                    ),
+                  );
+                  path.node.openingElement.attributes.push(newAttr, dataUnique);
                 }
               }
             },
@@ -268,14 +279,14 @@ export default function transformLocatorJsComponents(babel: Babel): {
           const dataCode = JSON.stringify(fileStorage);
 
           const dataAst = parseExpression(dataCode, {
-            sourceType: "script",
+            sourceType: 'script',
           });
 
           const insertCode = `(() => {
             if (typeof window !== "undefined") {
               window.__LOCATOR_DATA__ = window.__LOCATOR_DATA__ || {};
               window.__LOCATOR_DATA__["${createFullPath(
-                fileStorage
+                fileStorage,
               )}"] = ${dataCode};
             }
           })()`;
@@ -287,7 +298,7 @@ export default function transformLocatorJsComponents(babel: Babel): {
           // }`;
 
           const insertAst = parseExpression(insertCode, {
-            sourceType: "script",
+            sourceType: 'script',
           });
 
           path.node.body.push(t.expressionStatement(insertAst));
@@ -298,7 +309,7 @@ export default function transformLocatorJsComponents(babel: Babel): {
 }
 
 function createDataId(fileStorage: FileStorage, id: number): string {
-  return createFullPath(fileStorage) + "::" + String(id);
+  return `${createFullPath(fileStorage)}::${String(id)}`;
 }
 
 function createFullPath(fileStorage: FileStorage): string {

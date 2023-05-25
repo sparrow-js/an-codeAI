@@ -2,6 +2,7 @@
 import { obx, computed, autorun, makeObservable, runInAction, action } from '@firefly/auto-editor-core';
 import { DocumentModel } from '../document-model';
 import { NodeChildren } from './node-children';
+import { editInsertNode } from '../api';
 // import {
 //     isDOMText,
 //     isJSExpression,
@@ -59,11 +60,20 @@ export type PageNode = ParentalNode<PageSchema>;
 export type ComponentNode = ParentalNode<ComponentSchema>;
 export type RootNode = PageNode | ComponentNode;
 
+export type NodeData = NodeSchema;
+
 export function isNode(node: any): node is Node {
     return node && node.isNode;
 }
 
 export const NODE_ID = 'locatorjsId';
+
+export interface NodeParam {
+  path: string;
+  start: string;
+  end: string;
+  position?: number;
+}
 
 export class Node<Schema extends NodeSchema = NodeSchema> {
     readonly id: string;
@@ -192,3 +202,14 @@ export function contains(node1: Node, node2: Node): boolean {
 export function isRootNode(node: Node): node is RootNode {
     return node && node.isRoot();
 }
+
+export function insertChildren(
+    container: ParentalNode,
+    nodeParam: NodeParam,
+    nodes: Node[] | NodeData[],
+    at?: number | null,
+    copy?: boolean,
+  ): any {
+    console.log('*****8', container, nodeParam, nodes, at, copy);
+    editInsertNode({ ...nodeParam });
+  }

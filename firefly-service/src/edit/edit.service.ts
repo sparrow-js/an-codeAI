@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { parse } from '@babel/parser';
 import generate from '@babel/generator';
+import FsHandler from '../generator/fshandler';
+import { NodeParam } from '../types';
+import Generator from '../generator/ast';
 
 @Injectable()
 export class EditService {
@@ -12,7 +15,6 @@ export class EditService {
       sourceType: 'module',
       plugins: ['jsx'],
     });
-    console.log('***********1', JSON.stringify(ast, null, 2));
     const output = generate(
       ast,
       {
@@ -20,6 +22,23 @@ export class EditService {
       },
       code,
     );
-    console.log('***********1', output);
+  }
+
+  insertNode(nodeParam: NodeParam): any {
+    const content = FsHandler.getInstance().parseFile(nodeParam.path);
+    Generator.getInstance().insertNode(content, nodeParam);
+    console.log('insertNode', content);
+  }
+
+  moveNode(): any {
+    console.log('moveNode');
+  }
+
+  deleteNode(): any {
+    console.log('deleteNode');
+  }
+
+  replaceNode(): any {
+    console.log('replaceNode');
   }
 }

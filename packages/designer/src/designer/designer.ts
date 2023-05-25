@@ -13,7 +13,7 @@ import {
 } from '@alilc/lowcode-types';
 import { megreAssets, AssetsJson } from '@alilc/lowcode-utils';
 import { Project } from '../project';
-import { DocumentModel } from '../document';
+import { DocumentModel, insertChildren } from '../document';
 import { INodeSelector, Component } from '../simulator';
 import { Scroller, IScrollable } from './scroller';
 import { Dragon, isDragNodeObject, isDragNodeDataObject, LocateEvent, DragObject } from './dragon';
@@ -122,19 +122,41 @@ export class Designer {
       this.dragon.onDragend((e) => {
         const { dragObject, copy } = e;
         const loc = this._dropLocation;
+        console.log('*******2', loc, dragObject, copy);
         if (loc) {
           if (isLocationChildrenDetail(loc.detail) && loc.detail.valid !== false) {
             let nodes: Node[] | undefined;
             if (isDragNodeObject(dragObject)) {
               console.log('*******', loc.target, [...dragObject.nodes], loc.detail.index, copy);
             } else if (isDragNodeDataObject(dragObject)) {
+              // const nodeParam ={
+              //   path: loc.target.id,
+              //   start: string;
+              //   end: string;
+              //   position: loc.detail.index,
+              // }
+
+              // container: loc.target,
+              // nodes: nodeData,
+              // at?: loc.detail.index,
+              // copy?: boolean,
+
               // process nodeData
               const nodeData = Array.isArray(dragObject.data) ? dragObject.data : [dragObject.data];
               const isNotNodeSchema = nodeData.find((item) => !isNodeSchema(item));
-              if (isNotNodeSchema) {
-                return;
-              }
-              console.log('*******', loc.target, nodeData, loc.detail.index);
+              // if (isNotNodeSchema) {
+              //   return;
+              // }
+              const instance = loc.target.instance;
+              const unique = instance.dataset['unique'];
+              const interval = unique.split('::');
+              insertChildren(loc.target, {
+                path: loc.target.id.split('::')[0],
+                start: interval[0],
+                end: interval[1],
+                position: loc.detail.index,
+              }, nodeData, loc.detail.index);
+              console.log('*******2', loc.target, nodeData, loc.detail.index);
             }
             if (nodes) {
               // loc.document.selection.selectAll(nodes.map((o) => o.id));

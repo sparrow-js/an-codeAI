@@ -15,7 +15,7 @@ export enum LocationDetailType {
 
 export interface LocationChildrenDetail {
   type: LocationDetailType.Children;
-  index?: number | null;
+  index?: number;
   /**
    * 是否有效位置
    */

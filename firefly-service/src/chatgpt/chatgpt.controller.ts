@@ -16,7 +16,9 @@ export class ChatgptController {
   }
   @Get('generate')
   async generate() {
-    const res = await this.chatgptService.generate('');
+    const res = await this.chatgptService.generate([
+      { role: 'user', content: 'Hello world' },
+    ]);
     return res;
   }
 }

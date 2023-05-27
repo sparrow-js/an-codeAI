@@ -21,4 +21,9 @@ export class ChatgptController {
     const res = await this.chatgptService.generate([message]);
     return res;
   }
+
+  @Get('getAppKey')
+  getAppKey() {
+    return this.chatgptService.getAppKey();
+  }
 }

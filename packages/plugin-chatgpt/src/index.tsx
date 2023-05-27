@@ -5,7 +5,7 @@ import { Editor } from '@firefly/auto-editor-core';
 import { IconEdit } from './IconEdit';
 import { IconSave } from './IconSave';
 import { IconSeed } from './IconSeed';
-import { chatgptConnect } from '../api';
+import { chatgptConnect, chatgptGetAppKey } from '../api';
 import './index.less';
 import { Input } from 'antd';
 import { ChatCompletionRequestMessage, Role } from '../types';
@@ -26,6 +26,7 @@ interface ComponentPaneState {
     chatgptKey: string;
     messages: ChatCompletionRequestMessage[];
     sendMessage: string;
+    hasConnect: boolean;
 }
 
 export default class ChatgptPane extends React.Component<ComponentPaneProps, ComponentPaneState> {
@@ -33,6 +34,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
     constructor(props: ComponentPaneProps) {
         super(props);
         this.toggle = this.toggle.bind(this);
+        this.getAppKey();
     }
 
     state: ComponentPaneState = {
@@ -40,12 +42,23 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
         chatgptKey: '',
         messages: [],
         sendMessage: '',
+        hasConnect: false,
     };
+
+    async getAppKey() {
+      const res = await chatgptGetAppKey();
+      if (res && res.data && res.data.appKey) {
+        this.setState({
+          chatgptKey: res.data.appKey,
+        });
+      }
+    }
 
     async toggle() {
       const { showKeyInput } = this.state;
       if (showKeyInput && this.state.chatgptKey) {
         const res = await chatgptConnect({ appKey: this.state.chatgptKey });
+        // hasConnect
         console.log('********', res);
       }
       this.setState((prevState) => ({ showKeyInput: !prevState.showKeyInput }));

@@ -6,13 +6,16 @@ import type { ChatCompletionRequestMessage } from 'openai';
 export class ChatgptService {
   openai: any;
   configuration: any;
+  apiKey: string;
   connect(id: string): any {
+    this.apiKey = id;
     this.configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY || id,
     });
     this.openai = new OpenAIApi(this.configuration);
     return {
-      status: 0,
+      status: 1,
+      message: '',
     };
   }
 
@@ -39,5 +42,14 @@ export class ChatgptService {
         return firstMessage.content;
       }
     }
+  }
+
+  getAppKey() {
+    return {
+      status: 1,
+      data: {
+        appKey: this.apiKey,
+      },
+    };
   }
 }

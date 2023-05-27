@@ -8,6 +8,7 @@ import { IconSeed } from './IconSeed';
 import { chatgptConnect } from '../api';
 import './index.less';
 import { Input } from 'antd';
+import { ChatCompletionRequestMessage, Role } from '../types';
 
 const { TextArea } = Input;
 
@@ -23,6 +24,8 @@ interface ComponentPaneProps extends PluginProps {
 interface ComponentPaneState {
     showKeyInput: boolean;
     chatgptKey: string;
+    messages: ChatCompletionRequestMessage[];
+    sendMessage: string;
 }
 
 export default class ChatgptPane extends React.Component<ComponentPaneProps, ComponentPaneState> {
@@ -32,22 +35,52 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
         this.toggle = this.toggle.bind(this);
     }
 
-    state = {
+    state: ComponentPaneState = {
         showKeyInput: false,
         chatgptKey: '',
+        messages: [],
+        sendMessage: '',
     };
 
     async toggle() {
-      // chatgptConnect
       const { showKeyInput } = this.state;
-      if (showKeyInput) {
-        const res = await chatgptConnect();
+      if (showKeyInput && this.state.chatgptKey) {
+        const res = await chatgptConnect({ appKey: this.state.chatgptKey });
+        console.log('********', res);
       }
       this.setState((prevState) => ({ showKeyInput: !prevState.showKeyInput }));
     }
 
+    handleChatgptKeyChange = (e: any) => {
+      this.setState({
+        chatgptKey: e.target.value,
+      });
+    };
+
+    onSendMessage = () => {
+      const { sendMessage, messages } = this.state;
+      if (!sendMessage) return;
+      const message = {
+        role: Role.user,
+        content: sendMessage,
+      };
+      console.log(message);
+      messages.push(message);
+      this.setState({
+        messages,
+        sendMessage: '',
+      });
+    };
+
+    handlerSendMessage = (e: any) => {
+      this.setState({
+        sendMessage: e.target.value,
+      });
+    };
+
     render() {
-        const { showKeyInput } = this.state;
+        const { showKeyInput, messages } = this.state;
+        console.log(messages);
         return (
           <div className={classNames('auto-component-panel')}>
             <div className={classNames('edit-box')}>
@@ -59,12 +92,28 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
                 })}
               </span>
               {
-                showKeyInput ? <Input className={classNames('edit-input')} value={this.state.chatgptKey} /> : null
+                showKeyInput ? <Input className={classNames('edit-input')} onChange={this.handleChatgptKeyChange} value={this.state.chatgptKey} placeholder="chatgpt appkey" /> : null
+              }
+            </div>
+            <div className="message-box">
+              {
+                messages.map((item) => {
+                  return (
+                    <div>
+                      <div>
+                        <span>{item.role}</span>
+                      </div>
+                      <div>
+                        { item.content }
+                      </div>
+                    </div>
+                  );
+                })
               }
             </div>
             <div className={classNames('send-box')}>
-              <TextArea className={classNames('send-input')} autoSize bordered={false} />
-              <button className={classNames('send-btn')}>
+              <TextArea className={classNames('send-input')} autoSize bordered={false} value={this.state.sendMessage} onChange={this.handlerSendMessage} />
+              <button className={classNames('send-btn')} onClick={this.onSendMessage}>
                 {IconSeed({})}
               </button>
             </div>

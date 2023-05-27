@@ -1,5 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query, Body } from '@nestjs/common';
 import { ChatgptService } from './chatgpt.service';
+import type { ChatCompletionRequestMessage } from 'openai';
 
 @Controller('chatgpt')
 export class ChatgptController {
@@ -10,15 +11,14 @@ export class ChatgptController {
     return 'This action returns all cats';
   }
   @Get('connect')
-  connect() {
-    const res = this.chatgptService.connect('');
+  connect(@Query('appKey') appKey) {
+    console.log('******', appKey);
+    const res = this.chatgptService.connect(appKey);
     return res;
   }
   @Get('generate')
-  async generate() {
-    const res = await this.chatgptService.generate([
-      { role: 'user', content: 'Hello world' },
-    ]);
+  async generate(@Body() message: ChatCompletionRequestMessage) {
+    const res = await this.chatgptService.generate([message]);
     return res;
   }
 }

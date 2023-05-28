@@ -21,11 +21,16 @@
         "@alilc/lowcode-designer": "1.0.13",
         "@alilc/lowcode-editor-core": "1.0.13",
         "@alilc/lowcode-utils": "1.0.13",
+        "@types/marked": "^5.0.0",
         "@umijs/max": "^4.0.69",
         "antd": "^5.5.0",
         "axios": "^1.4.0",
+        "marked": "^5.0.3",
+        "prop-types": "^15.5.7",
         "react": "^16.8.1",
-        "react-dom": "^16.8.1"
+        "react-dom": "^16.8.1",
+        "react-markdown": "^8.0.7",
+        "remark-gfm": "^3.0.1"
     },
     "devDependencies": {
         "@alib/build-scripts": "^0.1.3",

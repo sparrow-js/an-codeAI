@@ -24,6 +24,7 @@ export class ChatgptService {
 
     if (!configuration.apiKey) {
       return {
+        status: 0,
         error: {
           message:
             'OpenAI API key not configured, please follow instructions in README.md',
@@ -39,7 +40,12 @@ export class ChatgptService {
     if (response.data.choices.length) {
       const firstMessage = response.data.choices[0].message;
       if (firstMessage) {
-        return firstMessage.content;
+        return {
+          status: 1,
+          data: {
+            message: firstMessage.content,
+          },
+        };
       }
     }
   }

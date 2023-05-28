@@ -8,7 +8,6 @@ const request = axios.create({
 
 
 request.interceptors.response.use((response) => {
-  console.log('***&', response);
   return response.data;
 }, (error) => {
   return Promise.reject(error);
@@ -25,5 +24,12 @@ export async function chatgptConnect(options?: { [key: string]: any }) {
 export async function chatgptGetAppKey() {
   return request('/chatgpt/getAppKey', {
     method: 'GET',
+  });
+}
+
+export async function chatgptGenerate(options?: { [key: string]: any }) {
+  return request('/chatgpt/generate', {
+    method: 'POST',
+    data: options,
   });
 }

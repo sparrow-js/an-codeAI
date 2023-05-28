@@ -5,10 +5,11 @@ import { Editor } from '@firefly/auto-editor-core';
 import { IconEdit } from './IconEdit';
 import { IconSave } from './IconSave';
 import { IconSeed } from './IconSeed';
-import { chatgptConnect, chatgptGetAppKey } from '../api';
+import { chatgptConnect, chatgptGetAppKey, chatgptGenerate } from '../api';
 import './index.less';
 import { Input } from 'antd';
 import { ChatCompletionRequestMessage, Role } from '../types';
+import ContentMessage from './components/content';
 
 const { TextArea } = Input;
 
@@ -70,19 +71,29 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
       });
     };
 
-    onSendMessage = () => {
+    onSendMessage = async () => {
       const { sendMessage, messages } = this.state;
       if (!sendMessage) return;
       const message = {
         role: Role.user,
         content: sendMessage,
       };
-      console.log(message);
       messages.push(message);
       this.setState({
         messages,
         sendMessage: '',
       });
+      const res = await chatgptGenerate(message);
+      const { data } = res;
+      if (data && data.message) {
+        messages.push({
+          role: Role.assistant,
+          content: data.message,
+        });
+        this.setState({
+          messages,
+        });
+      }
     };
 
     handlerSendMessage = (e: any) => {
@@ -93,7 +104,6 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
 
     render() {
         const { showKeyInput, messages } = this.state;
-        console.log(messages);
         return (
           <div className={classNames('auto-component-panel')}>
             <div className={classNames('edit-box')}>
@@ -117,7 +127,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
                         <span>{item.role}</span>
                       </div>
                       <div>
-                        { item.content }
+                        <ContentMessage content={item.content} />
                       </div>
                     </div>
                   );

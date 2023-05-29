@@ -30,12 +30,14 @@
         "react": "^16.8.1",
         "react-dom": "^16.8.1",
         "react-markdown": "^8.0.7",
+        "react-syntax-highlighter": "^15.5.0",
         "remark-gfm": "^3.0.1"
     },
     "devDependencies": {
         "@alib/build-scripts": "^0.1.3",
         "@types/react": "^16.9.13",
         "@types/react-dom": "^16.9.4",
+        "@types/react-syntax-highlighter": "^15.5.7",
         "build-plugin-component": "^0.2.7"
     },
     "publishConfig": {

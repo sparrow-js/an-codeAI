@@ -3,5 +3,6 @@ export interface NodeParam {
   start: number;
   end: number;
   position: string;
-  componentName: string;
+  componentName?: string;
+  content?: string;
 }

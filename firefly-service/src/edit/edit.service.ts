@@ -4,6 +4,7 @@ import generate from '@babel/generator';
 import FsHandler from '../generator/fshandler';
 import { NodeParam } from '../types';
 import Generator from '../generator/ast';
+import * as prettier from 'prettier';
 
 @Injectable()
 export class EditService {
@@ -26,8 +27,12 @@ export class EditService {
 
   insertNode(nodeParam: NodeParam): any {
     const content = FsHandler.getInstance().parseFile(nodeParam.path);
-    Generator.getInstance().insertNode(content, nodeParam);
-    console.log('insertNode', content);
+    const code = Generator.getInstance().insertNode(content, nodeParam);
+    const formatCode = prettier.format(code, { semi: true });
+    FsHandler.getInstance().writeFile(nodeParam.path, formatCode);
+    return {
+      status: 1,
+    };
   }
 
   moveNode(): any {

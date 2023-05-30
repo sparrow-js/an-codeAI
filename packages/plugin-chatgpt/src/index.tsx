@@ -1,15 +1,19 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import { Editor } from '@firefly/auto-editor-core';
+import { Editor, observer, globalContext } from '@firefly/auto-editor-core';
 import { IconEdit } from './IconEdit';
 import { IconSave } from './IconSave';
 import { IconSeed } from './IconSeed';
-import { chatgptConnect, chatgptGetAppKey, chatgptGenerate } from '../api';
+import { chatgptConnect, chatgptGetAppKey, chatgptGenerate, editInsertNode } from '../api';
 import './index.less';
 import { Input } from 'antd';
 import { ChatCompletionRequestMessage, Role } from '../types';
 import ContentMessage from './components/content';
+import { Chatgpt } from './chatgpt';
+import {
+  Designer,
+} from '@firefly/auto-designer';
 
 const { TextArea } = Input;
 
@@ -30,10 +34,14 @@ interface ComponentPaneState {
     hasConnect: boolean;
 }
 
+@observer
 export default class ChatgptPane extends React.Component<ComponentPaneProps, ComponentPaneState> {
     static displayName = 'AutoChatgptPane';
+    chatgpt: Chatgpt;
+
     constructor(props: ComponentPaneProps) {
         super(props);
+        this.chatgpt = new Chatgpt();
         this.toggle = this.toggle.bind(this);
         this.getAppKey();
     }
@@ -102,6 +110,30 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
       });
     };
 
+    syncToCode = async () => {
+      console.log('******', this.chatgpt.selection);
+      const editor = globalContext.get('editor');
+      const designer: Designer = editor.get('designer');
+      const selection = designer.currentDocument?.selection;
+      if (selection) {
+        const nodes = selection.getNodes();
+        const node = nodes[0];
+        if (node) {
+          const instance = node.instance;
+          const unique = instance.dataset['unique'];
+          const interval = unique.split('::');
+          const res = await editInsertNode({
+            path: node.id.split('::')[0],
+            start: interval[0],
+            end: interval[1],
+            position: 0,
+            content: this.chatgpt.selection,
+          });
+          console.log('********000', res);
+        }
+      }
+    };
+
     render() {
         const { showKeyInput, messages } = this.state;
         return (
@@ -118,6 +150,9 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
                 showKeyInput ? <Input className={classNames('edit-input')} onChange={this.handleChatgptKeyChange} value={this.state.chatgptKey} placeholder="chatgpt appkey" /> : null
               }
             </div>
+            <div className="toolbar">
+              <span onClick={this.syncToCode} className="toolbar-item">同步</span>
+            </div>
             <div className="message-box">
               {
                 messages.map((item) => {
@@ -127,7 +162,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
                         <span className="role-name">{item.role}</span>
                       </div>
                       <div>
-                        <ContentMessage content={item.content} />
+                        <ContentMessage content={item.content} chatgpt={this.chatgpt} />
                       </div>
                     </div>
                   );

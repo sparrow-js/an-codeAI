@@ -36,11 +36,13 @@ export default class DesignerPlugin extends PureComponent<PluginProps, DesignerP
       deviceClassName: '',
       simulatorUrl: null,
       requestHandlersMap: null,
+
     };
 
     constructor(props: any) {
         super(props);
-        console.log(this.props.editor);
+        const url = new URL(location.href);
+        this.state.simulatorUrl = url.searchParams.get('url') || 'http://localhost:5173/';
     }
 
 
@@ -78,7 +80,7 @@ export default class DesignerPlugin extends PureComponent<PluginProps, DesignerP
             editor={editor}
             designer={editor.get('designer')}
             simulatorProps={{
-                    simulatorUrl: 'http://localhost:5173/',
+                    simulatorUrl,
                 }}
           />
         );

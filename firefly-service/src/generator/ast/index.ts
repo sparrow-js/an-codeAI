@@ -14,7 +14,7 @@ export default class Generator {
     return this._instance;
   }
 
-  insertNode(content: string, nodeParam: NodeParam) {
+  insertNode(content: string, nodeParam: NodeParam): string {
     const { start, end } = nodeParam;
     const ast = parser.parse(content, {
       sourceType: 'module',
@@ -24,8 +24,10 @@ export default class Generator {
     traverse(ast, {
       enter: ({ node }) => {
         if (node.start == start && node.end == end) {
-          (node as any).children.push(
-            parser.parse('<h1>辅助前端开发</h1>', {
+          (node as any).children.splice(
+            nodeParam.position,
+            0,
+            parser.parse(nodeParam.content || '<h1>辅助前端开发</h1>', {
               sourceType: 'module',
               plugins: ['jsx'],
             }),
@@ -33,6 +35,6 @@ export default class Generator {
         }
       },
     });
-    console.log('insertNode', generate(ast).code);
+    return generate(ast).code;
   }
 }

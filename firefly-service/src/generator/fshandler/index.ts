@@ -14,4 +14,7 @@ export default class FsHandler {
     const fileStr = fsExtra.readFileSync(pathInstance.join(path), 'utf8');
     return fileStr;
   }
+  writeFile(path: string, content: string) {
+    fsExtra.writeFileSync(path, content, 'utf8');
+  }
 }

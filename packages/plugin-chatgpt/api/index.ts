@@ -33,3 +33,11 @@ export async function chatgptGenerate(options?: { [key: string]: any }) {
     data: options,
   });
 }
+
+export async function editInsertNode(options?: { [key: string]: any }) {
+  return request('/edit/insertNode', {
+    method: 'GET',
+    params: options,
+  });
+}
+

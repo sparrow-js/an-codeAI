@@ -1,5 +1,6 @@
 export const react = {
-  title: 'react developer',
+  label: 'react developer',
+  value: 'react_developer',
   messages: [
     {
       role: 'system',

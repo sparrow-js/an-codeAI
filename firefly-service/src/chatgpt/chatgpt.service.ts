@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Configuration, OpenAIApi } from 'openai';
 import type { ChatCompletionRequestMessage } from 'openai';
+import { react, command } from './prompt';
 
 @Injectable()
 export class ChatgptService {
@@ -57,5 +58,9 @@ export class ChatgptService {
         appKey: this.apiKey,
       },
     };
+  }
+
+  getPrompt() {
+    return [react, command];
   }
 }

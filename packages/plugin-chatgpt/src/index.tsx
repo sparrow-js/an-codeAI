@@ -7,7 +7,7 @@ import { IconSave } from './IconSave';
 import { IconSeed } from './IconSeed';
 import { chatgptConnect, chatgptGetAppKey, chatgptGenerate, editInsertNode } from '../api';
 import './index.less';
-import { Input } from 'antd';
+import { Input, Select } from 'antd';
 import { ChatCompletionRequestMessage, Role } from '../types';
 import ContentMessage from './components/content';
 import { Chatgpt } from './chatgpt';
@@ -119,7 +119,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
         const nodes = selection.getNodes();
         const node = nodes[0];
         if (node) {
-          const instance = node.instance;
+          const { instance } = node;
           const unique = instance.dataset['unique'];
           const interval = unique.split('::');
           const res = await editInsertNode({
@@ -132,6 +132,10 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
           console.log('********000', res);
         }
       }
+    };
+
+    handlePromptChange = (value: any) => {
+      console.log(value);
     };
 
     render() {
@@ -150,6 +154,14 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
                 showKeyInput ? <Input className={classNames('edit-input')} onChange={this.handleChatgptKeyChange} value={this.state.chatgptKey} placeholder="chatgpt appkey" /> : null
               }
             </div>
+            <div className="prompt-box">
+              <Select
+                onChange={this.handlePromptChange}
+                style={{ width: 200 }}
+                options={this.chatgpt.promptList}
+              />
+            </div>
+
             <div className="toolbar">
               <span onClick={this.syncToCode} className="toolbar-item">同步</span>
             </div>

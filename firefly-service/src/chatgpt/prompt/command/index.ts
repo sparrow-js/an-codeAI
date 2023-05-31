@@ -31,7 +31,8 @@ DANGERS
  */
 
 export const command = {
-  title: 'text to command',
+  label: 'text to command',
+  value: 'text_to_command',
   messages: [
     {
       role: 'system',

@@ -41,3 +41,10 @@ export async function editInsertNode(options?: { [key: string]: any }) {
   });
 }
 
+export async function getPromptList(options?: { [key: string]: any }) {
+  return request('/chatgpt/getPromptList', {
+    method: 'GET',
+    params: options,
+  });
+}
+

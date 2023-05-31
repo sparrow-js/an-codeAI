@@ -7,7 +7,7 @@ import { IconSave } from './IconSave';
 import { IconSeed } from './IconSeed';
 import { chatgptConnect, chatgptGetAppKey, chatgptGenerate, editInsertNode } from '../api';
 import './index.less';
-import { Input, Select } from 'antd';
+import { Input, Select, Button } from 'antd';
 import { ChatCompletionRequestMessage, Role } from '../types';
 import ContentMessage from './components/content';
 import { Chatgpt } from './chatgpt';
@@ -28,10 +28,7 @@ interface ComponentPaneProps extends PluginProps {
 
 interface ComponentPaneState {
     showKeyInput: boolean;
-    chatgptKey: string;
-    messages: ChatCompletionRequestMessage[];
     sendMessage: string;
-    hasConnect: boolean;
 }
 
 @observer
@@ -48,25 +45,20 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
 
     state: ComponentPaneState = {
         showKeyInput: false,
-        chatgptKey: '',
-        messages: [],
         sendMessage: '',
-        hasConnect: false,
     };
 
     async getAppKey() {
       const res = await chatgptGetAppKey();
       if (res && res.data && res.data.appKey) {
-        this.setState({
-          chatgptKey: res.data.appKey,
-        });
+        this.chatgpt.chatgptKey = res.data.appKey;
       }
     }
 
     async toggle() {
       const { showKeyInput } = this.state;
-      if (showKeyInput && this.state.chatgptKey) {
-        const res = await chatgptConnect({ appKey: this.state.chatgptKey });
+      if (showKeyInput && this.chatgpt.chatgptKey) {
+        const res = await chatgptConnect({ appKey: this.chatgpt.chatgptKey });
         // hasConnect
         console.log('********', res);
       }
@@ -74,32 +66,24 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
     }
 
     handleChatgptKeyChange = (e: any) => {
-      this.setState({
-        chatgptKey: e.target.value,
-      });
+      this.chatgpt.chatgptKey = e.target.value;
     };
 
     onSendMessage = async () => {
-      const { sendMessage, messages } = this.state;
+      const { messages } = this.chatgpt;
+      const { sendMessage } = this.state;
       if (!sendMessage) return;
       const message = {
         role: Role.user,
         content: sendMessage,
       };
       messages.push(message);
-      this.setState({
-        messages,
-        sendMessage: '',
-      });
       const res = await chatgptGenerate(message);
       const { data } = res;
       if (data && data.message) {
         messages.push({
           role: Role.assistant,
           content: data.message,
-        });
-        this.setState({
-          messages,
         });
       }
     };
@@ -111,7 +95,6 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
     };
 
     syncToCode = async () => {
-      console.log('******', this.chatgpt.selection);
       const editor = globalContext.get('editor');
       const designer: Designer = editor.get('designer');
       const selection = designer.currentDocument?.selection;
@@ -135,11 +118,12 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
     };
 
     handlePromptChange = (value: any) => {
-      console.log(value);
+      this.chatgpt.setPrompt(value);
     };
 
     render() {
-        const { showKeyInput, messages } = this.state;
+        const { messages } = this.chatgpt;
+        const { showKeyInput } = this.state;
         return (
           <div className={classNames('auto-component-panel')}>
             <div className={classNames('edit-box')}>
@@ -151,7 +135,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
                 })}
               </span>
               {
-                showKeyInput ? <Input className={classNames('edit-input')} onChange={this.handleChatgptKeyChange} value={this.state.chatgptKey} placeholder="chatgpt appkey" /> : null
+                showKeyInput ? <Input className={classNames('edit-input')} onChange={this.handleChatgptKeyChange} value={this.chatgpt.chatgptKey} placeholder="chatgpt appkey" /> : null
               }
             </div>
             <div className="prompt-box">
@@ -163,7 +147,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
             </div>
 
             <div className="toolbar">
-              <span onClick={this.syncToCode} className="toolbar-item">同步</span>
+              <Button size="small" onClick={this.syncToCode} >同步</Button>
             </div>
             <div className="message-box">
               {

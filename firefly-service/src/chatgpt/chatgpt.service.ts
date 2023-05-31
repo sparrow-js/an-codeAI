@@ -8,16 +8,13 @@ export class ChatgptService {
   openai: any;
   configuration: any;
   apiKey: string;
-  connect(id: string): any {
+  connect(id: string): boolean {
     this.apiKey = id;
     this.configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY || id,
     });
     this.openai = new OpenAIApi(this.configuration);
-    return {
-      status: 1,
-      message: '',
-    };
+    return true;
   }
 
   async generate(messages: ChatCompletionRequestMessage[]) {

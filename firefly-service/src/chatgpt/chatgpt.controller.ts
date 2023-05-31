@@ -10,10 +10,24 @@ export class ChatgptController {
   findAll(): string {
     return 'This action returns all cats';
   }
+
   @Get('connect')
   connect(@Query('appKey') appKey) {
     const res = this.chatgptService.connect(appKey);
-    return res;
+    if (res) {
+      return {
+        status: 1,
+        data: {
+          message: '连接成功',
+        },
+      };
+    }
+    return {
+      status: 0,
+      data: {
+        message: '连接失败',
+      },
+    };
   }
   @Post('generate')
   async generate(@Body() message: ChatCompletionRequestMessage) {

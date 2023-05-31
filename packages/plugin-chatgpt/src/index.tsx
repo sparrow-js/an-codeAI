@@ -60,7 +60,9 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
       if (showKeyInput && this.chatgpt.chatgptKey) {
         const res = await chatgptConnect({ appKey: this.chatgpt.chatgptKey });
         // hasConnect
-        console.log('********', res);
+        if (res.data) {
+          this.chatgpt.hasConnect = true;
+        }
       }
       this.setState((prevState) => ({ showKeyInput: !prevState.showKeyInput }));
     }

@@ -155,7 +155,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
               {
                 messages.map((item) => {
                   return (
-                    <div>
+                    <div className="message-item">
                       <div>
                         <span className="role-name">{item.role}</span>
                       </div>

@@ -19,7 +19,7 @@ import { ChatCompletionRequestMessage, Role } from '../types';
     @obx.ref promptList: any[];
     @obx.ref currentPrompt: any;
     @obx.ref chatgptKey: string;
-    @obx.ref messages: ChatCompletionRequestMessage[];
+    @obx.ref messages: ChatCompletionRequestMessage[] = [];
     hasConnect: boolean = false;
 
     constructor() {
@@ -41,6 +41,8 @@ import { ChatCompletionRequestMessage, Role } from '../types';
       const prompt = this.promptList.find((item) => item.value === value);
       if (prompt) {
         this.currentPrompt = prompt;
+        this.messages = [].concat(this.currentPrompt.messages);
+        console.log('******', this.messages);
       }
     }
   }

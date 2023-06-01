@@ -63,8 +63,7 @@ You are a command line translation program for '\${OS}' os. You can translate na
     },
     {
       role: 'ASSISTANT',
-      content:
-        '>git clone https://github.com/facebook/react.git && cd react && git checkout -b feat-gpt',
+      content: '$ git clone https://github.com/facebook/react.git && cd react && git checkout -b feat-gpt',
     },
     {
       role: 'USER',
@@ -73,7 +72,7 @@ You are a command line translation program for '\${OS}' os. You can translate na
     {
       role: 'ASSISTANT',
       content: `
->rm -rf *
+$ rm -rf *
 DANGERS
         `,
     },

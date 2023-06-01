@@ -30,8 +30,8 @@ export class ChatgptController {
     };
   }
   @Post('generate')
-  async generate(@Body() message: ChatCompletionRequestMessage) {
-    const res = await this.chatgptService.generate([message]);
+  async generate(@Body() messages: ChatCompletionRequestMessage[]) {
+    const res = await this.chatgptService.generate(messages);
     return res;
     // return {
     //   status: 1,

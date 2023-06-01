@@ -1,6 +1,6 @@
 实现一些辅助开发功能,本项目提供辅助前端开发功能，让普通的源码react、vue项目可以编辑，陆续会接入chatGPT，探索生成式落实到前端的方案，本项目是在lowcode-engine基础上做的修改，如想了解原理可先行看lowcode-engine文档
 
- <img src="https://raw.githubusercontent.com/sparrow-js/firefly/main/docs/fuzhu.png"  width = "520"  alt="图片名称">
+ <img src="https://raw.githubusercontent.com/sparrow-js/firefly/main/docs/home.png"  width = "520"  alt="图片名称">
 
 ### 基础功能
 - 定位到源代码文件（option + command + 点击页面元素）

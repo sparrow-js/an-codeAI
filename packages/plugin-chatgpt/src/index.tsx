@@ -35,6 +35,7 @@ interface ComponentPaneState {
 export default class ChatgptPane extends React.Component<ComponentPaneProps, ComponentPaneState> {
     static displayName = 'AutoChatgptPane';
     chatgpt: Chatgpt;
+    private messageBox: HTMLDivElement | null = null;
 
     constructor(props: ComponentPaneProps) {
         super(props);
@@ -71,6 +72,12 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
       this.chatgpt.chatgptKey = e.target.value;
     };
 
+    scrollBottom() {
+      setTimeout(() => {
+        this.messageBox?.scroll(0, this.messageBox.scrollHeight);
+      }, 0);
+    }
+
     onSendMessage = async () => {
       const { messages } = this.chatgpt;
       const { sendMessage } = this.state;
@@ -80,6 +87,10 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
         content: sendMessage,
       };
       messages.push(message);
+      this.setState({
+        sendMessage: '',
+      });
+      this.scrollBottom();
       const res = await chatgptGenerate(message);
       const { data } = res;
       if (data && data.message) {
@@ -121,6 +132,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
 
     handlePromptChange = (value: any) => {
       this.chatgpt.setPrompt(value);
+      this.scrollBottom();
     };
 
     render() {
@@ -151,7 +163,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
             <div className="toolbar">
               <Button size="small" onClick={this.syncToCode} >同步</Button>
             </div>
-            <div className="message-box">
+            <div ref={(messageBox) => { this.messageBox = messageBox; }} className="message-box">
               {
                 messages.map((item) => {
                   return (
@@ -169,9 +181,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
             </div>
             <div className={classNames('send-box')}>
               <TextArea className={classNames('send-input')} autoSize bordered={false} value={this.state.sendMessage} onChange={this.handlerSendMessage} />
-              <button className={classNames('send-btn')} onClick={this.onSendMessage}>
-                {IconSeed({})}
-              </button>
+              <Button className="send-btn" onClick={this.onSendMessage} icon={IconSeed({})} />
             </div>
           </div>
         );

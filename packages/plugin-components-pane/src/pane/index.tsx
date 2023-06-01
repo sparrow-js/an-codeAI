@@ -3,6 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Editor, globalContext } from '@firefly/auto-editor-core';
 import Component from '../components/Component';
+import './index.less';
 
 export interface PluginProps {
     editor: Editor;
@@ -57,7 +58,7 @@ export default class ComponentPane extends React.Component<ComponentPaneProps, C
 
     renderContent() {
         return (
-          <div ref={this.registerAdditive}>
+          <div className="card-box" ref={this.registerAdditive}>
             <Component
               data={{
                 title: 'Text',

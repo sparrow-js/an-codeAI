@@ -19,7 +19,7 @@ import { ChatCompletionRequestMessage, Role } from '../types';
     @obx.ref promptList: any[];
     @obx.ref currentPrompt: any;
     @obx.ref chatgptKey: string;
-    @obx.ref messages: ChatCompletionRequestMessage[] = [];
+    @obx messages: ChatCompletionRequestMessage[] = [];
     hasConnect: boolean = false;
 
     constructor() {

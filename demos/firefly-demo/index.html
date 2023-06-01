@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+    <!-- 低代码引擎的页面主题样式，可以替换为 theme-lowcode-dark -->
+    <link href="https://alifd.alicdn.com/npm/@alifd/theme-lowcode-light@0.2.1/variables.css" rel="stylesheet" />
+    <link href="https://alifd.alicdn.com/npm/@alifd/theme-lowcode-light@0.2.1/dist/next.var.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="//localhost:5555/css/engine-core.css" />
+    <script>
+      document.domain = 'localhost';
+    </script>
+    <!-- React，可替换为 production 包 -->
+    <script src="https://g.alicdn.com/code/lib/react/16.13.1/umd/react.production.min.js"></script>
+    <!-- React DOM，可替换为 production 包 -->
+    <script src="https://g.alicdn.com/code/lib/react-dom/16.13.1/umd/react-dom.production.min.js"></script>
+
+    <!-- lodash，低代码编辑器的依赖 -->
+    <script src="https://g.alicdn.com/platform/c/lodash/4.6.1/lodash.min.js"></script>
+    <!-- 日期处理包，Fusion Next 的依赖 -->
+    <script src="https://g.alicdn.com/mylib/moment/2.24.0/min/moment.min.js"></script>
+    <!-- Fusion Next 的主包，低代码编辑器的依赖 -->
+    <script src="https://g.alicdn.com/code/lib/alifd__next/1.23.24/next.min.js"></script>
+    <script src="//localhost:5555/js/engine-core.js"></script>
+    <style>
+      #root{
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

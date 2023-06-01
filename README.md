@@ -1,30 +1,32 @@
-## 项目概述
-本项目旨在提供辅助前端开发的功能，使得日常开发中使用的React、Vue等项目的源码可以进行编辑。此外，我们计划逐步引入ChatGPT技术，探索将生成式人工智能应用于前端开发的方案。本项目是在lowcode-engine基础上进行修改的，如果您对原理感兴趣，可以先参阅[lowcode-engine的文档](<https://github.com/alibaba/lowcode-engine>)。
 
-![项目首页截图](https://raw.githubusercontent.com/sparrow-js/firefly/main/docs/home.png)
+English | [简体中文](./README-zh_CN.md)
+## Project Overview
+This project aims to provide auxiliary functionalities for frontend development, allowing the editing of source code for everyday React, Vue, and other projects. Additionally, we plan to progressively integrate ChatGPT to explore the application of generative AI in frontend development. This project is built upon the foundation of lowcode-engine, and if you are interested in the underlying principles, you can refer to the [lowcode-engine documentation](<lowcode-engine documentation link>).
 
-## 基础功能
-- 快速定位到源代码文件（使用"Option + Command + 点击页面元素"的方式）
-- 页面元素可编辑
-- 可以向页面追加元素
+![Project Homepage Screenshot](https://raw.githubusercontent.com/sparrow-js/firefly/main/docs/home.png)
 
-## 项目重点
-本项目的重点研究方向是ChatGPT与前端开发的结合应用。我们计划通过以下方式帮助开发人员提升工作效率，包括但不限于：
-- 代码生成：利用ChatGPT生成代码片段
-- 代码补全：提供智能的代码补全功能
-- 代码转换：辅助进行代码语言转换
-- 代码解释：提供对代码逻辑的解释和说明
-- 代码审查：帮助进行代码质量的审查
-- 代码重构：辅助进行代码重构和优化
-- bug检测和修复：帮助发现和修复代码中的bug
-- 系统设计和架构：提供系统设计和架构方面的指导
-- 模拟数据生成：辅助生成测试和开发所需的模拟数据
-- 测试：提供测试相关的辅助功能
-- 文档：帮助生成项目文档
-- 内容生产：支持内容创作和生成
-- 求职面试：提供求职面试方面的辅助
-- 学习：作为学习工具，提供相关知识和学习资源
+## Core Features
+- Quick navigation to source code files (using "Option + Command + click on page elements" shortcut)
+- Editable page elements
+- Ability to append elements to the page
 
-我们将在实践中不断学习并逐步实现以上功能，展望未来的发展前景。
+## Project Focus
+The primary focus of this project is the integration of ChatGPT with frontend development. We plan to enhance developer productivity through the following means, among others:
+- Code generation: Leveraging ChatGPT to generate code snippets
+- Code completion: Providing intelligent code completion functionality
+- Code transformation: Assisting with code language conversion
+- Code explanation: Providing explanations and clarifications for code logic
+- Code review: Assisting with code quality review
+- Code refactoring: Supporting code refactoring and optimization
+- Bug detection and fixing: Helping identify and fix bugs in the code
+- System design and architecture: Offering guidance on system design and architecture
+- Mock data generation: Assisting in generating mock data for testing and development purposes
+- Testing: Providing relevant testing assistance
+- Documentation: Assisting in generating project documentation
+- Content production: Supporting content creation and generation
+- Job interview preparation: Providing assistance for job interviews
+- Learning: Serving as a learning tool, providing relevant knowledge and learning resources
 
-如有任何问题或需进一步了解，请随时联系我们。ps：上面这段介绍是ChatGPT润色的
+We will continue to learn and gradually implement these features in practical use, and we look forward to the future prospects.
+
+If you have any questions or would like further information, please feel free to contact us.

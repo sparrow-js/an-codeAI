@@ -17,4 +17,24 @@ export class EditController {
     this.editService.insertNode(query);
     return;
   }
+
+  @Get('watchProject')
+  watchProject(@Query() query: any): any {
+    console.log('*******10', query);
+    this.editService.watchProject(query.dir);
+    return {
+      status: 1,
+    };
+  }
+
+  @Get('getProjectRootPath')
+  getProjectRootPath(@Query() query: any): any {
+    const res = this.editService.getProjectRootPath(query.path);
+    return {
+      status: 1,
+      data: {
+        rootDir: res,
+      },
+    };
+  }
 }

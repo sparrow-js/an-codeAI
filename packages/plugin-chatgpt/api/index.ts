@@ -48,3 +48,23 @@ export async function getPromptList(options?: { [key: string]: any }) {
   });
 }
 
+export async function watchProject(options?: { [key: string]: any }) {
+  return request('/edit/watchProject', {
+    method: 'GET',
+    params: options,
+  });
+}
+
+export async function getProjectRootPath(options?: { [key: string]: any }) {
+  return request('/edit/getProjectRootPath', {
+    method: 'GET',
+    params: options,
+  });
+}
+
+export async function getWatchChangeFiles(options?: { [key: string]: any }) {
+  return request('/edit/getWatchChangeFiles', {
+    method: 'GET',
+    params: options,
+  });
+}

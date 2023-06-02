@@ -5,6 +5,11 @@ import FsHandler from '../generator/fshandler';
 import { NodeParam } from '../types';
 import Generator from '../generator/ast';
 import * as prettier from 'prettier';
+import * as chokidar from 'chokidar';
+import * as fs from 'fs-extra';
+import * as Path from 'path';
+
+const watcherQueue = [];
 
 @Injectable()
 export class EditService {
@@ -45,5 +50,41 @@ export class EditService {
 
   replaceNode(): any {
     console.log('replaceNode');
+  }
+
+  watchProject(dir: string) {
+    const watcher = chokidar.watch(
+      '/Users/haitaowu/lab/firefly/demos/vite-react/',
+      {
+        ignored: /(^|[\/\\])\../, // ignore dotfiles
+        persistent: true,
+      },
+    );
+    watcher.on('change', (path, stats) => {
+      if (!watcherQueue.includes(path)) {
+        watcherQueue.push(path);
+      }
+    });
+  }
+
+  getProjectRootPath(path: string) {
+    fs.statSync(path).isDirectory();
+    let currentPath = fs.statSync(path).isDirectory()
+      ? path
+      : Path.join(path, '..');
+    let rootDir = '';
+    while (currentPath) {
+      if (fs.pathExistsSync(Path.join(currentPath, 'package.json'))) {
+        rootDir = currentPath;
+        break;
+      } else {
+        currentPath = Path.join(currentPath, '..');
+      }
+    }
+    return rootDir;
+  }
+
+  getWatchChangeFiles() {
+    return watcherQueue;
   }
 }

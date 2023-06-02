@@ -3,7 +3,7 @@ import fireflyLogo from './assets/firefly.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
   return (
     <div className="App">
       <div>
@@ -24,7 +24,6 @@ function App() {
         本项目提供辅助前端开发功能，让普通的源码react、vue项目可以编辑，陆续会接入chatGPT，探索生成式落实到前端的方案，<br/>本项目是在lowcode-engine基础上做的修改，如果想了解原理可先行看lowcode-engine文档
       </p>
     </div>
-    
-  )
+  );
 }
 export default App

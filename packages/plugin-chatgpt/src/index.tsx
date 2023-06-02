@@ -8,12 +8,13 @@ import { IconSeed } from './IconSeed';
 import { chatgptConnect, chatgptGetAppKey, chatgptGenerate, editInsertNode } from '../api';
 import './index.less';
 import { Input, Select, Button } from 'antd';
-import { ChatCompletionRequestMessage, Role } from '../types';
+import { Role } from '../types';
 import ContentMessage from './components/content';
 import { Chatgpt } from './chatgpt';
 import {
   Designer,
 } from '@firefly/auto-designer';
+import CodeAuto from './components/code-auto';
 
 const { TextArea } = Input;
 
@@ -159,7 +160,9 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
                 options={this.chatgpt.promptList}
               />
             </div>
-
+            <div>
+              <CodeAuto chatgpt={this.chatgpt} />
+            </div>
             <div className="toolbar">
               <Button size="small" onClick={this.syncToCode} >同步</Button>
             </div>

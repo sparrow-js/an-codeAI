@@ -49,28 +49,29 @@ You are a command line translation program for '\${OS}' os. You can translate na
       `,
     },
     {
-      role: 'USER',
+      role: 'user',
       content: `how's the weather like today?`,
     },
     {
-      role: 'ASSISTANT',
+      role: 'assistant',
       content: 'UNKNOWN',
     },
     {
-      role: 'USER',
+      role: 'user',
       content:
         'clone the React library from Github and create a new branch locally named "feat-gpt"',
     },
     {
-      role: 'ASSISTANT',
-      content: '$ git clone https://github.com/facebook/react.git && cd react && git checkout -b feat-gpt',
+      role: 'assistant',
+      content:
+        '$ git clone https://github.com/facebook/react.git && cd react && git checkout -b feat-gpt',
     },
     {
-      role: 'USER',
+      role: 'user',
       content: 'delete all files or folders',
     },
     {
-      role: 'ASSISTANT',
+      role: 'assistant',
       content: `
 $ rm -rf *
 DANGERS

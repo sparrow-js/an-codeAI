@@ -1,8 +1,12 @@
 import React from 'react';
-import { observer } from '@firefly/auto-editor-core';
-import { Popover, Button, List, Skeleton, Checkbox } from 'antd';
+import { observer, globalContext } from '@firefly/auto-editor-core';
+import { Popover, Button, List, Skeleton, Checkbox, Tooltip } from 'antd';
 import { Chatgpt } from '../../chatgpt';
-
+import { IconReview, IconNote, IconReconfiguration, IconSync } from '../icon';
+import {
+    Designer,
+} from '@firefly/auto-designer';
+import { editInsertNode } from '../../../api';
 
 interface ComponentPaneProps {
     chatgpt: Chatgpt;
@@ -10,7 +14,6 @@ interface ComponentPaneProps {
 
 interface ComponentPaneState {
     open: boolean;
-    list: any[];
 }
 @observer
 export default class CodeAuto extends React.Component<
@@ -19,20 +22,6 @@ export default class CodeAuto extends React.Component<
 > {
     state: ComponentPaneState = {
         open: false,
-        list: [
-            {
-                name: 'hello',
-                select: false,
-            },
-            {
-                name: 'world',
-                select: false,
-            },
-            {
-                name: 'avator',
-                select: false,
-            },
-        ],
     };
 
     hide = () => {
@@ -46,23 +35,27 @@ export default class CodeAuto extends React.Component<
             open: true,
         });
     };
-    onChange = (value: any) => {
+    onChange = (value: string[]) => {
+        const { chatgpt } = this.props;
+        chatgpt.setSelectedFiles(value);
         console.log('***', value);
     };
 
     content() {
+        const { chatgpt } = this.props;
+
         return (
           <div>
-            <Checkbox.Group style={{ width: '100%' }} onChange={this.onChange} value={['hello']}>
+            <Checkbox.Group style={{ width: '100%' }} onChange={this.onChange} value={chatgpt.selectedFiles}>
               <List
                 className="demo-loadmore-list"
                 itemLayout="horizontal"
-                dataSource={this.state.list}
+                dataSource={chatgpt.changeFiles}
                 renderItem={(item) => (
                   <List.Item
-                    actions={[<Checkbox value={item.name}>{item.name}</Checkbox>]}
+                    actions={[<Checkbox value={item.value} />]}
                   >
-                    <div>{item.name}</div>
+                    <div>{item.value}</div>
                   </List.Item>
                 )}
               />
@@ -71,19 +64,69 @@ export default class CodeAuto extends React.Component<
         );
     }
 
+    handlerCode = (value: string) => {
+        return () => {
+            const { chatgpt } = this.props;
+            chatgpt.getWatchChangeFiles();
+        };
+    };
+
+    syncToCode = async () => {
+        const editor = globalContext.get('editor');
+        const designer: Designer = editor.get('designer');
+        const selection = designer.currentDocument?.selection;
+        if (selection) {
+          const nodes = selection.getNodes();
+          const node = nodes[0];
+          if (node) {
+            const { instance } = node;
+            const unique = instance.dataset['unique'];
+            const interval = unique.split('::');
+            const res = await editInsertNode({
+              path: node.id.split('::')[0],
+              start: interval[0],
+              end: interval[1],
+              position: 0,
+              content: this.props.chatgpt.selection,
+            });
+            console.log('********000', res);
+          }
+        }
+      };
+
     render() {
         return (
           <div>
+            <Tooltip title="同步">
+              <span className="mr-6 red-5" onClick={this.handlerCode('sync')}>
+                {IconSync({})}
+              </span>
+            </Tooltip>
             <Popover
               content={this.content()}
               placement="bottom"
-              title="Title"
+              title={<span onClick={this.hide}>关闭</span>}
               trigger="click"
               open={this.state.open}
               onOpenChange={this.handleOpenChange}
             >
-              <Button>code review</Button>
-              <Button>添加注释</Button>
+              <Tooltip title="code review">
+                <span className="mr-6" onClick={this.handlerCode('codeReview')}>
+                  {IconReview({})}
+                </span>
+              </Tooltip>
+
+              <Tooltip title="代码注释">
+                <span className="mr-6" onClick={this.handlerCode('note')}>
+                  {IconNote({})}
+                </span>
+              </Tooltip>
+              <Tooltip title="代码重构">
+                <span className="mr-6">
+                  {IconReconfiguration({})}
+                </span>
+              </Tooltip>
+
             </Popover>
           </div>
         );

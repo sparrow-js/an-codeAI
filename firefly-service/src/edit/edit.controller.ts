@@ -20,7 +20,6 @@ export class EditController {
 
   @Get('watchProject')
   watchProject(@Query() query: any): any {
-    console.log('*******10', query);
     this.editService.watchProject(query.dir);
     return {
       status: 1,
@@ -34,6 +33,17 @@ export class EditController {
       status: 1,
       data: {
         rootDir: res,
+      },
+    };
+  }
+
+  @Get('getWatchChangeFiles')
+  getWatchChangeFiles(): any {
+    const res = this.editService.getWatchChangeFiles();
+    return {
+      status: 1,
+      data: {
+        files: res,
       },
     };
   }

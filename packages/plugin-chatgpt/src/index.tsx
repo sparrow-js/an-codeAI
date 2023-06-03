@@ -5,6 +5,7 @@ import { Editor, observer, globalContext } from '@firefly/auto-editor-core';
 import { IconEdit } from './IconEdit';
 import { IconSave } from './IconSave';
 import { IconSeed } from './IconSeed';
+import { IconConnect } from './IconConnect';
 import { chatgptConnect, chatgptGetAppKey, chatgptGenerate, editInsertNode } from '../api';
 import './index.less';
 import { Input, Select, Button } from 'antd';
@@ -108,28 +109,6 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
       });
     };
 
-    syncToCode = async () => {
-      const editor = globalContext.get('editor');
-      const designer: Designer = editor.get('designer');
-      const selection = designer.currentDocument?.selection;
-      if (selection) {
-        const nodes = selection.getNodes();
-        const node = nodes[0];
-        if (node) {
-          const { instance } = node;
-          const unique = instance.dataset['unique'];
-          const interval = unique.split('::');
-          const res = await editInsertNode({
-            path: node.id.split('::')[0],
-            start: interval[0],
-            end: interval[1],
-            position: 0,
-            content: this.chatgpt.selection,
-          });
-          console.log('********000', res);
-        }
-      }
-    };
 
     handlePromptChange = (value: any) => {
       this.chatgpt.setPrompt(value);
@@ -142,6 +121,9 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
         return (
           <div className={classNames('auto-component-panel')}>
             <div className={classNames('edit-box')}>
+              <span className="mr-6">
+                {IconConnect({})}
+              </span>
               <span onClick={this.toggle}>
                 {showKeyInput ? IconSave({}) : IconEdit({
                     style: {
@@ -153,18 +135,15 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
                 showKeyInput ? <Input className={classNames('edit-input')} onChange={this.handleChatgptKeyChange} value={this.chatgpt.chatgptKey} placeholder="chatgpt appkey" /> : null
               }
             </div>
+            <div className="code-auto-box">
+              <CodeAuto chatgpt={this.chatgpt} />
+            </div>
             <div className="prompt-box">
               <Select
                 onChange={this.handlePromptChange}
                 style={{ width: 200 }}
                 options={this.chatgpt.promptList}
               />
-            </div>
-            <div>
-              <CodeAuto chatgpt={this.chatgpt} />
-            </div>
-            <div className="toolbar">
-              <Button size="small" onClick={this.syncToCode} >同步</Button>
             </div>
             <div ref={(messageBox) => { this.messageBox = messageBox; }} className="message-box">
               {

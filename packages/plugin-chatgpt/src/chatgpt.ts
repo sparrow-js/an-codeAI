@@ -9,8 +9,9 @@ import {
     IReactionDisposer,
     makeObservable,
     hotkey,
+    action,
 } from '@firefly/auto-editor-core';
-import { getPromptList, watchProject, getProjectRootPath } from '../api';
+import { getPromptList, watchProject, getProjectRootPath, getWatchChangeFiles } from '../api';
 import { ChatCompletionRequestMessage, Role } from '../types';
 
 
@@ -22,7 +23,13 @@ import { ChatCompletionRequestMessage, Role } from '../types';
     @obx messages: ChatCompletionRequestMessage[] = [];
     hasConnect: boolean = false;
     projectRootDir: string = '';
-    @obx changeFiles: string[] = [];
+    @obx changeFiles: Array<{
+      value: string;
+      label: string;
+    }> = [];
+    @obx selectedFiles: string[] = [];
+    hasWatchFile: boolean = false;
+
 
     constructor() {
         makeObservable(this);
@@ -42,6 +49,7 @@ import { ChatCompletionRequestMessage, Role } from '../types';
         this.promptList = res.data.prompt;
       }
     }
+
     /**
      * @description: 生成对话
      * @param {string} text
@@ -51,7 +59,6 @@ import { ChatCompletionRequestMessage, Role } from '../types';
       if (prompt) {
         this.currentPrompt = prompt;
         this.messages = [].concat(this.currentPrompt.messages);
-        console.log('******', this.messages);
       }
     }
 
@@ -59,7 +66,27 @@ import { ChatCompletionRequestMessage, Role } from '../types';
       const res = await watchProject({
         dir: path,
       });
-      console.log('*********9', res);
+      if (res.data) {
+        this.hasWatchFile = true;
+      }
+    }
+
+    async getWatchChangeFiles() {
+      const res = await getWatchChangeFiles();
+      if (res.data) {
+        this.changeFiles = res.data.files.map((item: string) => {
+          return {
+            value: item,
+            label: item,
+          };
+        });
+      }
+      console.log('****', this.changeFiles);
+    }
+
+    @action
+    setSelectedFiles(files: string[]) {
+      this.selectedFiles = files;
     }
 
     async getProjectRootPath() {

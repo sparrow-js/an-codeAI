@@ -47,4 +47,16 @@ export class EditController {
       },
     };
   }
+
+  @Get('getFilesContent')
+  getFilesContent(@Query() query: any): any {
+    console.log('*********', query);
+    const res = this.editService.getFilesContent(query.files);
+    return {
+      status: 1,
+      data: {
+        files: res,
+      },
+    };
+  }
 }

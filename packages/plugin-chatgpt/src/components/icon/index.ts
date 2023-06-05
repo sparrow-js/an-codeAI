@@ -1,4 +1,4 @@
 export * from './review';
-export * from './reconfiguration';
+export * from './refactor';
 export * from './note';
 export * from './sync';

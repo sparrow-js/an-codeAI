@@ -1,16 +1,17 @@
 .auto-component-panel{
     padding: 10px;
     height: 100%;
+    transform: translate(0px, -20px);
     .edit-box{
         display: flex;
         flex-direction: row;
         align-items: center;
         padding-right: 50px;
-        transform: translate(0, -45px);
         .edit-input{
             flex: auto;
             margin-left: 10px;
         }
+        transform: translate(0px, -20px);
     }
     .send-box{
         background: #fafafa;
@@ -35,7 +36,7 @@
     .message-box{
         height: calc(100% - 115px);
         overflow: scroll;
-        margin-top: 30px;
+        margin-top: 10px;
     }
     .message-item{
         border-bottom: 1px solid #0505050f;
@@ -54,12 +55,8 @@
             border-radius: 4px;
         }
     }
-    .prompt-box{
-        transform: translate(0px, -20px);
-    }
-    .code-auto-box{
-        transform: translate(0, -30px);
-    }
+    .prompt-box{}
+    .code-auto-box{}
 }
 .mr-6{
     margin-right: 6px;

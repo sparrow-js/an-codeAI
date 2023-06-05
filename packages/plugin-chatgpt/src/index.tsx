@@ -96,10 +96,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
       const res = await chatgptGenerate(messages);
       const { data } = res;
       if (data && data.message) {
-        messages.push({
-          role: Role.assistant,
-          content: data.message,
-        });
+        messages.push(data.message);
       }
     };
 

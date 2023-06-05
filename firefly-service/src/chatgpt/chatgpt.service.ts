@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Configuration, OpenAIApi } from 'openai';
 import type { ChatCompletionRequestMessage } from 'openai';
-import { react, command } from './prompt';
+import { react, command, codeReview, node, refactor } from './prompt';
 
 @Injectable()
 export class ChatgptService {
@@ -22,11 +22,7 @@ export class ChatgptService {
 
     if (!configuration.apiKey) {
       return {
-        status: 0,
-        error: {
-          message:
-            'OpenAI API key not configured, please follow instructions in README.md',
-        },
+        error: 'not api key',
       };
     }
 
@@ -36,14 +32,10 @@ export class ChatgptService {
       messages,
     });
     if (response.data.choices.length) {
+      console.log('****5', response.data.choices);
       const firstMessage = response.data.choices[0].message;
       if (firstMessage) {
-        return {
-          status: 1,
-          data: {
-            message: firstMessage.content,
-          },
-        };
+        return firstMessage;
       }
     }
   }
@@ -59,5 +51,22 @@ export class ChatgptService {
 
   getPrompt() {
     return [react, command];
+  }
+
+  getCodePrompt() {
+    return [codeReview, node, refactor];
+  }
+
+  async startCodeDocument(data: any) {
+    const { files, prompt } = data;
+    const { messages } = prompt;
+    const userPrompt = messages[1];
+    const content = files[0].content;
+    userPrompt.content = userPrompt.content
+      .replace('[code block]', content)
+      .replace('[language]', 'tsx or ts');
+    const res = await this.generate(messages);
+    console.log('*********8', res);
+    return res;
   }
 }

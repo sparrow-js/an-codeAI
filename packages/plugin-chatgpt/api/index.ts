@@ -68,3 +68,31 @@ export async function getWatchChangeFiles(options?: { [key: string]: any }) {
     params: options,
   });
 }
+
+export async function getCodePromptList(options?: { [key: string]: any }) {
+  return request('/chatgpt/getCodePromptList', {
+    method: 'GET',
+    params: options,
+  });
+}
+
+export async function getFilesContent(options?: { [key: string]: any }) {
+  return request('/edit/getFilesContent', {
+    method: 'GET',
+    params: options,
+  });
+}
+
+export async function chatgptGenerateLink(options?: { [key: string]: any }) {
+  return request('/chatgpt/generateLink', {
+    method: 'POST',
+    data: options,
+  });
+}
+
+export async function startCodeDocument(options?: { [key: string]: any }) {
+  return request('/chatgpt/startCodeDocument', {
+    method: 'GET',
+    params: options,
+  });
+}

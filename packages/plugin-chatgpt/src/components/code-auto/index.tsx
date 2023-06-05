@@ -2,11 +2,12 @@ import React from 'react';
 import { observer, globalContext } from '@firefly/auto-editor-core';
 import { Popover, Button, List, Skeleton, Checkbox, Tooltip } from 'antd';
 import { Chatgpt } from '../../chatgpt';
-import { IconReview, IconNote, IconReconfiguration, IconSync } from '../icon';
+import { IconReview, IconNote, IconRefactor, IconSync } from '../icon';
 import {
     Designer,
 } from '@firefly/auto-designer';
 import { editInsertNode } from '../../../api';
+import { ChatCompletionRequestMessage, Role, OperateType } from '../../../types';
 
 interface ComponentPaneProps {
     chatgpt: Chatgpt;
@@ -15,6 +16,8 @@ interface ComponentPaneProps {
 interface ComponentPaneState {
     open: boolean;
 }
+
+
 @observer
 export default class CodeAuto extends React.Component<
   ComponentPaneProps,
@@ -64,9 +67,10 @@ export default class CodeAuto extends React.Component<
         );
     }
 
-    handlerCode = (value: string) => {
+    handlerCode = (value: OperateType) => {
         return () => {
             const { chatgpt } = this.props;
+            chatgpt.setOperateType(value);
             chatgpt.getWatchChangeFiles();
         };
     };
@@ -94,36 +98,47 @@ export default class CodeAuto extends React.Component<
         }
       };
 
+    sureOperateCode = () => {
+      const { chatgpt } = this.props;
+      chatgpt.startPrompt();
+    };
+
     render() {
         return (
           <div>
             <Tooltip title="同步">
-              <span className="mr-6 red-5" onClick={this.handlerCode('sync')}>
+              <span className="mr-6 red-5" onClick={this.syncToCode}>
                 {IconSync({})}
               </span>
             </Tooltip>
             <Popover
               content={this.content()}
               placement="bottom"
-              title={<span onClick={this.hide}>关闭</span>}
+              title={
+                <div>
+                  <a onClick={this.hide} className="mr-6">关闭</a>
+                  <a className="mr-6" onClick={this.sureOperateCode}>确认</a>
+                  <a className="mr-6">清除</a>
+                </div>
+              }
               trigger="click"
               open={this.state.open}
               onOpenChange={this.handleOpenChange}
             >
               <Tooltip title="code review">
-                <span className="mr-6" onClick={this.handlerCode('codeReview')}>
+                <span className="mr-6" onClick={this.handlerCode(OperateType.codeReview)}>
                   {IconReview({})}
                 </span>
               </Tooltip>
 
               <Tooltip title="代码注释">
-                <span className="mr-6" onClick={this.handlerCode('note')}>
+                <span className="mr-6" onClick={this.handlerCode(OperateType.note)}>
                   {IconNote({})}
                 </span>
               </Tooltip>
               <Tooltip title="代码重构">
-                <span className="mr-6">
-                  {IconReconfiguration({})}
+                <span className="mr-6" onClick={this.handlerCode(OperateType.reconfiguration)}>
+                  {IconRefactor({})}
                 </span>
               </Tooltip>
 

@@ -4,6 +4,13 @@ export enum Role {
   assistant = 'assistant',
 }
 
+export enum OperateType {
+  codeReview = 'codeReview',
+  note = 'note',
+  reconfiguration = 'reconfiguration',
+}
+
+
 /**
  *
  * @export

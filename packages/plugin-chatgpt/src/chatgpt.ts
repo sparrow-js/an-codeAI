@@ -11,8 +11,15 @@ import {
     hotkey,
     action,
 } from '@firefly/auto-editor-core';
-import { getPromptList, watchProject, getProjectRootPath, getWatchChangeFiles } from '../api';
-import { ChatCompletionRequestMessage, Role } from '../types';
+import {
+    getPromptList,
+    watchProject,
+    getProjectRootPath,
+    getWatchChangeFiles,
+    getCodePromptList,
+    startCodeDocument,
+} from '../api';
+import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
 
 
   export class Chatgpt {
@@ -29,11 +36,14 @@ import { ChatCompletionRequestMessage, Role } from '../types';
     }> = [];
     @obx selectedFiles: string[] = [];
     hasWatchFile: boolean = false;
+    operateType: OperateType;
+    promptCodeList: any[];
 
 
     constructor() {
         makeObservable(this);
         this.getPromptList();
+        this.getCodePromptList();
         this.init();
     }
     async init() {
@@ -50,6 +60,13 @@ import { ChatCompletionRequestMessage, Role } from '../types';
       }
     }
 
+    private async getCodePromptList() {
+      const res = await getCodePromptList();
+      if (res.data) {
+        this.promptCodeList = res.data.prompt;
+      }
+    }
+
     /**
      * @description: 生成对话
      * @param {string} text
@@ -60,6 +77,18 @@ import { ChatCompletionRequestMessage, Role } from '../types';
         this.currentPrompt = prompt;
         this.messages = [].concat(this.currentPrompt.messages);
       }
+    }
+
+    async startPrompt() {
+      this.messages = [];
+      const res = await startCodeDocument({
+        files: this.selectedFiles,
+        promptType: this.operateType,
+      });
+      if (res.data) {
+        this.messages.push(res.data.message);
+      }
+      console.log('*****1', res);
     }
 
     async watchProject(path: string) {
@@ -87,6 +116,11 @@ import { ChatCompletionRequestMessage, Role } from '../types';
     @action
     setSelectedFiles(files: string[]) {
       this.selectedFiles = files;
+    }
+
+    @action
+    setOperateType(operateType: OperateType) {
+      this.operateType = operateType;
     }
 
     async getProjectRootPath() {

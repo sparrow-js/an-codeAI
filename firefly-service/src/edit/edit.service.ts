@@ -87,4 +87,14 @@ export class EditService {
   getWatchChangeFiles() {
     return watcherQueue;
   }
+
+  getFilesContent(files: string[]) {
+    return files.map((path) => {
+      console.log('******9', path);
+      return {
+        file: path,
+        content: fs.readFileSync(Path.join(path), 'utf8'),
+      };
+    });
+  }
 }

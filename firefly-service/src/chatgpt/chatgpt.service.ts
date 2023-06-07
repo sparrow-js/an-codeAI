@@ -3,7 +3,8 @@ import { Configuration, OpenAIApi } from 'openai';
 import type { ChatCompletionRequestMessage } from 'openai';
 import { react, command, codeReview, node, refactor } from './prompt';
 import FsHandler from '../generator/fshandler';
-import pathInstance from 'path';
+import Generator from '../generator/ast';
+import * as pathInstance from 'path';
 
 @Injectable()
 export class ChatgptService {
@@ -11,6 +12,7 @@ export class ChatgptService {
   configuration: any;
   apiKey: string;
   rootDir: string;
+  messageMap = new Map();
   connect(id: string): boolean {
     this.apiKey = id;
     this.configuration = new Configuration({
@@ -21,43 +23,69 @@ export class ChatgptService {
   }
 
   async generate(data: {
-    messages: ChatCompletionRequestMessage[];
-    operateType?: string;
+    message: ChatCompletionRequestMessage;
+    codeOperateType?: string;
     path: string;
+    promptId: string;
   }) {
     const { configuration, openai } = this;
-    const { messages, operateType, path } = data;
-
+    const { message, codeOperateType, path, promptId } = data;
     if (!configuration.apiKey) {
       return {
         error: 'not api key',
       };
     }
 
+    if (!this.messageMap.has(promptId)) {
+      const promptList = this.getPrompt();
+      const prompt = promptList.find((item) => item.value === promptId);
+      const messageList = prompt.messages.map((item) => {
+        return { role: item.role, content: item.content };
+      });
+      this.messageMap.set(promptId, messageList);
+    }
+
+    const messageList = this.messageMap.get(promptId);
+    messageList.push(message);
+
     const response = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
-      temperature: 0.6,
-      messages,
+      temperature: 0,
+      messages: messageList,
     });
     if (response.data.choices.length) {
       console.log('****5', response.data.choices);
       const firstMessage = response.data.choices[0].message;
-      if (operateType === 'create') {
-        const fileName = FsHandler.getInstance().extractFileName(firstMessage);
-        const filePath = `src/pages/${fileName}`;
+      messageList.push(firstMessage);
+      if (codeOperateType === 'create') {
+        const { content } = firstMessage;
+        const fileName = FsHandler.getInstance().extractFileName(content);
+        const filePath = `src/pages/${fileName}/${fileName}.tsx`;
+        console.log('****1', filePath);
         FsHandler.getInstance().createFile(
           pathInstance.join(this.rootDir, filePath),
-          firstMessage,
+          content,
+        );
+
+        Generator.getInstance().appendRouter(
+          FsHandler.getInstance().parseFile(
+            pathInstance.join(this.rootDir, 'src/routes/index.tsx'),
+          ),
+          `var data = {
+            path: '/${fileName}',
+            element: <${fileName} />,
+          }`,
+          `import ${fileName} from '../pages/${fileName}';`,
         );
         return {
           role: 'assistant',
           content: `
-创建完成
-文件路径：${filePath}
-`,
+        创建完成
+        文件路径：${filePath}
+        `,
         };
-      } else if (operateType === 'modify') {
-        FsHandler.getInstance().writeFile(path, firstMessage);
+      } else if (codeOperateType === 'modify') {
+        FsHandler.getInstance().writeFile(path, firstMessage.content);
         return {
           role: 'assistant',
           content: `修改完成`,

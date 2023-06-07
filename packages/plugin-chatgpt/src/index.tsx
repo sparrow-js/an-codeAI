@@ -80,9 +80,8 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
     }
 
     onSendMessage = async () => {
-      const { chatgptGenerate } = this.chatgpt;
       const { sendMessage } = this.state;
-      const res = await chatgptGenerate(sendMessage);
+      const res = await this.chatgpt.chatgptGenerate(sendMessage);
       if (res) {
         this.setState({
           sendMessage: '',
@@ -103,8 +102,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
 
     handlePromptChange = (value: any) => {
       const { chatgpt } = this;
-      chatgpt.setPrompt(value);
-      this.scrollBottom();
+      chatgpt.setCodePrompt(value);
     };
 
     render() {

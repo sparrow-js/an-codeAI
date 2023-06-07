@@ -38,7 +38,7 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
     hasWatchFile: boolean = false;
     operateType: OperateType;
     promptCodeList: any[];
-    codeOperateType: string;
+    codeOperateType: string = 'modify';
     codeOperateList: Array<{
       label: string;
       value: string;

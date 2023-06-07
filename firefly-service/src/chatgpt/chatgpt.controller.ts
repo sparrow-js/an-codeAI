@@ -2,6 +2,7 @@ import { Controller, Get, Param, Query, Body, Post } from '@nestjs/common';
 import { ChatgptService } from './chatgpt.service';
 import type { ChatCompletionRequestMessage } from 'openai';
 import { EditService } from 'src/edit/edit.service';
+import Generator from '../generator/ast';
 
 @Controller('chatgpt')
 export class ChatgptController {
@@ -37,12 +38,12 @@ export class ChatgptController {
   async generate(
     @Body()
     data: {
-      messages: ChatCompletionRequestMessage[];
+      message: ChatCompletionRequestMessage;
       codeOperateType: string;
       path: string;
+      promptId: string;
     },
   ) {
-    console.log(data);
     if (!this.chatgptService.rootDir) {
       this.chatgptService.rootDir = this.editService.rootDir;
     }

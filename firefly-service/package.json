@@ -26,6 +26,7 @@
     "chokidar": "^3.5.3",
     "fs-extra": "^11.1.1",
     "langchain": "0.0.90",
+    "lodash": "^4.17.21",
     "openai": "^3.2.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"

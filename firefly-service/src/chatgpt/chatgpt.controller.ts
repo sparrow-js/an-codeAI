@@ -34,8 +34,19 @@ export class ChatgptController {
     };
   }
   @Post('generate')
-  async generate(@Body() messages: ChatCompletionRequestMessage[]) {
-    const res = await this.chatgptService.generate(messages);
+  async generate(
+    @Body()
+    data: {
+      messages: ChatCompletionRequestMessage[];
+      codeOperateType: string;
+      path: string;
+    },
+  ) {
+    console.log(data);
+    if (!this.chatgptService.rootDir) {
+      this.chatgptService.rootDir = this.editService.rootDir;
+    }
+    const res = await this.chatgptService.generate(data);
     return {
       status: 1,
       data: {
@@ -72,7 +83,6 @@ export class ChatgptController {
   @Get('startCodeDocument')
   async startCodeDocument(@Query() query: any) {
     const { promptType, files } = query;
-    console.log('*****', query);
     const filesContent = this.editService.getFilesContent(files);
     const codePrompt = this.chatgptService
       .getCodePrompt()
@@ -84,6 +94,7 @@ export class ChatgptController {
     return {
       status: 1,
       data: {
+        messages: codePrompt.messages.concat(res),
         message: res,
       },
     };

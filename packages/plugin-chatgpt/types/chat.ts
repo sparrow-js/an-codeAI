@@ -35,4 +35,5 @@ export interface ChatCompletionRequestMessage {
    * @memberof ChatCompletionRequestMessage
    */
   name?: string;
+  from?: string;
 }

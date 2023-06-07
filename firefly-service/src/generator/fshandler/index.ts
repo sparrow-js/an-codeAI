@@ -17,4 +17,15 @@ export default class FsHandler {
   writeFile(path: string, content: string) {
     fsExtra.writeFileSync(path, content, 'utf8');
   }
+
+  extractFileName(codeContent: string) {
+    const exportName = codeContent.match(/export\s+default\s+(\w+)/)[1];
+    console.log(exportName); // ApprovalForm
+    return exportName;
+  }
+
+  createFile(path: string, content?: string) {
+    fsExtra.ensureFileSync(path);
+    if (content) this.writeFile(path, content);
+  }
 }

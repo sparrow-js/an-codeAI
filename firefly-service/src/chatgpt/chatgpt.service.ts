@@ -2,12 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { Configuration, OpenAIApi } from 'openai';
 import type { ChatCompletionRequestMessage } from 'openai';
 import { react, command, codeReview, node, refactor } from './prompt';
+import FsHandler from '../generator/fshandler';
+import pathInstance from 'path';
 
 @Injectable()
 export class ChatgptService {
   openai: any;
   configuration: any;
   apiKey: string;
+  rootDir: string;
   connect(id: string): boolean {
     this.apiKey = id;
     this.configuration = new Configuration({
@@ -17,8 +20,13 @@ export class ChatgptService {
     return true;
   }
 
-  async generate(messages: ChatCompletionRequestMessage[]) {
+  async generate(data: {
+    messages: ChatCompletionRequestMessage[];
+    operateType?: string;
+    path: string;
+  }) {
     const { configuration, openai } = this;
+    const { messages, operateType, path } = data;
 
     if (!configuration.apiKey) {
       return {
@@ -34,6 +42,27 @@ export class ChatgptService {
     if (response.data.choices.length) {
       console.log('****5', response.data.choices);
       const firstMessage = response.data.choices[0].message;
+      if (operateType === 'create') {
+        const fileName = FsHandler.getInstance().extractFileName(firstMessage);
+        const filePath = `src/pages/${fileName}`;
+        FsHandler.getInstance().createFile(
+          pathInstance.join(this.rootDir, filePath),
+          firstMessage,
+        );
+        return {
+          role: 'assistant',
+          content: `
+创建完成
+文件路径：${filePath}
+`,
+        };
+      } else if (operateType === 'modify') {
+        FsHandler.getInstance().writeFile(path, firstMessage);
+        return {
+          role: 'assistant',
+          content: `修改完成`,
+        };
+      }
       if (firstMessage) {
         return firstMessage;
       }

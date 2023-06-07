@@ -18,14 +18,14 @@ import {
     getWatchChangeFiles,
     getCodePromptList,
     startCodeDocument,
+    chatgptGenerate,
 } from '../api';
 import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
-
 
   export class Chatgpt {
     @obx.ref selection: string;
     @obx.ref promptList: any[];
-    @obx.ref currentPrompt: any;
+    @obx.ref currentPrompt: any = 'react';
     @obx.ref chatgptKey: string;
     @obx messages: ChatCompletionRequestMessage[] = [];
     hasConnect: boolean = false;
@@ -38,6 +38,24 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
     hasWatchFile: boolean = false;
     operateType: OperateType;
     promptCodeList: any[];
+    codeOperateType: string;
+    codeOperateList: Array<{
+      label: string;
+      value: string;
+    }> = [
+      {
+        label: '创建',
+        value: 'create',
+      },
+      {
+        label: '修改',
+        value: 'modify',
+      },
+      {
+        label: '默认',
+        value: 'default',
+      },
+    ];
 
 
     constructor() {
@@ -57,6 +75,8 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
       const res = await getPromptList();
       if (res.data) {
         this.promptList = res.data.prompt;
+        const prompt = this.promptList.find(item => item.value === 'react');
+        this.messages = prompt.messages;
       }
     }
 
@@ -79,6 +99,10 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
       }
     }
 
+    setCodePrompt(value: string) {
+      this.codeOperateType = value;
+    }
+
     async startPrompt() {
       this.messages = [];
       const res = await startCodeDocument({
@@ -86,7 +110,7 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
         promptType: this.operateType,
       });
       if (res.data) {
-        this.messages.push(res.data.message);
+        this.messages = res.data.messages;
       }
       console.log('*****1', res);
     }
@@ -138,5 +162,25 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
           }
         }
       }
+    }
+
+    async chatgptGenerate(sendMessage: string) {
+      const { messages, codeOperateType } = this;
+      if (!sendMessage) return;
+      const message = {
+        role: Role.user,
+        content: sendMessage,
+      };
+      messages.push(message);
+      const res = await chatgptGenerate({
+        messages,
+        codeOperateType,
+      });
+      const { data } = res;
+      if (data && data.message) {
+        messages.push(data.message);
+        return true;
+      }
+      return false;
     }
   }

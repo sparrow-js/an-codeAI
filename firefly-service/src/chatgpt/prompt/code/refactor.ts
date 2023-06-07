@@ -4,10 +4,13 @@ export const refactor = {
   messages: [
     {
       role: 'system',
-      content: 'Refactor to the code',
+      from: 'built-in',
+      content:
+        'I am a front-end development engineer, using technologies such as the antd UI framework',
     },
     {
       role: 'user',
+      from: 'built-in',
       content: `Refactor the given [language] code to improve its error handling and resilience: [code block]`,
     },
   ],

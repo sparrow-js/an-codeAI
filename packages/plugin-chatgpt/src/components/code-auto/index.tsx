@@ -1,8 +1,17 @@
 import React from 'react';
 import { observer, globalContext } from '@firefly/auto-editor-core';
-import { Popover, Button, List, Skeleton, Checkbox, Tooltip } from 'antd';
+import { Popover, Button, List, Skeleton, Checkbox, Tooltip, Select } from 'antd';
 import { Chatgpt } from '../../chatgpt';
-import { IconReview, IconNote, IconRefactor, IconSync } from '../icon';
+import {
+  IconReview,
+  IconNote,
+  IconRefactor,
+  IconSync,
+  IconClear,
+  IconClose,
+  IconSure,
+  IconPrompt,
+} from '../icon';
 import {
     Designer,
 } from '@firefly/auto-designer';
@@ -11,10 +20,12 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../../../types'
 
 interface ComponentPaneProps {
     chatgpt: Chatgpt;
+    scrollBottom: () => void;
 }
 
 interface ComponentPaneState {
     open: boolean;
+    promptOpen: boolean;
 }
 
 
@@ -25,6 +36,7 @@ export default class CodeAuto extends React.Component<
 > {
     state: ComponentPaneState = {
         open: false,
+        promptOpen: false,
     };
 
     hide = () => {
@@ -33,11 +45,24 @@ export default class CodeAuto extends React.Component<
         });
     };
 
+    promptHide = () => {
+      this.setState({
+          promptOpen: false,
+      });
+    };
+
     handleOpenChange = () => {
         this.setState({
             open: true,
         });
     };
+
+    handlePromptOpenChange = () => {
+      this.setState({
+          promptOpen: true,
+      });
+    };
+
     onChange = (value: string[]) => {
         const { chatgpt } = this.props;
         chatgpt.setSelectedFiles(value);
@@ -103,6 +128,26 @@ export default class CodeAuto extends React.Component<
       chatgpt.startPrompt();
     };
 
+    handlePromptChange = (value: any) => {
+      const { chatgpt } = this.props;
+      chatgpt.setPrompt(value);
+      this.props.scrollBottom();
+    };
+
+    promptContent = () => {
+      const { chatgpt } = this.props;
+      return (
+        <div className="prompt-box">
+          <Select
+            defaultValue="react"
+            onChange={this.handlePromptChange}
+            style={{ width: 200 }}
+            options={chatgpt.promptList}
+          />
+        </div>
+      );
+    };
+
     render() {
         return (
           <div>
@@ -112,13 +157,29 @@ export default class CodeAuto extends React.Component<
               </span>
             </Tooltip>
             <Popover
+              content={this.promptContent()}
+              placement="bottom"
+              title={
+                <div>
+                  <a onClick={this.promptHide} className="mr-6">{IconClose({})}</a>
+                </div>
+              }
+              trigger="click"
+              open={this.state.promptOpen}
+              onOpenChange={this.handlePromptOpenChange}
+            >
+              <span className="mr-6">
+                {IconPrompt({})}
+              </span>
+            </Popover>
+            <Popover
               content={this.content()}
               placement="bottom"
               title={
                 <div>
-                  <a onClick={this.hide} className="mr-6">关闭</a>
-                  <a className="mr-6" onClick={this.sureOperateCode}>确认</a>
-                  <a className="mr-6">清除</a>
+                  <a onClick={this.hide} className="mr-6">{IconClose({})}</a>
+                  <a className="mr-6" onClick={this.sureOperateCode}>{IconSure({})}</a>
+                  <a className="mr-6">{IconClear({})}</a>
                 </div>
               }
               trigger="click"

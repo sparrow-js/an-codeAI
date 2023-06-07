@@ -4,10 +4,13 @@ export const node = {
   messages: [
     {
       role: 'system',
-      content: 'Add comments to the code',
+      from: 'built-in',
+      content:
+        'I am a front-end development engineer, using technologies such as the antd UI framework',
     },
     {
       role: 'user',
+      from: 'built-in',
       content: `Review the following [language] code for code smells and suggest improvements: [code block]`,
     },
   ],

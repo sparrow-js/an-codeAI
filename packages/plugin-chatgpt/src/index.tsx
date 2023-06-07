@@ -6,10 +6,9 @@ import { IconEdit } from './IconEdit';
 import { IconSave } from './IconSave';
 import { IconSeed } from './IconSeed';
 import { IconConnect } from './IconConnect';
-import { chatgptConnect, chatgptGetAppKey, chatgptGenerate, editInsertNode } from '../api';
+import { chatgptConnect, chatgptGetAppKey, editInsertNode } from '../api';
 import './index.less';
 import { Input, Select, Button } from 'antd';
-import { Role } from '../types';
 import ContentMessage from './components/content';
 import { Chatgpt } from './chatgpt';
 import {
@@ -81,22 +80,14 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
     }
 
     onSendMessage = async () => {
-      const { messages } = this.chatgpt;
+      const { chatgptGenerate } = this.chatgpt;
       const { sendMessage } = this.state;
-      if (!sendMessage) return;
-      const message = {
-        role: Role.user,
-        content: sendMessage,
-      };
-      messages.push(message);
-      this.setState({
-        sendMessage: '',
-      });
-      this.scrollBottom();
-      const res = await chatgptGenerate(messages);
-      const { data } = res;
-      if (data && data.message) {
-        messages.push(data.message);
+      const res = await chatgptGenerate(sendMessage);
+      if (res) {
+        this.setState({
+          sendMessage: '',
+        });
+        this.scrollBottom();
       }
     };
 
@@ -106,9 +97,13 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
       });
     };
 
+    handleChange = (value: string) => {
+      console.log(`selected ${value}`);
+    };
 
     handlePromptChange = (value: any) => {
-      this.chatgpt.setPrompt(value);
+      const { chatgpt } = this;
+      chatgpt.setPrompt(value);
       this.scrollBottom();
     };
 
@@ -133,19 +128,12 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
               }
             </div>
             <div className="code-auto-box">
-              <CodeAuto chatgpt={this.chatgpt} />
-            </div>
-            <div className="prompt-box">
-              <Select
-                onChange={this.handlePromptChange}
-                style={{ width: 200 }}
-                options={this.chatgpt.promptList}
-              />
+              <CodeAuto chatgpt={this.chatgpt} scrollBottom={this.scrollBottom} />
             </div>
             <div ref={(messageBox) => { this.messageBox = messageBox; }} className="message-box">
               {
                 messages.map((item) => {
-                  return (
+                  return item.from !== 'built-in' ? (
                     <div className="message-item">
                       <div>
                         <span className="role-name">{item.role}</span>
@@ -154,13 +142,34 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
                         <ContentMessage content={item.content} chatgpt={this.chatgpt} />
                       </div>
                     </div>
-                  );
+                  ) : null;
                 })
               }
             </div>
+            {/* <div>
+              <Select
+                defaultValue="modify"
+                style={{ width: 120 }}
+                size="small"
+                onChange={this.handleChange}
+                options={[
+                  { value: 'modify', label: '修改' },
+                  { value: 'create', label: '创建' },
+                ]}
+              />
+            </div> */}
+            <div className="prompt-type">
+              <Select
+                size="small"
+                defaultValue="modify"
+                onChange={this.handlePromptChange}
+                style={{ width: 100 }}
+                options={this.chatgpt.codeOperateList}
+              />
+            </div>
             <div className={classNames('send-box')}>
               <TextArea className={classNames('send-input')} autoSize bordered={false} value={this.state.sendMessage} onChange={this.handlerSendMessage} />
-              <Button className="send-btn" onClick={this.onSendMessage} icon={IconSeed({})} />
+              <Button className="height-24 send-btn" onClick={this.onSendMessage} icon={IconSeed({})} />
             </div>
           </div>
         );

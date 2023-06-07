@@ -13,6 +13,8 @@ const watcherQueue = [];
 
 @Injectable()
 export class EditService {
+  rootDir = '';
+
   testCode(): any {
     const code = `
 <div>test</div>           
@@ -81,6 +83,7 @@ export class EditService {
         currentPath = Path.join(currentPath, '..');
       }
     }
+    this.rootDir = rootDir;
     return rootDir;
   }
 

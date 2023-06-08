@@ -184,12 +184,20 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     return autorun(effect, options);
   }
 
+  modifySimulatorUrl(iframeUrl: string, url?: string) {
+    this._props.simulatorUrl = iframeUrl;
+    this._iframe && (this._iframe.src = this._props.simulatorUrl);
+    if (url) {
+      history.pushState({}, '', url);
+    }
+  }
+
+
   private _renderer?: BuiltinSimulatorRenderer;
 
   get renderer() {
     return this._renderer;
   }
-
 
     async mountContentFrame(iframe: HTMLIFrameElement | null) {
         if (!iframe || this._iframe === iframe) {

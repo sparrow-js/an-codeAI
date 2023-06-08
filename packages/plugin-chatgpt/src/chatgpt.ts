@@ -10,7 +10,12 @@ import {
     makeObservable,
     hotkey,
     action,
+    observer,
+    globalContext,
 } from '@firefly/auto-editor-core';
+import {
+  Designer,
+} from '@firefly/auto-designer';
 import {
     getPromptList,
     watchProject,
@@ -25,7 +30,8 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
   export class Chatgpt {
     @obx.ref selection: string;
     @obx.ref promptList: any[];
-    @obx.ref currentPrompt: any = 'react';
+    @obx.ref currentPrompt: any;
+    promptId: string = 'react';
     @obx.ref chatgptKey: string;
     @obx messages: ChatCompletionRequestMessage[] = [];
     hasConnect: boolean = false;
@@ -92,6 +98,7 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
      * @param {string} text
      */
     setPrompt(value: string) {
+      this.promptId = value;
       const prompt = this.promptList.find((item) => item.value === value);
       if (prompt) {
         this.currentPrompt = prompt;
@@ -112,7 +119,6 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
       if (res.data) {
         this.messages = res.data.messages;
       }
-      console.log('*****1', res);
     }
 
     async watchProject(path: string) {
@@ -134,7 +140,6 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
           };
         });
       }
-      console.log('****', this.changeFiles);
     }
 
     @action
@@ -173,10 +178,19 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
       };
       messages.push(message);
       const res = await chatgptGenerate({
-        messages,
+        message,
         codeOperateType,
+        promptId: this.promptId,
       });
       const { data } = res;
+      if (data.url) {
+        const editor = globalContext.get('editor');
+        const designer: Designer = editor.get('designer');
+        let urlObj = new URL(location.href);
+        let urlParam = new URL(urlObj.searchParams.get('url') || '');
+        let url = `${urlParam.origin}${data.url}`;
+        designer.project.simulator?.modifySimulatorUrl(url, `${urlObj.origin}/?url=${url}`);
+      }
       if (data && data.message) {
         messages.push(data.message);
         return true;

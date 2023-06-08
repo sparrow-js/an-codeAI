@@ -152,6 +152,7 @@ export interface ISimulatorHost<P = object> extends ISensor {
   findDOMNodes(instance: ComponentInstance, selector?: string): Array<Element | Text> | null;
 
 //   getDropContainer(e: LocateEvent): DropContainer | null;
+  modifySimulatorUrl(iframeUrl: string, url?: string): void;
 
   postEvent(evtName: string, evtData: any): void;
 

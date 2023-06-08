@@ -54,45 +54,56 @@ export class ChatgptService {
       messages: messageList,
     });
     if (response.data.choices.length) {
-      console.log('****5', response.data.choices);
       const firstMessage = response.data.choices[0].message;
       messageList.push(firstMessage);
       if (codeOperateType === 'create') {
         const { content } = firstMessage;
         const fileName = FsHandler.getInstance().extractFileName(content);
         const filePath = `src/pages/${fileName}/${fileName}.tsx`;
-        console.log('****1', filePath);
         FsHandler.getInstance().createFile(
           pathInstance.join(this.rootDir, filePath),
           content,
         );
 
-        Generator.getInstance().appendRouter(
-          FsHandler.getInstance().parseFile(
-            pathInstance.join(this.rootDir, 'src/routes/index.tsx'),
-          ),
+        const routerPath = pathInstance.join(
+          this.rootDir,
+          'src/routes/index.tsx',
+        );
+
+        const routerContent = Generator.getInstance().appendRouter(
+          FsHandler.getInstance().parseFile(routerPath),
           `var data = {
             path: '/${fileName}',
             element: <${fileName} />,
           }`,
           `import ${fileName} from '../pages/${fileName}';`,
         );
+
+        FsHandler.getInstance().writeFile(routerContent, routerPath);
         return {
-          role: 'assistant',
-          content: `
-        创建完成
-        文件路径：${filePath}
-        `,
+          message: {
+            role: 'assistant',
+            content: `
+创建完成
+文件路径：${filePath}
+          `,
+          },
+          url: `/${fileName}`,
+          path: pathInstance.join(this.rootDir, filePath),
         };
       } else if (codeOperateType === 'modify') {
         FsHandler.getInstance().writeFile(path, firstMessage.content);
         return {
-          role: 'assistant',
-          content: `修改完成`,
+          message: {
+            role: 'assistant',
+            content: `修改完成`,
+          },
         };
       }
       if (firstMessage) {
-        return firstMessage;
+        return {
+          message: firstMessage,
+        };
       }
     }
   }
@@ -123,7 +134,6 @@ export class ChatgptService {
       .replace('[code block]', content)
       .replace('[language]', 'tsx or ts');
     const res = await this.generate(messages);
-    console.log('*********8', res);
     return res;
   }
 }

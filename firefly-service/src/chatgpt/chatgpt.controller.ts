@@ -51,7 +51,7 @@ export class ChatgptController {
     return {
       status: 1,
       data: {
-        message: res,
+        ...res,
       },
     };
   }
@@ -95,8 +95,8 @@ export class ChatgptController {
     return {
       status: 1,
       data: {
-        messages: codePrompt.messages.concat(res),
-        message: res,
+        messages: codePrompt.messages.concat(res.message),
+        ...res,
       },
     };
   }

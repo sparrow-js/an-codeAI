@@ -59,7 +59,7 @@ export class ChatgptService {
       if (codeOperateType === 'create') {
         const { content } = firstMessage;
         const fileName = FsHandler.getInstance().extractFileName(content);
-        const filePath = `src/pages/${fileName}/${fileName}.tsx`;
+        const filePath = `src/pages/${fileName}/index.tsx`;
         FsHandler.getInstance().createFile(
           pathInstance.join(this.rootDir, filePath),
           content,
@@ -79,7 +79,7 @@ export class ChatgptService {
           `import ${fileName} from '../pages/${fileName}';`,
         );
 
-        FsHandler.getInstance().writeFile(routerContent, routerPath);
+        FsHandler.getInstance().writeFile(routerPath, routerContent, true);
         return {
           message: {
             role: 'assistant',
@@ -92,7 +92,7 @@ export class ChatgptService {
           path: pathInstance.join(this.rootDir, filePath),
         };
       } else if (codeOperateType === 'modify') {
-        FsHandler.getInstance().writeFile(path, firstMessage.content);
+        FsHandler.getInstance().writeFile(path, firstMessage.content, true);
         return {
           message: {
             role: 'assistant',

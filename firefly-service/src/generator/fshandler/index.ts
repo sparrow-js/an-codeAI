@@ -1,5 +1,7 @@
 import * as fsExtra from 'fs-extra';
 import * as pathInstance from 'path';
+import * as prettier from 'prettier';
+import parserTs from 'prettier/parser-typescript';
 
 export default class FsHandler {
   static _instance: FsHandler;
@@ -14,8 +16,15 @@ export default class FsHandler {
     const fileStr = fsExtra.readFileSync(pathInstance.join(path), 'utf8');
     return fileStr;
   }
-  writeFile(path: string, content: string) {
-    fsExtra.writeFileSync(path, content, 'utf8');
+  writeFile(path: string, content: string, isFormat?: boolean) {
+    const formatCode = isFormat
+      ? prettier.format(content, {
+          semi: true,
+          parser: 'typescript',
+          plugins: [parserTs],
+        })
+      : content;
+    fsExtra.writeFileSync(path, formatCode, 'utf8');
   }
 
   extractFileName(codeContent: string) {

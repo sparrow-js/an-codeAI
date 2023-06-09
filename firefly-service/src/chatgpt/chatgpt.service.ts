@@ -64,7 +64,6 @@ export class ChatgptService {
       const firstMessage = response.data.choices[0].message;
       messageList.push(firstMessage);
       if (typeText.includes('创建')) {
-        console.log('*****2');
         const { content } = firstMessage;
         const fileName = FsHandler.getInstance().extractFileName(content);
         const filePath = `src/pages/${fileName}/index.tsx`;

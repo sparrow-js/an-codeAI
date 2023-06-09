@@ -81,11 +81,11 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
 
     onSendMessage = async () => {
       const { sendMessage } = this.state;
+      this.setState({
+        sendMessage: '',
+      });
       const res = await this.chatgpt.chatgptGenerate(sendMessage);
       if (res) {
-        this.setState({
-          sendMessage: '',
-        });
         this.scrollBottom();
       }
     };

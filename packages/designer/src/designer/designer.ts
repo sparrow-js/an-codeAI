@@ -323,6 +323,11 @@ export class Designer {
     }
   }
 
+  touchOffsetObserver() {
+    this.clearOobxList(true);
+    this.oobxList.forEach((item) => item.compute());
+  }
+
   @computed get componentsMap(): { [key: string]: NpmInfo | Component } {
     const maps: any = {};
     const designer = this;

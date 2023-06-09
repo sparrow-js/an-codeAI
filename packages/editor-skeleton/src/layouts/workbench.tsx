@@ -3,6 +3,7 @@ import { TipContainer, observer } from '@alilc/lowcode-editor-core';
 import classNames from 'classnames';
 import { Skeleton } from '../skeleton';
 import LeftArea from './left-area';
+import LeftFixedPane from './left-fixed-pane';
 import LeftFloatPane from './left-float-pane';
 import Toolbar from './toolbar';
 import MainArea from './main-area';
@@ -30,6 +31,7 @@ export class Workbench extends Component<{ skeleton: Skeleton; config?: EditorCo
           <div className="lc-workbench-body">
             <LeftArea area={skeleton.leftArea} />
             <LeftFloatPane area={skeleton.leftFloatArea} />
+            <LeftFixedPane area={skeleton.leftFixedArea} />
             <div className="lc-workbench-center">
               <MainArea area={skeleton.mainArea} />
             </div>

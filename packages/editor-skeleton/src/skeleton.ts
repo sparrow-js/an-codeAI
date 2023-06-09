@@ -44,6 +44,7 @@ export class Skeleton {
   readonly leftArea: Area<DockConfig | PanelDockConfig | DialogDockConfig>;
 
   readonly leftFloatArea: Area<PanelConfig, Panel>;
+  readonly leftFixedArea: Area<PanelConfig, Panel>;
 
   readonly mainArea: Area<WidgetConfig | PanelConfig, Widget | Panel>;
 
@@ -62,6 +63,18 @@ export class Skeleton {
         return this.createWidget(config);
       },
       false,
+    );
+
+    this.leftFixedArea = new Area(
+      this,
+      'leftFixedArea',
+      (config) => {
+        if (isPanel(config)) {
+          return config;
+        }
+        return this.createPanel(config);
+      },
+      true,
     );
 
     this.leftFloatArea = new Area(
@@ -126,17 +139,17 @@ export class Skeleton {
    */
   @action
   toggleFloatStatus(panel: Panel) {
-    // const isFloat = panel?.parent?.name === 'leftFloatArea';
-    // if (isFloat) {
-    //   this.leftFloatArea.remove(panel);
-    //   this.leftFixedArea.add(panel);
-    //   this.leftFixedArea.container.active(panel);
-    // } else {
-    //   this.leftFixedArea.remove(panel);
-    //   this.leftFloatArea.add(panel);
-    //   this.leftFloatArea.container.active(panel);
-    // }
-    // this.editor?.getPreference()?.set(`${panel.name}-pinned-status-isFloat`, !isFloat, 'skeleton');
+    const isFloat = panel?.parent?.name === 'leftFloatArea';
+    if (isFloat) {
+      this.leftFloatArea.remove(panel);
+      this.leftFixedArea.add(panel);
+      this.leftFixedArea.container.active(panel);
+    } else {
+      this.leftFixedArea.remove(panel);
+      this.leftFloatArea.add(panel);
+      this.leftFloatArea.container.active(panel);
+    }
+    this.editor?.getPreference()?.set(`${panel.name}-pinned-status-isFloat`, !isFloat, 'skeleton');
   }
 
   buildFromConfig(config?: EditorConfig, components: PluginClassSet = {}) {
@@ -323,6 +336,8 @@ export class Skeleton {
       case 'center':
       case 'centerArea':
         return this.mainArea.add(parsedConfig as PanelConfig);
+      case 'leftFixedArea':
+          return this.leftFixedArea.add(parsedConfig as PanelConfig);
       case 'leftFloatArea':
         return this.leftFloatArea.add(parsedConfig as PanelConfig);
       case 'stages':

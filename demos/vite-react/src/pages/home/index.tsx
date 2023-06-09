@@ -6,7 +6,6 @@ function Home() {
   return (
     <div className="App">
       <h1>辅助前端开发</h1>
-      <h1>添加内容</h1>
       <div>
         <a href="https://reactjs.org" target="_blank" rel="noreferrer">
           <img src={fireflyLogo} className="logo react" alt="React logo" />

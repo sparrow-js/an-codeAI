@@ -1,4 +1,4 @@
-export default {
+export const Text = {
   componentName: '',
-  content: '<h1>辅助前端开发</h1>',
+  content: '<h1>添加内容</h1>',
 };

@@ -4,6 +4,7 @@ import generate from '@babel/generator';
 
 import { NodeParam } from '../../types';
 import * as _ from 'lodash';
+import materials from 'src/materials';
 
 export default class Generator {
   static _instance: Generator;
@@ -21,21 +22,54 @@ export default class Generator {
       sourceType: 'module',
       plugins: ['jsx'],
     });
+    const componentContent = materials[nodeParam.componentId].content;
+    const m = parser.parse(componentContent, {
+      sourceType: 'module',
+      plugins: ['jsx'],
+    });
+    console.log(
+      '********123',
+      JSON.stringify(_.get(m, 'program.body'), null, 2),
+    );
 
     traverse(ast, {
       enter: ({ node }) => {
         if (node.start == start && node.end == end) {
-          (node as any).children.splice(
-            nodeParam.position,
+          let effective = -1;
+          let position = nodeParam.position;
+          const children = (node as any).children;
+          for (let i = 0; i < children.length; i++) {
+            // console.log(
+            //   '********5',
+            //   position,
+            //   children[i],
+            //   children[i].value,
+            //   (children[i].value || '').includes('\n'),
+            //   i,
+            //   effective,
+            // );
+            if (children[i].type === 'JSXElement') {
+              ++effective;
+            }
+            if (effective === +nodeParam.position) {
+              position = i;
+              break;
+            }
+          }
+          const componentParse = parser.parse(componentContent, {
+            sourceType: 'module',
+            plugins: ['jsx'],
+          });
+
+          children.splice(
+            position,
             0,
-            parser.parse(nodeParam.content || '<h1>辅助前端开发</h1>', {
-              sourceType: 'module',
-              plugins: ['jsx'],
-            }),
+            _.get(componentParse, 'program.body[0].expression'),
           );
         }
       },
     });
+    console.log('******90', generate(ast).code);
     return generate(ast).code;
   }
 

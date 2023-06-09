@@ -21,7 +21,6 @@ export default class FsHandler {
       ? prettier.format(content, {
           semi: true,
           parser: 'typescript',
-          plugins: [parserTs],
         })
       : content;
     fsExtra.writeFileSync(path, formatCode, 'utf8');

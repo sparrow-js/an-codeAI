@@ -2,7 +2,8 @@ export interface NodeParam {
   path: string;
   start: number;
   end: number;
-  position: string;
+  position: number;
+  componentId?: string;
   componentName?: string;
   content?: string;
 }

@@ -24,6 +24,20 @@ export default class ComponentPane extends React.Component<ComponentPaneProps, C
       if (!shell || shell.dataset.registered) {
         return;
       }
+
+      function getSnippetId(elem: any) {
+        if (!elem) {
+          return null;
+        }
+        while (shell !== elem) {
+          console.log('elem.classList; ', elem.classList);
+          if (elem.classList.contains('snippet')) {
+            return elem.dataset.id;
+          }
+          elem = elem.parentNode;
+        }
+        return null;
+      }
       const { editor } = this.props;
       const designer = editor?.get('designer');
       const _dragon = designer?.dragon;
@@ -38,7 +52,7 @@ export default class ComponentPane extends React.Component<ComponentPaneProps, C
 
       _dragon.from(shell, (e: Event) => {
         const doc = designer?.currentDocument;
-        const id = 'title';
+        const id = getSnippetId(e.target);
         if (!doc || !id) {
           return false;
         }
@@ -74,7 +88,7 @@ export default class ComponentPane extends React.Component<ComponentPaneProps, C
                 title: 'img',
                 icon: 'https://img.alicdn.com/imgextra/i3/O1CN01tnhXhk1GUIFhsXwzA_!!6000000000625-55-tps-56-56.svg',
                 snippets: [{
-                  id: 'img',
+                  id: 'Image',
                 }],
               }}
               key={'img'}

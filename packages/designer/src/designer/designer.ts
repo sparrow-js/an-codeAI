@@ -122,13 +122,13 @@ export class Designer {
       this.dragon.onDragend((e) => {
         const { dragObject, copy } = e;
         const loc = this._dropLocation;
-        console.log('*******2', loc, dragObject, copy);
         if (loc) {
           if (isLocationChildrenDetail(loc.detail) && loc.detail.valid !== false) {
             let nodes: Node[] | undefined;
             if (isDragNodeObject(dragObject)) {
-              console.log('*******', loc.target, [...dragObject.nodes], loc.detail.index, copy);
+              // console.log('*******', loc.target, [...dragObject.nodes], loc.detail.index, copy);
             } else if (isDragNodeDataObject(dragObject)) {
+              console.log('*******2', loc, loc.detail.index);
               // const nodeParam ={
               //   path: loc.target.id,
               //   start: string;
@@ -154,9 +154,10 @@ export class Designer {
                 path: loc.target.id.split('::')[0],
                 start: interval[0],
                 end: interval[1],
-                position: loc.detail.index,
+                position: loc.detail.near?.pos === 'before' ? (loc.detail.index || 0) + 1 : loc.detail.index,
+                componentId: nodeData[0].id,
               }, nodeData, loc.detail.index);
-              console.log('*******2', loc.target, nodeData, loc.detail.index);
+              // console.log('*******2', loc.target, nodeData, loc.detail.index);
             }
             if (nodes) {
               // loc.document.selection.selectAll(nodes.map((o) => o.id));

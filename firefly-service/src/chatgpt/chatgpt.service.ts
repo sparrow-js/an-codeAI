@@ -30,11 +30,18 @@ export class ChatgptService {
   }) {
     const { configuration, openai } = this;
     const { message, codeOperateType, path, promptId } = data;
-    if (!configuration.apiKey) {
+    if (!this.apiKey) {
       return {
         error: 'not api key',
       };
     }
+
+    const res = await this.checkPromptType(`
+将文本分类为：创建，修改，未知
+文本：${message.content}
+    `);
+    const typeText = res.data.choices[0].text;
+    //[ { text: '\n创建', index: 0, logprobs: null, finish_reason: 'stop' } ]
 
     if (!this.messageMap.has(promptId)) {
       const promptList = this.getPrompt();
@@ -56,7 +63,8 @@ export class ChatgptService {
     if (response.data.choices.length) {
       const firstMessage = response.data.choices[0].message;
       messageList.push(firstMessage);
-      if (codeOperateType === 'create') {
+      if (typeText.includes('创建')) {
+        console.log('*****2');
         const { content } = firstMessage;
         const fileName = FsHandler.getInstance().extractFileName(content);
         const filePath = `src/pages/${fileName}/index.tsx`;
@@ -91,7 +99,7 @@ export class ChatgptService {
           url: `/${fileName}`,
           path: pathInstance.join(this.rootDir, filePath),
         };
-      } else if (codeOperateType === 'modify') {
+      } else if (typeText.includes('修改')) {
         FsHandler.getInstance().writeFile(path, firstMessage.content, true);
         return {
           message: {
@@ -134,6 +142,20 @@ export class ChatgptService {
       .replace('[code block]', content)
       .replace('[language]', 'tsx or ts');
     const res = await this.generate(messages);
+    return res;
+  }
+
+  async checkPromptType(text: string) {
+    /**
+     * 将文本分类为：创建，修改，未知
+        文本：创建产品名称，产品详情。
+    */
+    const res = await this.openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt: text,
+      max_tokens: 300,
+      temperature: 0,
+    });
     return res;
   }
 }

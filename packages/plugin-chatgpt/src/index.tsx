@@ -144,27 +144,6 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
                 })
               }
             </div>
-            {/* <div>
-              <Select
-                defaultValue="modify"
-                style={{ width: 120 }}
-                size="small"
-                onChange={this.handleChange}
-                options={[
-                  { value: 'modify', label: '修改' },
-                  { value: 'create', label: '创建' },
-                ]}
-              />
-            </div> */}
-            <div className="prompt-type">
-              <Select
-                size="small"
-                defaultValue="modify"
-                onChange={this.handlePromptChange}
-                style={{ width: 100 }}
-                options={this.chatgpt.codeOperateList}
-              />
-            </div>
             <div className={classNames('send-box')}>
               <TextArea className={classNames('send-input')} autoSize bordered={false} value={this.state.sendMessage} onChange={this.handlerSendMessage} />
               <Button className="height-24 send-btn" onClick={this.onSendMessage} icon={IconSeed({})} />

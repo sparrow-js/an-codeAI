@@ -62,6 +62,7 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
         value: 'default',
       },
     ];
+    filePath: string = '';
 
 
     constructor() {
@@ -181,6 +182,7 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
         message,
         codeOperateType,
         promptId: this.promptId,
+        path: this.filePath,
       });
       const { data } = res;
       if (data.url) {
@@ -190,6 +192,9 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
         let urlParam = new URL(urlObj.searchParams.get('url') || '');
         let url = `${urlParam.origin}${data.url}`;
         designer.project.simulator?.modifySimulatorUrl(url, `${urlObj.origin}/?url=${url}`);
+      }
+      if (data.path) {
+        this.filePath = data.path;
       }
       if (data && data.message) {
         messages.push(data.message);

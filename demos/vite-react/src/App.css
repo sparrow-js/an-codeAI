@@ -1,9 +1,10 @@
 #root {
   max-width: 1280px;
-  padding: 2rem;
   text-align: center;
 }
-
+.App{
+  padding: 10px;
+}
 .logo {
   height: 6em;
   padding: 1.5em;

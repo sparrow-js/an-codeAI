@@ -1,23 +1,14 @@
-import UserForm from "../pages/UserForm";
-import ProductForm from "../pages/ProductForm";
-import { RouteObject, createBrowserRouter } from "react-router-dom";
-import Home from "../pages/home";
-import Test from "../pages/test";
+import UserForm from '../pages/UserForm';
+import { RouteObject, createBrowserRouter } from 'react-router-dom';
+import Home from '../pages/home';
+
 const routeList: RouteObject[] = [
   {
-    path: "/",
+    path: '/',
     element: <Home />,
   },
   {
-    path: "/test",
-    element: <Test />,
-  },
-  {
-    path: "/ProductForm",
-    element: <ProductForm />,
-  },
-  {
-    path: "/UserForm",
+    path: '/UserForm',
     element: <UserForm />,
   },
 ];

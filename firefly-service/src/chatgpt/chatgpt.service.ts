@@ -5,20 +5,38 @@ import { react, command, codeReview, node, refactor } from './prompt';
 import FsHandler from '../generator/fshandler';
 import Generator from '../generator/ast';
 import * as pathInstance from 'path';
+import { ChatOpenAI } from 'langchain/chat_models/openai';
+import {
+  ChatPromptTemplate,
+  HumanMessagePromptTemplate,
+  SystemMessagePromptTemplate,
+  MessagesPlaceholder,
+  AIMessagePromptTemplate,
+} from 'langchain/prompts';
+import { ConversationChain } from 'langchain/chains';
+import { BufferMemory } from 'langchain/memory';
+import {
+  HumanChatMessage,
+  SystemChatMessage,
+  AIChatMessage,
+} from 'langchain/schema';
+import { OpenAI } from 'langchain/llms/openai';
 
 @Injectable()
 export class ChatgptService {
   openai: any;
-  configuration: any;
+  chatOpenAI: any;
   apiKey: string;
   rootDir: string;
   messageMap = new Map();
+  cacheMessageMap = new Map();
+  chain: ConversationChain;
   connect(id: string): boolean {
     this.apiKey = id;
-    this.configuration = new Configuration({
-      apiKey: process.env.OPENAI_API_KEY || id,
+    this.chatOpenAI = new ChatOpenAI({
+      openAIApiKey: process.env.OPENAI_API_KEY || id,
+      temperature: 0,
     });
-    this.openai = new OpenAIApi(this.configuration);
     return true;
   }
 
@@ -28,7 +46,7 @@ export class ChatgptService {
     path: string;
     promptId: string;
   }) {
-    const { configuration, openai } = this;
+    const { openai } = this;
     const { message, codeOperateType, path, promptId } = data;
     if (!this.apiKey) {
       return {
@@ -40,29 +58,18 @@ export class ChatgptService {
 将文本分类为：创建，修改，未知
 文本：${message.content}
     `);
-    const typeText = res.data.choices[0].text;
-    //[ { text: '\n创建', index: 0, logprobs: null, finish_reason: 'stop' } ]
+    const typeText = res;
 
-    if (!this.messageMap.has(promptId)) {
-      const promptList = this.getPrompt();
-      const prompt = promptList.find((item) => item.value === promptId);
-      const messageList = prompt.messages.map((item) => {
-        return { role: item.role, content: item.content };
-      });
-      this.messageMap.set(promptId, messageList);
-    }
+    if (!this.chain) this.initChat();
 
-    const messageList = this.messageMap.get(promptId);
-    messageList.push(message);
-
-    const response = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
-      temperature: 0,
-      messages: messageList,
-    });
-    if (response.data.choices.length) {
-      const firstMessage = response.data.choices[0].message;
-      messageList.push(firstMessage);
+    const { response } = await this.call(message.content);
+    console.log('******8', response);
+    if (response) {
+      const firstMessage = {
+        content: (response as string) || '',
+        from: 'ai',
+        role: 'assistant',
+      };
       if (typeText.includes('创建')) {
         const { content } = firstMessage;
         const fileName = FsHandler.getInstance().extractFileName(content);
@@ -90,6 +97,7 @@ export class ChatgptService {
         return {
           message: {
             role: 'assistant',
+            from: 'custom',
             content: `
 创建完成
 文件路径：${filePath}
@@ -104,6 +112,7 @@ export class ChatgptService {
           message: {
             role: 'assistant',
             content: `修改完成`,
+            from: 'custom',
           },
         };
       }
@@ -149,12 +158,66 @@ export class ChatgptService {
      * 将文本分类为：创建，修改，未知
         文本：创建产品名称，产品详情。
     */
-    const res = await this.openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: text,
-      max_tokens: 300,
+    const model = new OpenAI({
+      openAIApiKey: this.apiKey,
       temperature: 0,
+      modelName: 'text-davinci-003',
     });
+    const res = await model.call(text);
+    console.log(res);
     return res;
+  }
+
+  initMessage() {
+    const messages = react.messages.reduce((prevValue, item) => {
+      let chatMessage;
+      if (item.role === 'user') {
+        chatMessage = new HumanChatMessage(item.content);
+      } else if (item.role === 'assistant') {
+        chatMessage = new AIChatMessage(item.content);
+      }
+      if (chatMessage) {
+        prevValue.push(chatMessage);
+      }
+      return prevValue;
+    }, []);
+    this.cacheMessageMap.set('react', messages);
+    return messages;
+  }
+
+  initChat() {
+    const chatPrompt = ChatPromptTemplate.fromPromptMessages([
+      SystemMessagePromptTemplate.fromTemplate(
+        `
+        你是一个react工程师，使用antd作为UI库。
+        1.返回结果只需输出代码。
+        2.开发语言使用typescript。
+        `,
+      ),
+      new MessagesPlaceholder('preMessage'),
+      new MessagesPlaceholder('history'),
+      HumanMessagePromptTemplate.fromTemplate('{input}'),
+    ]);
+
+    this.chain = new ConversationChain({
+      memory: new BufferMemory({
+        inputKey: 'question',
+        returnMessages: true,
+        memoryKey: 'history',
+      }),
+      prompt: chatPrompt,
+      llm: this.chatOpenAI,
+      verbose: true,
+    });
+  }
+
+  async call(content: string) {
+    const response = await this.chain.call({
+      input: content,
+      preMessage: this.cacheMessageMap.has('react')
+        ? this.cacheMessageMap.get('react')
+        : this.initMessage(),
+    });
+    return response;
   }
 }

@@ -1,3 +1,4 @@
+import UserForm from "../pages/UserForm";
 import ProductForm from "../pages/ProductForm";
 import { RouteObject, createBrowserRouter } from "react-router-dom";
 import Home from "../pages/home";
@@ -14,6 +15,10 @@ const routeList: RouteObject[] = [
   {
     path: "/ProductForm",
     element: <ProductForm />,
+  },
+  {
+    path: "/UserForm",
+    element: <UserForm />,
   },
 ];
 export const router = createBrowserRouter(routeList);

@@ -21,6 +21,8 @@ import {
   AIChatMessage,
 } from 'langchain/schema';
 import { OpenAI } from 'langchain/llms/openai';
+import { VetorStoresService } from '../vetorstores/vetorstores.service';
+import globalConfig from '../globalConfig';
 
 @Injectable()
 export class ChatgptService {
@@ -31,12 +33,16 @@ export class ChatgptService {
   messageMap = new Map();
   cacheMessageMap = new Map();
   chain: ConversationChain;
+  globalConfig = globalConfig.getInstance();
+  constructor(readonly vetorStoresService: VetorStoresService) {}
   connect(id: string): boolean {
     this.apiKey = id;
+    this.globalConfig.setAppkey(this.apiKey);
     this.chatOpenAI = new ChatOpenAI({
       openAIApiKey: process.env.OPENAI_API_KEY || id,
       temperature: 0,
     });
+    this.vetorStoresService.connectVectorStore('antd-test-collection');
     return true;
   }
 
@@ -168,16 +174,17 @@ export class ChatgptService {
     return res;
   }
 
-  initMessage() {
-    const messages = react.messages.reduce((prevValue, item) => {
-      let chatMessage;
-      if (item.role === 'user') {
-        chatMessage = new HumanChatMessage(item.content);
-      } else if (item.role === 'assistant') {
-        chatMessage = new AIChatMessage(item.content);
+  async initMessage(content: string) {
+    const docs = await this.vetorStoresService.getSimilaritySearch(content);
+
+    const messages = docs.reduce((prevValue, item) => {
+      const { pageContent, metadata } = item;
+      if (pageContent) {
+        prevValue.push(new HumanChatMessage(pageContent));
       }
-      if (chatMessage) {
-        prevValue.push(chatMessage);
+
+      if (metadata && metadata.code) {
+        prevValue.push(new AIChatMessage(metadata.code));
       }
       return prevValue;
     }, []);
@@ -199,12 +206,13 @@ export class ChatgptService {
       HumanMessagePromptTemplate.fromTemplate('{input}'),
     ]);
 
+    const memory = new BufferMemory({
+      inputKey: 'question',
+      returnMessages: true,
+      memoryKey: 'history',
+    });
     this.chain = new ConversationChain({
-      memory: new BufferMemory({
-        inputKey: 'question',
-        returnMessages: true,
-        memoryKey: 'history',
-      }),
+      memory,
       prompt: chatPrompt,
       llm: this.chatOpenAI,
       verbose: true,
@@ -216,7 +224,7 @@ export class ChatgptService {
       input: content,
       preMessage: this.cacheMessageMap.has('react')
         ? this.cacheMessageMap.get('react')
-        : this.initMessage(),
+        : this.initMessage(content),
     });
     return response;
   }

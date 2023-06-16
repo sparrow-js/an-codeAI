@@ -15,27 +15,11 @@ const watcherQueue = [];
 export class EditService {
   rootDir = '';
 
-  testCode(): any {
-    const code = `
-<div>test</div>           
-    `;
-    const ast = parse(code, {
-      sourceType: 'module',
-      plugins: ['jsx'],
-    });
-    const output = generate(
-      ast,
-      {
-        /* options */
-      },
-      code,
-    );
-  }
-
   insertNode(nodeParam: NodeParam): any {
     const content = FsHandler.getInstance().parseFile(nodeParam.path);
     const code = Generator.getInstance().insertNode(content, nodeParam);
-    const formatCode = prettier.format(code, { semi: true });
+    // const options = prettier.resolveConfig.sync(); // 使用默认配置
+    const formatCode = prettier.format(code);
     FsHandler.getInstance().writeFile(nodeParam.path, formatCode);
     return {
       status: 1,

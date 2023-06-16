@@ -17,12 +17,8 @@ export default class FsHandler {
     return fileStr;
   }
   writeFile(path: string, content: string, isFormat?: boolean) {
-    const formatCode = isFormat
-      ? prettier.format(content, {
-          semi: true,
-          parser: 'typescript',
-        })
-      : content;
+    // const options = prettier.resolveConfig.sync(); // 使用默认配置
+    const formatCode = isFormat ? prettier.format(content) : content;
     fsExtra.writeFileSync(path, formatCode, 'utf8');
   }
 

@@ -1,6 +1,6 @@
 export default class GlobalConfig {
   static _instance: GlobalConfig;
-  appkey: string;
+  appkey = '';
 
   static getInstance() {
     if (!this._instance) {

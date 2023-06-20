@@ -23,6 +23,7 @@ import {
 import { OpenAI } from 'langchain/llms/openai';
 import { VetorStoresService } from '../vetorstores/vetorstores.service';
 import globalConfig from '../globalConfig';
+import CodeChain from '../codechain';
 
 @Injectable()
 export class ChatgptService {
@@ -34,7 +35,10 @@ export class ChatgptService {
   cacheMessageMap = new Map();
   chain: ConversationChain;
   globalConfig = globalConfig.getInstance();
-  constructor(readonly vetorStoresService: VetorStoresService) {}
+  codeChain: CodeChain;
+  constructor(readonly vetorStoresService: VetorStoresService) {
+    this.codeChain = new CodeChain(vetorStoresService);
+  }
   connect(id: string): boolean {
     this.apiKey = id;
     this.globalConfig.setAppkey(this.apiKey);
@@ -42,7 +46,8 @@ export class ChatgptService {
       openAIApiKey: process.env.OPENAI_API_KEY || id,
       temperature: 0,
     });
-    this.vetorStoresService.connectVectorStore('antd-test-collection');
+    // this.vetorStoresService.createDocsEmbedding();
+    this.vetorStoresService.connectVectorStore('antd-test5-collection');
     return true;
   }
 
@@ -59,75 +64,77 @@ export class ChatgptService {
         error: 'not api key',
       };
     }
+    console.log('**********', 12);
 
-    const res = await this.checkPromptType(`
-将文本分类为：创建，修改，未知
-文本：${message.content}
-    `);
-    const typeText = res;
+    //     const res = await this.checkPromptType(`
+    // 将文本分类为：创建，修改，未知
+    // 文本：${message.content}
+    //     `);
+    //     const typeText = res;
+    const content = await this.codeChain.execute(message.content);
 
-    if (!this.chain) this.initChat();
+    // if (!this.chain) this.initChat();
 
-    const { response } = await this.call(message.content);
-    console.log('******8', response);
-    if (response) {
-      const firstMessage = {
-        content: (response as string) || '',
-        from: 'ai',
-        role: 'assistant',
-      };
-      if (typeText.includes('创建')) {
-        const { content } = firstMessage;
-        const fileName = FsHandler.getInstance().extractFileName(content);
-        const filePath = `src/pages/${fileName}/index.tsx`;
-        FsHandler.getInstance().createFile(
-          pathInstance.join(this.rootDir, filePath),
-          content,
-        );
+    //     const { response } = await this.call(message.content);
+    //     console.log('******8', response);
+    //     if (response) {
+    //       const firstMessage = {
+    //         content: (response as string) || '',
+    //         from: 'ai',
+    //         role: 'assistant',
+    //       };
+    //       if (typeText.includes('创建')) {
+    //         const { content } = firstMessage;
+    //         const fileName = FsHandler.getInstance().extractFileName(content);
+    //         const filePath = `src/pages/${fileName}/index.tsx`;
+    //         FsHandler.getInstance().createFile(
+    //           pathInstance.join(this.rootDir, filePath),
+    //           content,
+    //         );
 
-        const routerPath = pathInstance.join(
-          this.rootDir,
-          'src/routes/index.tsx',
-        );
+    //         const routerPath = pathInstance.join(
+    //           this.rootDir,
+    //           'src/routes/index.tsx',
+    //         );
 
-        const routerContent = Generator.getInstance().appendRouter(
-          FsHandler.getInstance().parseFile(routerPath),
-          `var data = {
-            path: '/${fileName}',
-            element: <${fileName} />,
-          }`,
-          `import ${fileName} from '../pages/${fileName}';`,
-        );
+    //         const routerContent = Generator.getInstance().appendRouter(
+    //           FsHandler.getInstance().parseFile(routerPath),
+    //           `var data = {
+    //             path: '/${fileName}',
+    //             element: <${fileName} />,
+    //           }`,
+    //           `import ${fileName} from '../pages/${fileName}';`,
+    //         );
 
-        FsHandler.getInstance().writeFile(routerPath, routerContent, true);
-        return {
-          message: {
-            role: 'assistant',
-            from: 'custom',
-            content: `
-创建完成
-文件路径：${filePath}
-          `,
-          },
-          url: `/${fileName}`,
-          path: pathInstance.join(this.rootDir, filePath),
-        };
-      } else if (typeText.includes('修改')) {
-        FsHandler.getInstance().writeFile(path, firstMessage.content, true);
-        return {
-          message: {
-            role: 'assistant',
-            content: `修改完成`,
-            from: 'custom',
-          },
-        };
-      }
-      if (firstMessage) {
-        return {
-          message: firstMessage,
-        };
-      }
-    }
+    //         FsHandler.getInstance().writeFile(routerPath, routerContent, true);
+    //         return {
+    //           message: {
+    //             role: 'assistant',
+    //             from: 'custom',
+    //             content: `
+    // 创建完成
+    // 文件路径：${filePath}
+    //           `,
+    //           },
+    //           url: `/${fileName}`,
+    //           path: pathInstance.join(this.rootDir, filePath),
+    //         };
+    //       } else if (typeText.includes('修改')) {
+    //         FsHandler.getInstance().writeFile(path, firstMessage.content, true);
+    //         return {
+    //           message: {
+    //             role: 'assistant',
+    //             content: `修改完成`,
+    //             from: 'custom',
+    //           },
+    //         };
+    //       }
+    //       if (firstMessage) {
+    //         return {
+    //           message: firstMessage,
+    //         };
+    //       }
+    //     }
   }
 
   getAppKey() {

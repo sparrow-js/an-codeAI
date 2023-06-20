@@ -3,29 +3,29 @@ export const demo = [
     pageContent: '创建一个产品详情页，包括产品名称，产品详情，产品名称',
     metadata: {
       source: 1,
-      code: `
-        import React from 'react';
-        import { PageHeader, Descriptions } from 'antd';
-        
-        type ProductDetailProps = {
-          name: string;
-          description: string;
-          price: number;
-        }
-        
-        const ProductDetail: React.FC<ProductDetailProps> = ({ name, description, price }) => {
-          return (
-            <>
-              <Descriptions bordered>
-                <Descriptions.Item label="Product Description" span={3}>
-                  {description}
-                </Descriptions.Item>
-              </Descriptions>
-            </>
-          );
-        }
-        
-        export default ProductDetail;        
+      output: `
+import React from 'react';
+import { PageHeader, Descriptions } from 'antd';
+
+type ProductDetailProps = {
+  name: string;
+  description: string;
+  price: number;
+}
+
+const ProductDetail: React.FC<ProductDetailProps> = ({ name, description, price }) => {
+  return (
+    <>
+      <Descriptions bordered>
+        <Descriptions.Item label="Product Description" span={3}>
+          {description}
+        </Descriptions.Item>
+      </Descriptions>
+    </>
+  );
+}
+
+export default ProductDetail;        
         `,
     },
   },
@@ -33,33 +33,33 @@ export const demo = [
     pageContent: '新增产品详情页，产品修改人',
     metadata: {
       source: 2,
-      code: `
-        import React from 'react';
-        import { PageHeader, Descriptions } from 'antd';
-        
-        type ProductDetailProps = {
-          name: string;
-          description: string;
-          fixTime: string;
-          price: number;
-        }
-        
-        const ProductDetail: React.FC<ProductDetailProps> = ({ name, description, price }) => {
-          return (
-            <>
-              <Descriptions bordered>
-                <Descriptions.Item label="Product Description" span={3}>
-                  {description}
-                </Descriptions.Item>
-                <Descriptions.Item label="Product Fix Time" span={3}>
-                  {fixTime}
-                </Descriptions.Item>
-              </Descriptions>
-            </>
-          );
-        }
-        
-        export default ProductDetail;        
+      output: `
+import React from 'react';
+import { PageHeader, Descriptions } from 'antd';
+
+type ProductDetailProps = {
+  name: string;
+  description: string;
+  fixTime: string;
+  price: number;
+}
+
+const ProductDetail: React.FC<ProductDetailProps> = ({ name, description, price }) => {
+  return (
+    <>
+      <Descriptions bordered>
+        <Descriptions.Item label="Product Description" span={3}>
+          {description}
+        </Descriptions.Item>
+        <Descriptions.Item label="Product Fix Time" span={3}>
+          {fixTime}
+        </Descriptions.Item>
+      </Descriptions>
+    </>
+  );
+}
+
+export default ProductDetail;        
         `,
     },
   },
@@ -74,7 +74,7 @@ export const demo = [
     `,
     metadata: {
       source: 3,
-      code: `
+      output: `
 import React from 'react';
 import { Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
@@ -179,7 +179,7 @@ export default App;
         `,
     metadata: {
       source: 4,
-      code: `
+      output: `
 import { Button, Form, Input, Select } from 'antd';
 import React from 'react';
 
@@ -268,6 +268,328 @@ const UserForm: React.FC = () => {
 
 export default UserForm;
       `,
+    },
+  },
+  {
+    pageContent: '将代码的变量使用recoil存储',
+    metadata: {
+      source: 4,
+      output: `
+      // jsx
+import React from 'react';
+import { useRecoilValue } from 'recoil';
+import { PageHeader, Descriptions } from 'antd';
+import { productState } from '../recoil/atoms';
+
+const ProductDetail: React.FC = () => {
+  const { name, description, price } = useRecoilValue(productState);
+  
+  return (
+    <>
+      <PageHeader
+        title={name}
+        subTitle={'title'}
+      />
+      <Descriptions bordered>
+        <Descriptions.Item label="Product Description" span={3}>
+          {description}
+        </Descriptions.Item>
+      </Descriptions>
+    </>
+  );
+}
+
+export default ProductDetail;
+
+// atoms.ts
+
+import { atom } from 'recoil';
+
+type Product = {
+  name: string;
+  description: string;
+  price: number;
+}
+
+export const productState = atom<Product>({
+  key: 'productState',
+  default: {
+    name: '',
+    description: '',
+    price: 0,
+  },
+});
+      `,
+    },
+  },
+  {
+    pageContent: `
+分析以下代码生成mock数据：
+
+// api.ts
+
+import {  useGetOne } from "./request";
+
+const projectResource = '/projects';
+export interface Project {
+    id: number;
+    name: string;
+    description?: string;
+}
+
+export const useGetProjectDetail = (id: string) => {
+    return useGetOne<Project>(
+        "ProjectDetail",
+        projectResource,
+        id,
+    );
+}  
+    `,
+    metadata: {
+      source: 4,
+      output: `
+// mock.ts
+import { MockMethod } from 'vite-plugin-mock';
+
+const mockProjects = {
+  total: 200,
+  list: [
+    {
+      id: 1,
+      name: 'Project1',
+      description: 'description',
+    },
+    {
+      id: 2,
+      name: 'Project2',
+      description: 'description',
+    },
+  ]
+}
+
+export default [
+  {
+    url: '/api/v1/projectDetail',
+    method: 'get',
+    response: ({ query }) => {
+      return mockProjects;
+    },
+  },
+] as MockMethod[];
+      `,
+    },
+  },
+  {
+    pageContent: '分析以下代码创建所需要的请求接口：',
+    metadata: {
+      source: 1,
+      question: `
+分析以下代码创建需要的请求接口：
+import React from 'react';
+import { useRecoilValue } from 'recoil';
+import { PageHeader, Descriptions } from 'antd';
+import { productState } from '../recoil/atoms';
+
+const ProductDetail: React.FC = () => {
+  const { name, description, price } = useRecoilValue(productState);
+  
+  return (
+    <>
+      <PageHeader
+        title={name}
+        subTitle={'title'}
+      />
+      <Descriptions bordered>
+        <Descriptions.Item label="Product Description" span={3}>
+          {description}
+        </Descriptions.Item>
+      </Descriptions>
+    </>
+  );
+}
+
+export default ProductDetail;
+
+// atoms.ts
+
+import { atom } from 'recoil';
+
+type Product = {
+  name: string;
+  description: string;
+  price: number;
+}
+
+export const productState = atom<Product>({
+  key: 'productState',
+  default: {
+    name: '',
+    description: '',
+    price: 0,
+  },
+});
+          `,
+      output: `
+// api.ts
+import {  useGetOne } from "./request";
+
+const projectResource = '/projects';
+export interface Project {
+    id: number;
+    name: string;
+    description?: string;
+}
+
+export const useGetProjectDetail = (id: string) => {
+    return useGetOne<Project>(
+        "ProjectDetail",
+        projectResource,
+        id,
+    );
+}
+      `,
+    },
+  },
+  {
+    pageContent: '分析以下代码将接口{api}使用到下面代码当中:{code}',
+    metadata: {
+      source: 1,
+      api: `
+// api.ts
+import {  useGetOne } from "./request";
+
+const projectResource = '/projects';
+export interface Project {
+    id: number;
+    name: string;
+    description?: string;
+}
+
+export const useGetProjectDetail = (id: string) => {
+    return useGetOne<Project>(
+        "ProjectDetail",
+        projectResource,
+        id,
+    );
+}
+      `,
+      code: `
+import React from 'react';
+import { useRecoilValue } from 'recoil';
+import { PageHeader, Descriptions } from 'antd';
+import { productState } from '../recoil/atoms';
+
+const ProductDetail: React.FC = () => {
+  const { name, description, price } = useRecoilValue(productState);
+  
+  return (
+    <>
+      <PageHeader
+        title={name}
+        subTitle={'title'}
+      />
+      <Descriptions bordered>
+        <Descriptions.Item label="Product Description" span={3}>
+          {description}
+        </Descriptions.Item>
+      </Descriptions>
+    </>
+  );
+}
+
+export default ProductDetail;
+
+// atoms.ts
+
+import { atom } from 'recoil';
+
+type Product = {
+  name: string;
+  description: string;
+  price: number;
+}
+
+export const productState = atom<Product>({
+  key: 'productState',
+  default: {
+    name: '',
+    description: '',
+    price: 0,
+  },
+});
+      `,
+      output: `
+      import React, { useEffect } from 'react';
+      import { useRecoilState } from 'recoil';
+      import { PageHeader, Descriptions } from 'antd';
+      import { productState } from '../recoil/atoms';
+      import { useGetProjectDetail } from "./api";
+      
+      
+      const ProductDetail: React.FC = () => {
+        const [product, setProduct] = useRecoilState(productState);
+        
+        useEffect(() => {
+          useGetProjectDetail('/api/product').then((response) => {
+            setProduct(response.data);
+          });
+        }, [setProduct]);
+        
+        return (
+          <>
+            <PageHeader
+              title={product.name}
+              subTitle={'product.price'}
+            />
+            <Descriptions bordered>
+              <Descriptions.Item label="Product Description" span={3}>
+                {product.description}
+              </Descriptions.Item>
+            </Descriptions>
+          </>
+        );
+      }
+      
+      export default ProductDetail;
+      
+      // atoms.ts
+      
+      import { atom } from 'recoil';
+      
+      type Product = {
+        name: string;
+        description: string;
+        price: number;
+      }
+      
+      export const productState = atom<Product>({
+        key: 'productState',
+        default: {
+          name: '',
+          description: '',
+          price: 0,
+        },
+      });
+      
+      // api.ts
+      
+      import {  useGetOne } from "./request";
+      
+      const projectResource = '/projects';
+      export interface Project {
+          id: number;
+          name: string;
+          description?: string;
+      }
+      
+      export const useGetProjectDetail = (id: string) => {
+          return useGetOne<Project>(
+              "ProjectDetail",
+              projectResource,
+              id,
+          );
+      }
+          `,
     },
   },
 ];

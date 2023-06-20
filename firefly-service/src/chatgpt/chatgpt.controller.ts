@@ -95,7 +95,7 @@ export class ChatgptController {
     return {
       status: 1,
       data: {
-        messages: codePrompt.messages.concat(res.message),
+        // messages: codePrompt.messages.concat(res.message),
         ...res,
       },
     };

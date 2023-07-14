@@ -10,6 +10,7 @@ import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import { CodeBlock } from './codeBlock';
 import Convert from 'ansi-to-html';
+import { IconChatgpt } from './IconChatgpt';
 
 export default function ChatMessage({
   chat,
@@ -43,22 +44,7 @@ export default function ChatMessage({
       >
         {!chat.isSend && (
           <div className="relative w-8 h-8">
-            <span
-              className={
-                  `absolute transition-opacity duration-500 scale-150 ${
-                  lockChat ? 'opacity-100' : 'opacity-0'}`
-                }
-            >
-              {lastMessage ? 'AiIcon' : 'AiIconStill'}
-            </span>
-            <span
-              className={
-                `absolute transition-opacity duration-500 scale-150 ${
-                lockChat ? 'opacity-0' : 'opacity-100'}`
-              }
-            >
-              AiIconStill
-            </span>
+            {IconChatgpt({})}
           </div>
         )}
         {chat.isSend && (

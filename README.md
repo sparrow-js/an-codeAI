@@ -3,7 +3,9 @@ English | [简体中文](./README-zh_CN.md)
 ## Project Overview
 This project aims to provide auxiliary functionalities for frontend development, allowing the editing of source code for everyday React, Vue, and other projects. Additionally, we plan to progressively integrate ChatGPT to explore the application of generative AI in frontend development. This project is built upon the foundation of lowcode-engine, and if you are interested in the underlying principles, you can refer to the [lowcode-engine documentation](<lowcode-engine documentation link>).
 
-![Project Homepage Screenshot](https://raw.githubusercontent.com/sparrow-js/firefly/main/docs/home.png)
+![Project Homepage Screenshot](https://raw.githubusercontent.com/sparrow-js/firefly/main/docs/12345.png)
+
+![Project Task Chain Screenshot](https://raw.githubusercontent.com/sparrow-js/firefly/main/docs/56789.png)
 
 ## Core Features
 - Quick navigation to source code files (using "Option + Command + click on page elements" shortcut)

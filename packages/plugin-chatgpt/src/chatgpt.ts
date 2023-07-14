@@ -24,6 +24,7 @@ import {
     getCodePromptList,
     startCodeDocument,
     chatgptGenerate,
+    executeProduceChain,
 } from '../api';
 import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
 
@@ -45,52 +46,17 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
     operateType: OperateType;
     promptCodeList: any[];
     codeOperateType: string = 'modify';
-    codeOperateList: Array<{
-      label: string;
-      value: string;
-    }> = [
-      {
-        label: '创建',
-        value: 'create',
-      },
-      {
-        label: '修改',
-        value: 'modify',
-      },
-      {
-        label: '默认',
-        value: 'default',
-      },
-    ];
     filePath: string = '';
-
+    chainId: string = '82f74522-d882-4507-8c0c-70f15bc9a4e4';
+    pagePath: string = '';
 
     constructor() {
         makeObservable(this);
-        this.getPromptList();
-        this.getCodePromptList();
-        this.init();
     }
     async init() {
       await this.getProjectRootPath();
       if (this.projectRootDir) {
         this.watchProject(this.projectRootDir);
-      }
-    }
-
-    private async getPromptList() {
-      const res = await getPromptList();
-      if (res.data) {
-        this.promptList = res.data.prompt;
-        const prompt = this.promptList.find(item => item.value === 'react');
-        this.messages = prompt.messages;
-      }
-    }
-
-    private async getCodePromptList() {
-      const res = await getCodePromptList();
-      if (res.data) {
-        this.promptCodeList = res.data.prompt;
       }
     }
 
@@ -156,6 +122,8 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
     async getProjectRootPath() {
       const Iframe = document.getElementsByClassName('lc-simulator-content-frame')[0] as HTMLIFrameElement;
       const app = Iframe.contentDocument?.querySelector('div[data-locatorjs-id*="/"]');
+      const pages = Iframe.contentDocument?.querySelector('div[data-locatorjs-id*="pages"]');
+
       if (app) {
         let path = (app as HTMLElement).dataset['locatorjsId'];
         path = path ? path.split('::')[0] : '';
@@ -168,10 +136,18 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
           }
         }
       }
+
+      if (pages) {
+        let pagePath = (pages as HTMLElement).dataset['locatorjsId'];
+        pagePath = pagePath ? pagePath.split('::')[0] : '';
+        if (pagePath) {
+          this.pagePath = pagePath;
+        }
+      }
     }
 
     async chatgptGenerate(sendMessage: string) {
-      const { messages, codeOperateType } = this;
+      const { messages } = this;
       if (!sendMessage) return;
       const message = {
         role: Role.user,
@@ -180,8 +156,6 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
       messages.push(message);
       const res = await chatgptGenerate({
         message,
-        codeOperateType,
-        promptId: this.promptId,
         path: this.filePath,
       });
       const { data } = res;
@@ -196,10 +170,25 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
       if (data.path) {
         this.filePath = data.path;
       }
+      if (data.chainId) {
+        this.chainId = data.chainId;
+      }
       if (data && data.message) {
         messages.push(data.message);
-        return true;
+        return data.message;
       }
-      return false;
+      return null;
+    }
+
+    async executeProduceChain() {
+      console.log('*********', this.chainId);
+      const res = await executeProduceChain({
+        chainId: this.chainId,
+        pagePath: this.pagePath,
+      });
     }
   }
+const chatgptInstance = new Chatgpt();
+export {
+  chatgptInstance,
+};

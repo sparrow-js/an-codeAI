@@ -19,6 +19,11 @@ import { IconChatgpt } from './IconChatgpt';
 import { OutlinePane } from './OutlinePane';
 import ComponentPane from '@firefly/auto-plugin-components-pane';
 import ChatgptPane from '@firefly/auto-plugin-chatgpt';
+import PromptPanel from '@firefly/auto-plugin-prompt';
+import { IconPrompt } from './IconPrompt';
+import { IconSetting } from './IconSetting';
+import SystemSettingPane from '@firefly/auto-plugin-system-setting';
+
 
 const editor = new Editor();
 globalContext.register(editor, Editor);
@@ -38,15 +43,15 @@ const plugins = new AutoCodePluginManager(editor).toProxy();
 let engineInited = false;
 
 (async function registerPlugins() {
-  const locatorRegistry = (ctx: ILowCodePluginContext) => {
-    return {
-      init() {
-        LocatorPlugin(ctx);
-      },
-    };
-  };
-  locatorRegistry.pluginName = '__locator__';
-  await plugins.register(locatorRegistry);
+  // const locatorRegistry = (ctx: ILowCodePluginContext) => {
+  //   return {
+  //     init() {
+  //       LocatorPlugin(ctx);
+  //     },
+  //   };
+  // };
+  // locatorRegistry.pluginName = '__locator__';
+  // await plugins.register(locatorRegistry);
 
   const defaultPanelRegistry = (ctx: ILowCodePluginContext) => {
     return {
@@ -81,37 +86,37 @@ let engineInited = false;
   defaultPanelRegistry.pluginName = '___default_panel___';
   await plugins.register(defaultPanelRegistry);
   // 组件面板
-  const componentPanelRegistry = (ctx: ILowCodePluginContext) => {
-    return {
-      init() {
-        innerSkeleton.add({
-            area: 'leftArea',
-            type: 'PanelDock',
-            name: 'componentsPane',
-            content: {
-              name: 'component-pane',
-              props: {
-                icon: IconOutline,
-                description: null,
-                editor,
-              },
-              content: ComponentPane,
-            },
-            contentProps: {
-              editor,
-            },
-            panelProps: {
-              area: 'leftFloatArea',
-              keepVisibleWhileDragging: true,
-            },
-          });
-      },
-    };
-  };
+  // const componentPanelRegistry = (ctx: ILowCodePluginContext) => {
+  //   return {
+  //     init() {
+  //       innerSkeleton.add({
+  //           area: 'leftArea',
+  //           type: 'PanelDock',
+  //           name: 'componentsPane',
+  //           content: {
+  //             name: 'component-pane',
+  //             props: {
+  //               icon: IconOutline,
+  //               description: null,
+  //               editor,
+  //             },
+  //             content: ComponentPane,
+  //           },
+  //           contentProps: {
+  //             editor,
+  //           },
+  //           panelProps: {
+  //             area: 'leftFloatArea',
+  //             keepVisibleWhileDragging: true,
+  //           },
+  //         });
+  //     },
+  //   };
+  // };
 
-  componentPanelRegistry.pluginName = '___component_panel___';
+  // componentPanelRegistry.pluginName = '___component_panel___';
 
-  await plugins.register(componentPanelRegistry);
+  // await plugins.register(componentPanelRegistry);
 
   // chatGPT面板
   const chatGPTPanelRegistry = (ctx: ILowCodePluginContext) => {
@@ -134,7 +139,7 @@ let engineInited = false;
               editor,
             },
             panelProps: {
-              area: 'leftFloatArea',
+              area: 'leftFixedArea',
               keepVisibleWhileDragging: true,
             },
           });
@@ -145,6 +150,73 @@ let engineInited = false;
   chatGPTPanelRegistry.pluginName = '___chatgpt_panel___';
 
   await plugins.register(chatGPTPanelRegistry);
+
+  // prompt 面板
+  const promptPanelRegistry = (ctx: ILowCodePluginContext) => {
+    return {
+      init() {
+        innerSkeleton.add({
+            area: 'leftArea',
+            type: 'PanelDock',
+            name: 'PromptPanel',
+            content: {
+              name: 'prompt-panel',
+              props: {
+                icon: IconPrompt,
+                description: null,
+                editor,
+              },
+              content: PromptPanel,
+            },
+            contentProps: {
+              editor,
+            },
+            panelProps: {
+              area: 'leftFixedArea',
+              keepVisibleWhileDragging: true,
+            },
+          });
+      },
+    };
+  };
+
+  promptPanelRegistry.pluginName = '___prompt_panel___';
+
+  await plugins.register(promptPanelRegistry);
+
+  // 设置面板
+  const SystemSettingRegistry = (ctx: ILowCodePluginContext) => {
+    return {
+      init() {
+        innerSkeleton.add({
+            area: 'leftArea',
+            type: 'PanelDock',
+            name: 'SystemSettingPanel',
+            content: {
+              name: 'system-setting-panel',
+              props: {
+                icon: IconSetting,
+                description: null,
+                editor,
+                align: 'bottom',
+              },
+              content: SystemSettingPane,
+            },
+            contentProps: {
+              editor,
+            },
+            panelProps: {
+              area: 'leftFixedArea',
+              keepVisibleWhileDragging: true,
+            },
+          });
+      },
+    };
+  };
+
+  SystemSettingRegistry.pluginName = '___system-setting_panel___';
+
+  await plugins.register(SystemSettingRegistry);
 
   const editorInit = (ctx: ILowCodePluginContext) => {
     return {

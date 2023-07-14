@@ -3,6 +3,8 @@ import { ChatgptService } from './chatgpt.service';
 import type { ChatCompletionRequestMessage } from 'openai';
 import { EditService } from 'src/edit/edit.service';
 import Generator from '../generator/ast';
+import lowdb from '../utils/lowdb';
+import globalConfig from '../globalConfig';
 
 @Controller('chatgpt')
 export class ChatgptController {
@@ -18,7 +20,7 @@ export class ChatgptController {
 
   @Get('connect')
   connect(@Query('appKey') appKey) {
-    const res = this.chatgptService.connect(appKey);
+    const res = this.chatgptService.connect();
     if (res) {
       return {
         status: 1,
@@ -99,5 +101,67 @@ export class ChatgptController {
         ...res,
       },
     };
+  }
+
+  @Post('chainExecute')
+  async chainExecute(
+    @Body()
+    data: any,
+  ) {
+    const res = await this.chatgptService.chainExecute(data);
+    return {
+      status: 1,
+      data: res,
+    };
+  }
+
+  @Post('saveflowInfo')
+  async saveflowInfo(
+    @Body()
+    data: any,
+  ) {
+    const res = await this.chatgptService.saveflowInfo(data);
+    console.log('*****', res);
+  }
+
+  @Post('saveSystemInfo')
+  async saveSystemInfo(
+    @Body()
+    data: any,
+  ) {
+    lowdb.set('setting', data).write();
+    globalConfig.getInstance().updateSetting(data);
+    await this.chatgptService.connect();
+    return {
+      status: 1,
+    };
+  }
+
+  @Get('getSystemInfo')
+  async getSystemInfo(@Query() query: any) {
+    const setting = lowdb.get('setting').value();
+    return {
+      status: 1,
+      data: setting,
+    };
+  }
+
+  @Get('executeProduceChain')
+  async executeProduceChain(@Query() query: any) {
+    const { chainId, pagePath } = query;
+    console.log(query);
+    const res = await this.chatgptService.executeProduceChain(
+      chainId,
+      pagePath,
+    );
+    if (chainId) {
+      return {
+        status: 1,
+      };
+    } else {
+      return {
+        status: 0,
+      };
+    }
   }
 }

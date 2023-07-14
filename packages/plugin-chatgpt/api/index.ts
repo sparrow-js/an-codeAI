@@ -96,3 +96,10 @@ export async function startCodeDocument(options?: { [key: string]: any }) {
     params: options,
   });
 }
+
+export async function executeProduceChain(options?: { [key: string]: any }) {
+  return request('/chatgpt/executeProduceChain', {
+    method: 'GET',
+    params: options,
+  });
+}

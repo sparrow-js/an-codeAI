@@ -20,28 +20,33 @@ import PageChain from './page_chain';
 import BlockChain from './block_chain';
 import StoreChain from './store_chain';
 import APIChain from './api_chain';
+import FsHandler from '../generator/fshandler';
 
 export default class CodeChain {
   chat: ChatOpenAI;
-  systemMessage = `
-你是一个react工程师，使用antd作为UI库。使用recoil库作为状态管理。
-1.返回结果只需输出代码，不需要文字解释。
-2.开发语言使用typescript。
-  `;
-
   chain: SequentialChain;
 
+  page: PageChain;
+  store: StoreChain;
+  api: APIChain;
+  globalConfig = globalConfig.getInstance();
+  codeChainMap = new Map();
+
   constructor(readonly vetorStoresService: VetorStoresService) {
-    // this.initTest();
+    this.init();
+    this.page = this.pageChain();
+    this.store = this.storeChain();
+    this.api = this.apiChain();
+    this.codeChainMap.set('PageChain', this.page);
+    this.codeChainMap.set('StoreChain', this.store);
+    this.codeChainMap.set('api', this.api);
   }
 
-  async initTest() {
+  async init() {
     console.log('CodeChain');
-    await this.vetorStoresService.connectVectorStore('antd-test9-collection');
-    // this.vetorStoresService.getSimilaritySearch(
-    //   '分析以下代码将接口{api}使用到下面代码当中:{code}',
-    // );
-    this.executeTest('创建用户详情，包括用户名称，用户详情');
+    await this.vetorStoresService.connectVectorStore(
+      'antd-test10001-collection',
+    );
   }
 
   async getPrevPrompt(text: string) {
@@ -64,14 +69,14 @@ export default class CodeChain {
     const chat = new ChatOpenAI(
       {
         temperature: 0,
-        openAIApiKey: globalConfig.getInstance().appkey,
+        openAIApiKey: globalConfig.getInstance().apikey,
       },
       {
-        basePath: 'https://chtgptproxyapi-wht.pages.dev/api/v1',
+        basePath: this.globalConfig.proxyUrl,
       },
     );
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(this.systemMessage),
+      SystemMessagePromptTemplate.fromTemplate(this.globalConfig.systemMessage),
       HumanMessagePromptTemplate.fromTemplate(text || '{input}'),
     ]);
     chatPrompt.inputVariables = ['pageContent'];
@@ -86,14 +91,14 @@ export default class CodeChain {
     const chat = new ChatOpenAI(
       {
         temperature: 0,
-        openAIApiKey: globalConfig.getInstance().appkey,
+        openAIApiKey: globalConfig.getInstance().apikey,
       },
       {
-        basePath: 'https://chtgptproxyapi-wht.pages.dev/api/v1',
+        basePath: this.globalConfig.proxyUrl,
       },
     );
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(this.systemMessage),
+      SystemMessagePromptTemplate.fromTemplate(this.globalConfig.systemMessage),
       new MessagesPlaceholder(messagesPlaceholderKey),
       HumanMessagePromptTemplate.fromTemplate(text || '{input}'),
     ]);
@@ -113,25 +118,16 @@ export default class CodeChain {
       outputVariables: ['pageContent', 'storeContent'],
       verbose: true,
     });
-    // return new SequentialChain({
-    //   chains: [this.pageNode(), this.storeNode()],
-    //   inputVariables: ['input', 'pageNode'],
-    //   // Here we return multiple variables
-    //   outputVariables: ['pageContent', 'storeContent'],
-    //   verbose: true,
-    // });
   }
 
   async execute(text: string) {
     const overallChain = this.sequentialLoad();
     const pageNode = await this.getPrevPrompt(text);
     const storeNode = await this.getPrevPrompt('将代码的变量使用recoil存储');
-    console.log('****3', storeNode);
     const chainExecutionResult = await overallChain.call({
       input: text,
       pageNode,
     });
-    console.log('*****9', chainExecutionResult);
     return chainExecutionResult;
   }
 
@@ -139,34 +135,34 @@ export default class CodeChain {
     const chat = new ChatOpenAI(
       {
         temperature: 0,
-        openAIApiKey: globalConfig.getInstance().appkey,
+        openAIApiKey: globalConfig.getInstance().apikey,
+        maxTokens: 3000,
       },
       {
-        basePath: 'https://chtgptproxyapi-wht.pages.dev/api/v1',
+        basePath: this.globalConfig.proxyUrl,
       },
     );
-    return new PageChain({
+    const param = {
       vectorStore: this.vetorStoresService.vectorStore,
       llm: chat,
-      outputKey: 'pageChainText',
-    });
+    };
+
+    return new PageChain(param);
   }
 
   blockChain() {
     const chat = new ChatOpenAI(
       {
         temperature: 0,
-        openAIApiKey: globalConfig.getInstance().appkey,
+        openAIApiKey: globalConfig.getInstance().apikey,
       },
       {
-        basePath: 'https://chtgptproxyapi-wht.pages.dev/api/v1',
+        basePath: this.globalConfig.proxyUrl,
       },
     );
     return new BlockChain({
       vectorStore: this.vetorStoresService.vectorStore,
       llm: chat,
-      inputKey: 'pageChainText',
-      //   outputKey: 'pageChainText',
     });
   }
 
@@ -174,17 +170,15 @@ export default class CodeChain {
     const chat = new ChatOpenAI(
       {
         temperature: 0,
-        openAIApiKey: globalConfig.getInstance().appkey,
+        openAIApiKey: globalConfig.getInstance().apikey,
       },
       {
-        basePath: 'https://chtgptproxyapi-wht.pages.dev/api/v1',
+        basePath: this.globalConfig.proxyUrl,
       },
     );
     return new StoreChain({
       vectorStore: this.vetorStoresService.vectorStore,
       llm: chat,
-      inputKey: 'pageChainText',
-      outputKey: 'storeChainText',
     });
   }
 
@@ -193,17 +187,15 @@ export default class CodeChain {
     const chat = new ChatOpenAI(
       {
         temperature: 0,
-        openAIApiKey: globalConfig.getInstance().appkey,
+        openAIApiKey: globalConfig.getInstance().apikey,
       },
       {
-        basePath: 'https://chtgptproxyapi-wht.pages.dev/api/v1',
+        basePath: this.globalConfig.proxyUrl,
       },
     );
     return new APIChain({
       vectorStore: this.vetorStoresService.vectorStore,
       llm: chat,
-      inputKey: 'storeChainText',
-      outputKey: 'apiChainText',
     });
   }
 
@@ -220,6 +212,103 @@ export default class CodeChain {
     const res = await this.chain.call({
       question: text,
     });
-    console.log('*******80', res);
+  }
+
+  async executeChain(nodes: any[], code: string) {
+    const chains = nodes.reduce((prev, nodeInfo) => {
+      const {
+        data: { type, node: nodeData, link },
+      } = nodeInfo;
+      if (type !== 'PageChain') {
+        const chain = this.codeChainMap.get(type);
+
+        const param = this.parseData(nodeData, link);
+        chain.injectPrompt(param);
+        prev.push(chain);
+      }
+      return prev;
+    }, []);
+    if (chains.length > 0) {
+      const chain = new SequentialChain({
+        chains: chains,
+        inputVariables: ['question'],
+        verbose: true,
+      });
+
+      const res = await chain.call({
+        question: code,
+      });
+      const content = res[Object.keys(res)[0]];
+      const codes = FsHandler.getInstance().codeCategorizeParse(content);
+      return codes;
+    }
+    return null;
+  }
+
+  parseData(data: any, link?: any) {
+    const { template, type } = data;
+    const { question, answer } = template;
+    let metadata;
+    if (answer.type == 'list') {
+      metadata = {};
+      answer.dataList.forEach((item) => {
+        metadata[item.key] = item.value;
+      });
+    } else {
+      metadata = answer.value;
+    }
+    const chain = [];
+    if (link) {
+      link.forEach((item) => {
+        chain.push(this.parseData(item.data.node));
+      });
+    }
+    const parseData: any = {
+      question: question.value,
+      answer: metadata,
+      type,
+    };
+    if (chain.length > 0) parseData.chain = chain;
+    return parseData;
+  }
+
+  async executePromptDebug(data: any) {
+    const { value, node } = data;
+    const { type, node: nodeData, link } = node;
+
+    const param = this.parseData(nodeData, link);
+
+    switch (type) {
+      case 'PageChain':
+        this.page.injectPrompt(param);
+        const res = await this.page.call({
+          question: value,
+        });
+        return {
+          content: res.output,
+          type: 'PageChain',
+        };
+      case 'StoreChain':
+        console.log('StoreChain', value);
+        this.store.injectPrompt(param);
+        const storeCode = await this.store.call({
+          question: value,
+        });
+        return {
+          content: storeCode.output,
+          type: 'StoreChain',
+        };
+      case 'ApiChain':
+        this.api.injectPrompt(param);
+        const apiCode = await this.api.call({
+          question: value,
+        });
+        return {
+          content: apiCode.output,
+          type: 'ApiChain',
+        };
+      default:
+        break;
+    }
   }
 }

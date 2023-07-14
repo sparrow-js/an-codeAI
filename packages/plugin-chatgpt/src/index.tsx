@@ -2,19 +2,15 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Editor, observer, globalContext } from '@firefly/auto-editor-core';
-import { IconEdit } from './IconEdit';
-import { IconSave } from './IconSave';
-import { IconSeed } from './IconSeed';
-import { IconConnect } from './IconConnect';
-import { chatgptConnect, chatgptGetAppKey, editInsertNode } from '../api';
 import './index.less';
 import { Input, Select, Button } from 'antd';
 import ContentMessage from './components/content';
-import { Chatgpt } from './chatgpt';
+import { chatgptInstance, Chatgpt } from './chatgpt';
 import {
   Designer,
 } from '@firefly/auto-designer';
-import CodeAuto from './components/code-auto';
+import { chatgptConnect } from '../api';
+import ChatMessage from './components/ChatMessage';
 
 const { TextArea } = Input;
 
@@ -28,7 +24,6 @@ interface ComponentPaneProps extends PluginProps {
 }
 
 interface ComponentPaneState {
-    showKeyInput: boolean;
     sendMessage: string;
 }
 
@@ -40,34 +35,19 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
 
     constructor(props: ComponentPaneProps) {
         super(props);
-        this.chatgpt = new Chatgpt();
-        this.toggle = this.toggle.bind(this);
-        this.getAppKey();
+        this.chatgpt = chatgptInstance;
+        this.chatgpt.init();
+        this.initConnect();
+    }
+
+    async initConnect() {
+      const res = await chatgptConnect();
+      console.log('********', res);
     }
 
     state: ComponentPaneState = {
-        showKeyInput: false,
         sendMessage: '',
     };
-
-    async getAppKey() {
-      const res = await chatgptGetAppKey();
-      if (res && res.data && res.data.appKey) {
-        this.chatgpt.chatgptKey = res.data.appKey;
-      }
-    }
-
-    async toggle() {
-      const { showKeyInput } = this.state;
-      if (showKeyInput && this.chatgpt.chatgptKey) {
-        const res = await chatgptConnect({ appKey: this.chatgpt.chatgptKey });
-        // hasConnect
-        if (res.data) {
-          this.chatgpt.hasConnect = true;
-        }
-      }
-      this.setState((prevState) => ({ showKeyInput: !prevState.showKeyInput }));
-    }
 
     handleChatgptKeyChange = (e: any) => {
       this.chatgpt.chatgptKey = e.target.value;
@@ -106,29 +86,13 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
     };
 
     render() {
-        const { messages } = this.chatgpt;
-        const { showKeyInput } = this.state;
         return (
           <div className={classNames('auto-component-panel')}>
-            <div className={classNames('edit-box')}>
-              <span className="mr-6">
-                {IconConnect({})}
-              </span>
-              <span onClick={this.toggle}>
-                {showKeyInput ? IconSave({}) : IconEdit({
-                    style: {
-                        color: '',
-                    },
-                })}
-              </span>
-              {
-                showKeyInput ? <Input className={classNames('edit-input')} onChange={this.handleChatgptKeyChange} value={this.chatgpt.chatgptKey} placeholder="chatgpt appkey" /> : null
-              }
-            </div>
-            <div className="code-auto-box">
+            <ChatMessage />
+            {/* <div className="code-auto-box">
               <CodeAuto chatgpt={this.chatgpt} scrollBottom={this.scrollBottom} />
-            </div>
-            <div ref={(messageBox) => { this.messageBox = messageBox; }} className="message-box">
+            </div> */}
+            {/* <div ref={(messageBox) => { this.messageBox = messageBox; }} className="message-box">
               {
                 messages.map((item) => {
                   return item.from !== 'built-in' ? (
@@ -147,7 +111,7 @@ export default class ChatgptPane extends React.Component<ComponentPaneProps, Com
             <div className={classNames('send-box')}>
               <TextArea className={classNames('send-input')} autoSize bordered={false} value={this.state.sendMessage} onChange={this.handlerSendMessage} />
               <Button className="height-24 send-btn" onClick={this.onSendMessage} icon={IconSeed({})} />
-            </div>
+            </div> */}
           </div>
         );
     }

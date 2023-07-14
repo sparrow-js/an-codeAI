@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Configuration, OpenAIApi } from 'openai';
 import type { ChatCompletionRequestMessage } from 'openai';
-import { react, command, codeReview, node, refactor } from './prompt';
+import { react, command, node, refactor } from './prompt';
 import FsHandler from '../generator/fshandler';
 import Generator from '../generator/ast';
 import * as pathInstance from 'path';
@@ -13,8 +13,7 @@ import {
   MessagesPlaceholder,
   AIMessagePromptTemplate,
 } from 'langchain/prompts';
-import { ConversationChain } from 'langchain/chains';
-import { BufferMemory } from 'langchain/memory';
+import { LLMChain } from 'langchain/chains';
 import {
   HumanChatMessage,
   SystemChatMessage,
@@ -24,6 +23,7 @@ import { OpenAI } from 'langchain/llms/openai';
 import { VetorStoresService } from '../vetorstores/vetorstores.service';
 import globalConfig from '../globalConfig';
 import CodeChain from '../codechain';
+import { serialNode } from '../codechain/serialNode';
 
 @Injectable()
 export class ChatgptService {
@@ -33,22 +33,34 @@ export class ChatgptService {
   rootDir: string;
   messageMap = new Map();
   cacheMessageMap = new Map();
-  chain: ConversationChain;
+  chain: LLMChain;
   globalConfig = globalConfig.getInstance();
+  fsHandler = FsHandler.getInstance();
   codeChain: CodeChain;
+  currentChainId: string;
+  pagePath: string;
+
   constructor(readonly vetorStoresService: VetorStoresService) {
     this.codeChain = new CodeChain(vetorStoresService);
   }
-  connect(id: string): boolean {
-    this.apiKey = id;
-    this.globalConfig.setAppkey(this.apiKey);
-    this.chatOpenAI = new ChatOpenAI({
-      openAIApiKey: process.env.OPENAI_API_KEY || id,
-      temperature: 0,
-    });
-    // this.vetorStoresService.createDocsEmbedding();
-    this.vetorStoresService.connectVectorStore('antd-test5-collection');
-    return true;
+  connect(): boolean {
+    this.apiKey = this.globalConfig.apikey;
+    console.log('******', this.apiKey);
+    this.chatOpenAI = new ChatOpenAI(
+      {
+        openAIApiKey: this.apiKey,
+        temperature: 0,
+      },
+      {
+        basePath: this.globalConfig.proxyUrl,
+      },
+    );
+    if (this.apiKey) {
+      this.vetorStoresService.connectVectorStore('antd-test10011-collection');
+      return true;
+    } else {
+      return true;
+    }
   }
 
   async generate(data: {
@@ -57,84 +69,67 @@ export class ChatgptService {
     path: string;
     promptId: string;
   }) {
-    const { openai } = this;
-    const { message, codeOperateType, path, promptId } = data;
+    const { message, path } = data;
     if (!this.apiKey) {
       return {
         error: 'not api key',
       };
     }
-    console.log('**********', 12);
+    const res = await this.checkPromptType(`
+    将文本分类为：创建，修改，未知
+    文本：${message.content}
+        `);
+    const typeText = res;
 
-    //     const res = await this.checkPromptType(`
-    // 将文本分类为：创建，修改，未知
-    // 文本：${message.content}
-    //     `);
-    //     const typeText = res;
-    const content = await this.codeChain.execute(message.content);
-
-    // if (!this.chain) this.initChat();
-
-    //     const { response } = await this.call(message.content);
-    //     console.log('******8', response);
-    //     if (response) {
-    //       const firstMessage = {
-    //         content: (response as string) || '',
-    //         from: 'ai',
-    //         role: 'assistant',
-    //       };
-    //       if (typeText.includes('创建')) {
-    //         const { content } = firstMessage;
-    //         const fileName = FsHandler.getInstance().extractFileName(content);
-    //         const filePath = `src/pages/${fileName}/index.tsx`;
-    //         FsHandler.getInstance().createFile(
-    //           pathInstance.join(this.rootDir, filePath),
-    //           content,
-    //         );
-
-    //         const routerPath = pathInstance.join(
-    //           this.rootDir,
-    //           'src/routes/index.tsx',
-    //         );
-
-    //         const routerContent = Generator.getInstance().appendRouter(
-    //           FsHandler.getInstance().parseFile(routerPath),
-    //           `var data = {
-    //             path: '/${fileName}',
-    //             element: <${fileName} />,
-    //           }`,
-    //           `import ${fileName} from '../pages/${fileName}';`,
-    //         );
-
-    //         FsHandler.getInstance().writeFile(routerPath, routerContent, true);
-    //         return {
-    //           message: {
-    //             role: 'assistant',
-    //             from: 'custom',
-    //             content: `
-    // 创建完成
-    // 文件路径：${filePath}
-    //           `,
-    //           },
-    //           url: `/${fileName}`,
-    //           path: pathInstance.join(this.rootDir, filePath),
-    //         };
-    //       } else if (typeText.includes('修改')) {
-    //         FsHandler.getInstance().writeFile(path, firstMessage.content, true);
-    //         return {
-    //           message: {
-    //             role: 'assistant',
-    //             content: `修改完成`,
-    //             from: 'custom',
-    //           },
-    //         };
-    //       }
-    //       if (firstMessage) {
-    //         return {
-    //           message: firstMessage,
-    //         };
-    //       }
-    //     }
+    if (!this.chain) this.initChat();
+    const { response, id } = await this.call(message.content);
+    const { text } = response;
+    const firstMessage = {
+      content: text,
+      role: 'assistant',
+    };
+    if (typeText.includes('创建')) {
+      const { content } = firstMessage;
+      const fileName = this.fsHandler.extractFileName(content);
+      const filePath = `src/pages/${fileName}/index.tsx`;
+      this.pagePath = pathInstance.join(this.rootDir, filePath);
+      this.currentChainId = id;
+      FsHandler.getInstance().createFile(
+        pathInstance.join(this.rootDir, filePath),
+        content,
+      );
+      const routerPath = pathInstance.join(
+        this.rootDir,
+        'src/routes/index.tsx',
+      );
+      const routerContent = Generator.getInstance().appendRouter(
+        FsHandler.getInstance().parseFile(routerPath),
+        `var data = {
+                path: '/${fileName}',
+                element: <${fileName} />,
+              }`,
+        `import ${fileName} from '../pages/${fileName}';`,
+      );
+      FsHandler.getInstance().writeFile(routerPath, routerContent, true);
+      return {
+        message: {
+          role: 'assistant',
+          content,
+        },
+        url: `/${fileName}`,
+        path: pathInstance.join(this.rootDir, filePath),
+        chainId: this.currentChainId,
+      };
+    } else if (typeText.includes('修改')) {
+      FsHandler.getInstance().writeFile(path, firstMessage.content, true);
+      return {
+        message: firstMessage,
+      };
+    } else {
+      return {
+        message: firstMessage,
+      };
+    }
   }
 
   getAppKey() {
@@ -151,7 +146,7 @@ export class ChatgptService {
   }
 
   getCodePrompt() {
-    return [codeReview, node, refactor];
+    return [node, refactor];
   }
 
   async startCodeDocument(data: any) {
@@ -171,55 +166,62 @@ export class ChatgptService {
      * 将文本分类为：创建，修改，未知
         文本：创建产品名称，产品详情。
     */
-    const model = new OpenAI({
-      openAIApiKey: this.apiKey,
-      temperature: 0,
-      modelName: 'text-davinci-003',
-    });
+    const model = new OpenAI(
+      {
+        openAIApiKey: this.apiKey,
+        temperature: 0,
+        modelName: 'text-davinci-003',
+      },
+      {
+        basePath: this.globalConfig.proxyUrl,
+      },
+    );
     const res = await model.call(text);
     console.log(res);
     return res;
   }
 
-  async initMessage(content: string) {
-    const docs = await this.vetorStoresService.getSimilaritySearch(content);
-
+  async getMessageFormat(content: string, parentId?: string) {
+    let docs;
+    if (parentId) {
+      docs = await this.vetorStoresService.getSimilaritySearchByFilter(
+        content,
+        {
+          parentId,
+        },
+      );
+    } else {
+      docs = await this.vetorStoresService.getSimilaritySearch(content);
+    }
+    const { id } = docs[0].metadata;
     const messages = docs.reduce((prevValue, item) => {
       const { pageContent, metadata } = item;
-      if (pageContent) {
+
+      if (metadata.question) {
+        prevValue.push(new HumanChatMessage(metadata.question));
+      } else {
         prevValue.push(new HumanChatMessage(pageContent));
       }
 
-      if (metadata && metadata.code) {
-        prevValue.push(new AIChatMessage(metadata.code));
+      if (metadata && metadata.answer) {
+        prevValue.push(new AIChatMessage(metadata.answer));
       }
       return prevValue;
     }, []);
-    this.cacheMessageMap.set('react', messages);
-    return messages;
+    return {
+      id,
+      messages,
+    };
   }
 
   initChat() {
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(
-        `
-        你是一个react工程师，使用antd作为UI库。
-        1.返回结果只需输出代码。
-        2.开发语言使用typescript。
-        `,
-      ),
+      SystemMessagePromptTemplate.fromTemplate(this.globalConfig.systemMessage),
       new MessagesPlaceholder('preMessage'),
-      new MessagesPlaceholder('history'),
       HumanMessagePromptTemplate.fromTemplate('{input}'),
     ]);
 
-    const memory = new BufferMemory({
-      inputKey: 'question',
-      returnMessages: true,
-      memoryKey: 'history',
-    });
-    this.chain = new ConversationChain({
-      memory,
+    this.chain = new LLMChain({
       prompt: chatPrompt,
       llm: this.chatOpenAI,
       verbose: true,
@@ -227,12 +229,39 @@ export class ChatgptService {
   }
 
   async call(content: string) {
+    const { messages, id } = await this.getMessageFormat(content);
     const response = await this.chain.call({
       input: content,
-      preMessage: this.cacheMessageMap.has('react')
-        ? this.cacheMessageMap.get('react')
-        : this.initMessage(content),
+      preMessage: messages,
     });
-    return response;
+    return {
+      response,
+      id,
+    };
+  }
+
+  async chainExecute(node: any) {
+    const res = await this.codeChain.executePromptDebug(node);
+    return res;
+  }
+
+  async saveflowInfo(data: any) {
+    return await this.vetorStoresService.addDocument(data);
+  }
+
+  async executeProduceChain(id: string, pagePath: string) {
+    const res = await this.vetorStoresService.getSimilaritySearchById('', id);
+    console.log(res);
+    const flow = res[0]?.metadata?.flow[0];
+    if (flow) {
+      const nodes = serialNode(flow);
+      if (nodes.length > 1) {
+        return await this.codeChain.executeChain(
+          nodes,
+          FsHandler.getInstance().readFileSync(pagePath || this.pagePath),
+        );
+      }
+    }
+    return null;
   }
 }

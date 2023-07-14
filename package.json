@@ -53,5 +53,11 @@
   },
   "resolutions": {
     "@builder/babel-preset-ice": "1.0.1"
+  },
+  "dependencies": {
+    "@svgr/core": "5.5.0",
+    "@svgr/webpack": "5.5.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-preact": "^2.0.0"
   }
 }

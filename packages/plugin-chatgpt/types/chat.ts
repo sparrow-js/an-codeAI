@@ -37,3 +37,10 @@ export interface ChatCompletionRequestMessage {
   name?: string;
   from?: string;
 }
+
+export interface ChatMessageType {
+  message: string;
+  isSend: boolean;
+  thought?: string;
+  files?: Array<{ data: string; type: string; data_type: string }>;
+}

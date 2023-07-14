@@ -118,7 +118,6 @@ export default class CodeAuto extends React.Component<
               position: 0,
               content: this.props.chatgpt.selection,
             });
-            console.log('********000', res);
           }
         }
       };

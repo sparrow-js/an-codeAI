@@ -18,6 +18,7 @@ import { ChainValues } from 'langchain/schema';
 import { BaseLanguageModel } from 'langchain/base_language';
 import { BaseOutputParser } from 'langchain/schema/output_parser';
 import { VectorStore } from 'langchain/vectorstores';
+import GlobalConfig from 'src/globalConfig';
 
 export interface APIChainInput<T extends string | object = string>
   extends ChainInputs {
@@ -33,6 +34,8 @@ export interface APIChainInput<T extends string | object = string>
   /** Key to use for output, defaults to `text` */
   outputKey?: string;
   similarityText?: string;
+  debug?: boolean;
+  param?: any;
 }
 export default class APIChain<T extends string | object = string>
   extends BaseChain
@@ -53,6 +56,8 @@ export default class APIChain<T extends string | object = string>
   similarityText = '分析以下代码创建所需要的请求接口';
 
   outputParser?: BaseOutputParser<T>;
+  param?: any;
+  useInjectPrompt = false;
 
   constructor(fields: APIChainInput<T>) {
     super(fields);
@@ -77,53 +82,29 @@ export default class APIChain<T extends string | object = string>
       }
     }
 
-    const chatPrompt = ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(`
-你是一个react工程师，使用antd作为UI库。使用recoil库作为状态管理。
-1.返回结果只需输出代码，不需要文字解释。
-2.开发语言使用typescript。
-      `),
-      new MessagesPlaceholder('placeholder'),
-      HumanMessagePromptTemplate.fromTemplate('{input}'),
-    ]);
-    // values[this.inputKey]
-    const messages = await this.getPrevPrompt(this.similarityText);
-    const promptValue = await chatPrompt.formatPromptValue({
-      placeholder: messages,
-      input: `${this.similarityText}: ${values[this.inputKey]}`,
-    });
-
-    const { generations } = await this.llm.generatePrompt(
-      [promptValue],
-      valuesForLLM,
-      runManager?.getChild(),
-    );
+    const apiCodeContent = await this.step(values, valuesForLLM, runManager);
 
     const inputValue = values[this.inputKey];
 
-    const apiCodeContent = generations[0][0].text;
+    const similarityText = this.param.question;
 
-    const similarityText = '分析以下代码将接口{api}使用到下面代码当中:{code}';
-
-    const apiMessages = await this.getPrevPrompt(similarityText);
-
-    console.log('********09', apiMessages);
-
-    const promptTemplate = PromptTemplate.fromTemplate(similarityText);
-    const formatApiInput = await promptTemplate.format({
+    const formatApiInput = await this.getPromptTemplate(similarityText, {
+      ...this.param.answer,
       api: apiCodeContent,
       code: inputValue,
     });
 
-    console.log('********', formatApiInput);
+    const apiMessages = await this.getPromptValue(
+      values,
+      this.param,
+      formatApiInput,
+      similarityText,
+    );
 
-    const apiPromptValue = await chatPrompt.formatPromptValue({
-      placeholder: apiMessages,
-      input: formatApiInput,
-    });
+    console.log('************8', apiMessages);
 
     const { generations: apiGenerations } = await this.llm.generatePrompt(
-      [apiPromptValue],
+      [apiMessages],
       valuesForLLM,
       runManager?.getChild(),
     );
@@ -143,10 +124,64 @@ export default class APIChain<T extends string | object = string>
     return [this.outputKey];
   }
 
-  async getPrevPrompt(text: string) {
-    const documents = await this.vectorStore.similaritySearch(text, 1);
+  getChatPromptTemplate() {
+    return ChatPromptTemplate.fromPromptMessages([
+      SystemMessagePromptTemplate.fromTemplate(
+        GlobalConfig.getInstance().systemMessage,
+      ),
+      new MessagesPlaceholder('placeholder'),
+      HumanMessagePromptTemplate.fromTemplate('{input}'),
+    ]);
+  }
 
-    console.log('*********13', documents);
+  async getPromptValue(
+    values: any,
+    param: any,
+    input: string,
+    similarityText?: string,
+  ) {
+    const chatPrompt = this.getChatPromptTemplate();
+    const messages = this.useInjectPrompt
+      ? await this.getFlowPrompt(param)
+      : await this.getSimilarityPrompt(similarityText || this.similarityText);
+    return await chatPrompt.formatPromptValue({
+      placeholder: messages,
+      input,
+    });
+  }
+
+  async step(values: any, valuesForLLM: any, runManager: any) {
+    const { chain } = this.param;
+    const content = chain[0];
+    const input = await this.getPromptTemplate(content.question, {
+      code: values[this.inputKey],
+    });
+    console.log('*******123', input);
+
+    const promptValue = await this.getPromptValue(
+      values,
+      this.param.chain[0],
+      input,
+    );
+
+    const { generations } = await this.llm.generatePrompt(
+      [promptValue],
+      valuesForLLM,
+      runManager?.getChild(),
+    );
+    const apiCodeContent = generations[0][0].text;
+    return apiCodeContent;
+  }
+
+  async getFlowPrompt(param: any) {
+    return [
+      new HumanChatMessage(param.answer.question),
+      new AIChatMessage(param.answer.output),
+    ];
+  }
+
+  async getSimilarityPrompt(text: string) {
+    const documents = await this.vectorStore.similaritySearch(text, 1);
 
     const chatPromiseArr = documents.reduce((prevValue, item) => {
       const promise = new Promise(async (resolve, reject) => {
@@ -172,9 +207,23 @@ export default class APIChain<T extends string | object = string>
       return prevValue;
     }, []);
     const chatArr = await Promise.all(chatPromiseArr);
-    console.log('********123', chatArr);
     return chatArr.reduce((prevValue, item) => {
       return prevValue.concat(item);
     }, []);
+  }
+
+  async getPromptTemplate(text: string, param: any) {
+    const promptTemplate = PromptTemplate.fromTemplate(text);
+    const content = await promptTemplate.format(param);
+    return content;
+  }
+
+  injectPrompt(param: any) {
+    this.useInjectPrompt = true;
+    this.param = param;
+  }
+
+  clearInjectPrompt() {
+    this.useInjectPrompt = false;
   }
 }

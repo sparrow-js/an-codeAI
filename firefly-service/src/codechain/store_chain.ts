@@ -5,6 +5,7 @@ import {
   HumanMessagePromptTemplate,
   SystemMessagePromptTemplate,
   MessagesPlaceholder,
+  PromptTemplate,
 } from 'langchain/prompts';
 import {
   HumanChatMessage,
@@ -17,6 +18,7 @@ import { ChainValues } from 'langchain/schema';
 import { BaseLanguageModel } from 'langchain/base_language';
 import { BaseOutputParser } from 'langchain/schema/output_parser';
 import { VectorStore } from 'langchain/vectorstores';
+import GlobalConfig from 'src/globalConfig';
 
 export interface StoreChainInput<T extends string | object = string>
   extends ChainInputs {
@@ -32,6 +34,8 @@ export interface StoreChainInput<T extends string | object = string>
   /** Key to use for output, defaults to `text` */
   outputKey?: string;
   similarityText?: string;
+  debug?: boolean;
+  param?: any;
 }
 export default class StoreChain<T extends string | object = string>
   extends BaseChain
@@ -47,11 +51,16 @@ export default class StoreChain<T extends string | object = string>
 
   inputKey = 'question';
 
-  outputKey = 'output';
+  outputKey = 'storeOutput';
 
-  similarityText = '将代码的变量使用recoil存储';
+  similarityText = '将代码的变量使用recoil存储: {code}';
 
   outputParser?: BaseOutputParser<T>;
+
+  debug?: boolean;
+  param?: any;
+
+  useInjectPrompt = false;
 
   constructor(fields: StoreChainInput<T>) {
     super(fields);
@@ -77,19 +86,25 @@ export default class StoreChain<T extends string | object = string>
     }
 
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(`
-你是一个react工程师，使用antd作为UI库。使用recoil库作为状态管理。
-1.返回结果只需输出代码，不需要文字解释。
-2.开发语言使用typescript。
-      `),
+      SystemMessagePromptTemplate.fromTemplate(
+        GlobalConfig.getInstance().systemMessage,
+      ),
       new MessagesPlaceholder('placeholder'),
       HumanMessagePromptTemplate.fromTemplate('{input}'),
     ]);
-    // values[this.inputKey]
+
+    const formatInput = await this.formatTemplate(this.similarityText, {
+      ...this.param,
+      code: values[this.inputKey],
+    });
+
+    // metadata
+
     const messages = await this.getPrevPrompt(this.similarityText);
+
     const promptValue = await chatPrompt.formatPromptValue({
       placeholder: messages,
-      input: `${this.similarityText}: ${values[this.inputKey]}`,
+      input: formatInput,
     });
 
     const { generations } = await this.llm.generatePrompt(
@@ -111,14 +126,41 @@ export default class StoreChain<T extends string | object = string>
     return [this.outputKey];
   }
 
+  async formatTemplate(template: string, param: any) {
+    const promptTemplate = PromptTemplate.fromTemplate(template);
+    const formatInput = await promptTemplate.format(param);
+    return formatInput;
+  }
+
   async getPrevPrompt(text: string) {
-    const documents = await this.vectorStore.similaritySearch(text, 1);
-    return documents.reduce((prevValue, item) => {
-      prevValue.push(new HumanChatMessage(item.pageContent));
-      if (item.metadata && item.metadata.output) {
-        prevValue.push(new AIChatMessage(item.metadata.output));
-      }
-      return prevValue;
-    }, []);
+    if (this.useInjectPrompt) {
+      return [
+        new HumanChatMessage(this.param.answer.question),
+        new AIChatMessage(this.param.answer.output),
+      ];
+    } else {
+      const documents = await this.vectorStore.similaritySearch(text, 1);
+      return documents.reduce((prevValue, item) => {
+        prevValue.push(new HumanChatMessage(item.pageContent));
+        if (item.metadata && item.metadata.output) {
+          prevValue.push(new AIChatMessage(item.metadata.output));
+        }
+        return prevValue;
+      }, []);
+    }
+  }
+
+  debugger(isDebug: boolean, param: any) {
+    this.debug = isDebug;
+    this.param = param;
+  }
+
+  injectPrompt(param: any) {
+    this.useInjectPrompt = true;
+    this.param = param;
+  }
+
+  clearInjectPrompt() {
+    this.useInjectPrompt = false;
   }
 }

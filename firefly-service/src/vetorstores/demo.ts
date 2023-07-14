@@ -271,11 +271,40 @@ export default UserForm;
     },
   },
   {
-    pageContent: '将代码的变量使用recoil存储',
+    pageContent: '将代码的变量使用recoil存储:{code}',
     metadata: {
       source: 4,
+      question: `
+将代码的变量使用recoil存储:
+import React from 'react';
+import { PageHeader, Descriptions } from 'antd';
+
+type ProductDetailProps = {
+  name: string;
+  description: string;
+  fixTime: string;
+  price: number;
+}
+
+const ProductDetail: React.FC<ProductDetailProps> = ({ name, description, price }) => {
+  return (
+    <>
+      <Descriptions bordered>
+        <Descriptions.Item label="Product Description" span={3}>
+          {description}
+        </Descriptions.Item>
+        <Descriptions.Item label="Product Fix Time" span={3}>
+          {fixTime}
+        </Descriptions.Item>
+      </Descriptions>
+    </>
+  );
+}
+
+export default ProductDetail;
+      `,
       output: `
-      // jsx
+// page.tsx
 import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { PageHeader, Descriptions } from 'antd';
@@ -301,7 +330,7 @@ const ProductDetail: React.FC = () => {
 
 export default ProductDetail;
 
-// atoms.ts
+// store.ts
 
 import { atom } from 'recoil';
 
@@ -380,7 +409,7 @@ export default [
     },
   },
   {
-    pageContent: '分析以下代码创建所需要的请求接口：',
+    pageContent: '分析以下代码创建所需要的请求接口：{code}',
     metadata: {
       source: 1,
       question: `
@@ -454,6 +483,70 @@ export const useGetProjectDetail = (id: string) => {
     pageContent: '分析以下代码将接口{api}使用到下面代码当中:{code}',
     metadata: {
       source: 1,
+      question: `
+分析以下代码将接口: 
+// api.ts
+import {  useGetOne } from "./request";
+
+const projectResource = '/projects';
+export interface Project {
+    id: number;
+    name: string;
+    description?: string;
+}
+
+export const useGetProjectDetail = (id: string) => {
+    return useGetOne<Project>(
+        "ProjectDetail",
+        projectResource,
+        id,
+    );
+}
+使用到下面代码当中:
+import React from 'react';
+import { useRecoilValue } from 'recoil';
+import { PageHeader, Descriptions } from 'antd';
+import { productState } from '../recoil/atoms';
+
+const ProductDetail: React.FC = () => {
+  const { name, description, price } = useRecoilValue(productState);
+  
+  return (
+    <>
+      <PageHeader
+        title={name}
+        subTitle={'title'}
+      />
+      <Descriptions bordered>
+        <Descriptions.Item label="Product Description" span={3}>
+          {description}
+        </Descriptions.Item>
+      </Descriptions>
+    </>
+  );
+}
+
+export default ProductDetail;
+
+// atoms.ts
+
+import { atom } from 'recoil';
+
+type Product = {
+  name: string;
+  description: string;
+  price: number;
+}
+
+export const productState = atom<Product>({
+  key: 'productState',
+  default: {
+    name: '',
+    description: '',
+    price: 0,
+  },
+});
+      `,
       api: `
 // api.ts
 import {  useGetOne } from "./request";

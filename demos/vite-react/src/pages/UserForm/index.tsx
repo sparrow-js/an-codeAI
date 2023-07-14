@@ -21,7 +21,7 @@ const UserForm = () => {
     >
       <Form.Item
         label="用户名称"
-        name="userName"
+        name="username"
         rules={[{ required: true, message: '请输入用户名称' }]}
       >
         <Input placeholder="请输入用户名称" />
@@ -29,7 +29,7 @@ const UserForm = () => {
 
       <Form.Item
         label="用户详情"
-        name="userDetail"
+        name="userDetails"
         rules={[{ required: true, message: '请输入用户详情' }]}
       >
         <TextArea rows={4} placeholder="请输入用户详情" />

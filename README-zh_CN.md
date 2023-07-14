@@ -2,7 +2,9 @@
 ## 项目概述
 本项目旨在提供辅助前端开发的功能，使得日常开发中使用的React、Vue等项目的源码可以进行编辑。此外，我们计划逐步引入ChatGPT技术，探索将生成式人工智能应用于前端开发的方案。本项目是在lowcode-engine基础上进行修改的，如果您对原理感兴趣，可以先参阅[lowcode-engine的文档](<https://github.com/alibaba/lowcode-engine>)。
 
-![项目首页截图](https://raw.githubusercontent.com/sparrow-js/firefly/main/docs/home.png)
+![项目首页截图](https://raw.githubusercontent.com/sparrow-js/firefly/main/docs/12345.png)
+
+![任务链截图](https://raw.githubusercontent.com/sparrow-js/firefly/main/docs/56789.png)
 
 ## 基础功能
 - 快速定位到源代码文件（使用"Option + Command + 点击页面元素"的方式）

@@ -37,5 +37,29 @@ module.exports = ({ context, onGetWebpackConfig }) => {
     //   }]);
     config.plugins.delete('hot');
     config.devServer.hot(false);
+
+    config.module
+    .rule('compile')
+      .test(/\.(js|mjs)$/)
+      .include
+        .add(/node_modules[\\\/]@?reactflow/)
+        .add(/node_modules[\\\/]tailwind-merge/)
+        .add(/node_modules[\\\/]@?radix-ui/)
+        .end()
+      .type('javascript/auto')
+      .use('babel')
+        .loader('babel-loader')
+        .options({
+          presets: [
+            ['@babel/preset-env'],
+          ],
+        });
+
+      config.module.rules.delete('image');
+      config.module
+      .rule('svg')
+      .test(/\.svg$/)
+      .use('svgr')
+      .loader('@svgr/webpack');
   });
 };

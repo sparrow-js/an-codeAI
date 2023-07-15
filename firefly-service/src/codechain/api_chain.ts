@@ -101,8 +101,6 @@ export default class APIChain<T extends string | object = string>
       similarityText,
     );
 
-    console.log('************8', apiMessages);
-
     const { generations: apiGenerations } = await this.llm.generatePrompt(
       [apiMessages],
       valuesForLLM,
@@ -156,7 +154,6 @@ export default class APIChain<T extends string | object = string>
     const input = await this.getPromptTemplate(content.question, {
       code: values[this.inputKey],
     });
-    console.log('*******123', input);
 
     const promptValue = await this.getPromptValue(
       values,

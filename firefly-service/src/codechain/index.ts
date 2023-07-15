@@ -60,33 +60,6 @@ export default class CodeChain {
     }, []);
   }
 
-  pageNode() {
-    return this.LLMChain('pageNode', 'pageContent');
-  }
-
-  storeNode() {
-    const text = '将{pageContent}代码的变量使用recoil存储';
-    const chat = new ChatOpenAI(
-      {
-        temperature: 0,
-        openAIApiKey: globalConfig.getInstance().apikey,
-      },
-      {
-        basePath: this.globalConfig.proxyUrl,
-      },
-    );
-    const chatPrompt = ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(this.globalConfig.systemMessage),
-      HumanMessagePromptTemplate.fromTemplate(text || '{input}'),
-    ]);
-    chatPrompt.inputVariables = ['pageContent'];
-    return new LLMChain({
-      prompt: chatPrompt,
-      llm: chat,
-      outputKey: 'storeContent',
-    });
-  }
-
   LLMChain(messagesPlaceholderKey: string, outputKey: string, text?: string) {
     const chat = new ChatOpenAI(
       {
@@ -123,7 +96,6 @@ export default class CodeChain {
   async execute(text: string) {
     const overallChain = this.sequentialLoad();
     const pageNode = await this.getPrevPrompt(text);
-    const storeNode = await this.getPrevPrompt('将代码的变量使用recoil存储');
     const chainExecutionResult = await overallChain.call({
       input: text,
       pageNode,

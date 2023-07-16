@@ -55,6 +55,20 @@ export default defineConfig({
     }),
   ],
 });
+
+// plugins firefly-babel-jsx
+
+babel: {
+    plugins: [
+        [
+        'firefly-babel-jsx/dist',
+        {
+            env: 'development',
+        },
+        ],
+    ],
+},
+
 ```
 
 ## Core Features

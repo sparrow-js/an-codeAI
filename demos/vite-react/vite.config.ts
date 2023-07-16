@@ -18,7 +18,7 @@ export default defineConfig({
       babel: {
         plugins: [
           [
-            '@firefly/babel-jsx/dist',
+            'firefly-babel-jsx/dist',
             {
               env: 'development',
             },

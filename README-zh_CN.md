@@ -6,10 +6,78 @@
 
 ![任务链截图](https://raw.githubusercontent.com/sparrow-js/firefly/main/docs/56789.png)
 
+---
+
+## 安装
+
+```bash
+# Global installation
+$ npm install -g firefly-code
+
+# run
+$ firefly
+```
+---
+
+## 项目中添加firefly-babel-jsx插件
+```js
+// vite project
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import resolveExternalsPlugin from 'vite-plugin-resolve-externals';
+import { resolve } from 'path';
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        nested: resolve(__dirname, 'nested/index.html'),
+      },
+    },
+  },
+  plugins: [
+    react({
+      babel: {
+        plugins: [
+          [
+            'firefly-babel-jsx/dist',
+            {
+              env: 'development',
+            },
+          ],
+        ],
+      },
+    }),
+    resolveExternalsPlugin({
+      '@firefly/auto-engine': 'AliLowCodeEngine',
+    }),
+  ],
+});
+
+// 安装插件 firefly-babel-jsx
+
+babel: {
+    plugins: [
+        [
+        'firefly-babel-jsx/dist',
+        {
+            env: 'development',
+        },
+        ],
+    ],
+},
+
+```
+
 ## 基础功能
+- 录入prompt，执行链任务
+- 通过对话开发代码
 - 快速定位到源代码文件（使用"Option + Command + 点击页面元素"的方式）
 - 页面元素可编辑
 - 可以向页面追加元素
+
 
 ## 项目重点
 本项目的重点研究方向是ChatGPT与前端开发的结合应用。我们计划通过以下方式帮助开发人员提升工作效率，包括但不限于：
@@ -25,9 +93,7 @@
 - 测试：提供测试相关的辅助功能
 - 文档：帮助生成项目文档
 - 内容生产：支持内容创作和生成
-- 求职面试：提供求职面试方面的辅助
-- 学习：作为学习工具，提供相关知识和学习资源
 
 我们将在实践中不断学习并逐步实现以上功能，展望未来的发展前景。
 
-如有任何问题或需进一步了解，请随时联系我们。ps：上面这段介绍是ChatGPT润色的
+如有任何问题或需进一步了解，请随时联系我们。

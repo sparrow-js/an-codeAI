@@ -1,4 +1,4 @@
-# 被裁员失业中，如果对我有兴趣可以联系聊下，wx：sparrow777-js
+## 被裁员失业中，如果对我有兴趣可以联系聊下，wx：sparrow777-js
 
 简体中文 | [English](./README-en.md)
 ## 项目概述

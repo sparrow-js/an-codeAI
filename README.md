@@ -7,6 +7,19 @@ This project aims to provide auxiliary functionalities for frontend development,
 
 ![Project Task Chain Screenshot](https://raw.githubusercontent.com/sparrow-js/firefly/main/docs/56789.png)
 
+---
+
+## Install
+
+```bash
+# Global installation
+$ npm install -g firefly-code
+
+# run
+$ firefly
+```
+---
+
 ## Core Features
 - Quick navigation to source code files (using "Option + Command + click on page elements" shortcut)
 - Editable page elements

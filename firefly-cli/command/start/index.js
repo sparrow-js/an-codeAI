@@ -13,8 +13,8 @@ const checkVersion = require('../../utils/checkVersion');
 const parseArgs = require('../../utils/parseArgs');
 const execa = require('execa');
 
-const SPARROW_PATH = path.join(userHome, '.sparrow');
-const SERVER_PATH = path.join(SPARROW_PATH, 'sparrow-server');
+const SPARROW_PATH = path.join(userHome, '.firefly');
+const SERVER_PATH = path.join(SPARROW_PATH, 'firefly-service');
 
 
 let commonOptions = {};
@@ -86,7 +86,7 @@ async function start(options = {}) {
 
 // npm run start
 async function startSparrowworks(options) {
-  const host = options.host || 'http://127.0.0.1';
+  const host = options.host || 'http://localhost';
 
   let { port } = options;
   if (!port) {
@@ -108,10 +108,9 @@ async function startSparrowworks(options) {
   env.PORT = opts.port;
   env.NODE_ENV = 'product';
 
-  let [command, ...args] = parseArgs('npm run start');
-
+  let [command, ...args] = parseArgs('nest start');
   const child = execa(
-    path.join(SERVER_PATH),
+    path.join(SERVER_PATH, 'node_modules/.bin/nest'),
     args,
     {
       stdio: ['pipe'],
@@ -121,16 +120,16 @@ async function startSparrowworks(options) {
   );
   let started = false;
   child.stdout.on('data', (data) => {
-    if (data.toString().indexOf('started on http://127.0.0.1') !== -1) {
+    console.log(data.toString());
+
+    if (data.toString().indexOf('successfully') !== -1) {
+      console.log();
       spinner.stop();
       console.log();
-      console.log('🚀  Start sparrow successful');
+      console.log('🚀  Start firefly successful');
       console.log();
-      console.log(`👉  Ready on ${chalk.yellow(url)}`);
+      console.log(`👉  Ready on ${chalk.yellow('http://localhost:3000/')}`);
       console.log();
-      if (!mode) {
-        open('http://localhost:8000/');
-      }
       started = true;
     } else if (started) {
       console.log(data.toString());

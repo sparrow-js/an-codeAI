@@ -6,7 +6,7 @@ const chalk = require('chalk');
 const spawn = require('cross-spawn');
 
 
-const NPM_NAME = 'firefly-server';
+const NPM_NAME = 'firefly-service';
 const DEST_DIR = path.join(userHome, `.firefly/${NPM_NAME}`);
 const REGISTRY = process.env.REGISTRY || 'https://registry.npm.taobao.org';
 
@@ -14,26 +14,26 @@ module.exports = function downloadServer(version = 'latest') {
   const npmName = NPM_NAME;
   const destDir = DEST_DIR;
 
-  console.log('>>> start download firefly-server', version, destDir, REGISTRY);
+  console.log('>>> start download firefly-service', version, destDir, REGISTRY);
   return getNpmTarball(npmName, version, REGISTRY)
   .then((tarballURL) => {
-    console.log('>>> download firefly-server from npm', tarballURL);
+    console.log('>>> download firefly-service from npm', tarballURL);
     return extractTarball({ tarballURL, destDir });
   })
   .catch((err) => {
     console.log();
-    console.log(chalk.red('Error: download firefly-server error'));
+    console.log(chalk.red('Error: download firefly-service error'));
     console.log();
     console.log(err);
     process.exit(1);
   })
   .then(() => {
-    console.log('>>> download firefly-server completed');
-    console.log('>>> start installing firefly-server dependencies');
+    console.log('>>> download firefly-service completed');
+    console.log('>>> start installing firefly-service dependencies');
     return install(destDir);
   })
   .then(() => {
-    console.log('>>> install firefly-server dependencies completed');
+    console.log('>>> install firefly-service dependencies completed');
   })
   .catch((err) => {
     console.log();

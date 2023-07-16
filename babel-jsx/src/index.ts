@@ -185,7 +185,6 @@ export default function transformLocatorJsComponents(babel: Babel): {
                       loc: path.node.loc,
                       htmlTag: property.name,
                     });
-                    console.log('*********8', path.node);
                     path.node.tag = t.callExpression(
                       t.memberExpression(tag, t.identifier('attrs')),
                       [
@@ -236,7 +235,6 @@ export default function transformLocatorJsComponents(babel: Babel): {
                     loc: path.node.loc,
                     wrappingComponentId: currentWrappingComponentId,
                   });
-                  console.log('******3', JSON.stringify(path.node, null, 2));
                   const newAttr = t.jSXAttribute(
                     t.jSXIdentifier('data-locatorjs-id'),
                     t.jSXExpressionContainer(

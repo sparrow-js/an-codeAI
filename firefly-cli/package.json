@@ -1,10 +1,10 @@
 {
   "name": "firefly-code",
-  "version": "0.6.4",
+  "version": "0.6.7",
   "description": "firefly CLI for develop project/material-collection/component.",
   "main": "bin/firefly.js",
   "bin": {
-    "sparrow": "bin/firefly.js"
+    "firefly": "bin/firefly.js"
   },
   "scripts": {
     "test": "node ./bin/firefly.js"

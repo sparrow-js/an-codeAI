@@ -2,6 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import resolveExternalsPlugin from 'vite-plugin-resolve-externals';
 import { resolve } from 'path';
+import markjsx from './vite-plugin-react-markjsx';
+
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -14,18 +16,24 @@ export default defineConfig({
     },
   },
   plugins: [
-    react({
-      babel: {
-        plugins: [
-          [
-            'firefly-babel-jsx/dist',
-            {
-              env: 'development',
-            },
-          ],
-        ],
-      },
-    }),
+    {
+      ...markjsx(),
+      enforce: 'pre',
+    },
+    react(
+    // {
+    //   babel: {
+    //     plugins: [
+    //       [
+    //         'firefly-babel-jsx/dist',
+    //         {
+    //           env: 'development',
+    //         },
+    //       ],
+    //     ],
+    //   },
+    // }
+    ),
     resolveExternalsPlugin({
       '@firefly/auto-engine': 'AliLowCodeEngine',
     }),

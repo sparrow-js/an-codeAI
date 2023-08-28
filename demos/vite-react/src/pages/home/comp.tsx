@@ -1,19 +1,11 @@
 import { useState } from 'react';
-import fireflyLogo from '../../assets/firefly.svg';
 import './home.css';
-import Comp from './comp';
 
-function Home() {
+function Comp() {
   const [count, setCount] = useState(0);
   return (
     <div className="App">
-      <Comp />
-      <h1>辅助前端开发</h1>
-      <div>
-        <a href="https://reactjs.org" target="_blank" rel="noreferrer">
-          <img src={fireflyLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
+      <h1>辅助前1开发</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
@@ -30,4 +22,4 @@ function Home() {
     </div>
   );
 }
-export default Home;
+export default Comp;

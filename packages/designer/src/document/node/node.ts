@@ -160,6 +160,10 @@ export class Node<Schema extends NodeSchema = NodeSchema> {
     isRoot(): boolean {
         return this.document.rootNode === (this as any);
     }
+
+    removeNode() {
+      //
+    }
 }
 
 export function getZLevelTop(child: Node, zLevel: number): Node | null {

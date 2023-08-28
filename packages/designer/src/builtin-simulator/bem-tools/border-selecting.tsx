@@ -49,6 +49,11 @@ export class BorderSelectingInstance extends Component<{
 
 @observer
 class Toolbar extends Component<{ observed: OffsetObserver }> {
+  removeNode = () => {
+    const { observed } = this.props;
+    console.log('*', observed.node);
+  };
+
   render() {
     const { observed } = this.props;
     const { height, width } = observed.viewport;
@@ -96,7 +101,7 @@ class Toolbar extends Component<{ observed: OffsetObserver }> {
     // });
     return (
       <div className="lc-borders-actions" style={style}>
-        <span>test</span>
+        <span onClick={this.removeNode}>删除</span>
       </div>
     );
   }

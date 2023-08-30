@@ -5,6 +5,11 @@ import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    headers: {
+      'Origin-Agent-Cluster': '?0',
+    },
+  },
   build: {
     rollupOptions: {
       input: {

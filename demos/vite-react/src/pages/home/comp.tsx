@@ -4,8 +4,8 @@ import './home.css';
 function Comp() {
   const [count, setCount] = useState(0);
   return (
-    <div className="App">
-      <h1>辅助前1开发</h1>
+    <div>
+      <h1>辅助前开发</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}

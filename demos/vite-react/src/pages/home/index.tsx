@@ -6,8 +6,7 @@ import Comp from './comp';
 function Home() {
   const [count, setCount] = useState(0);
   return (
-    <div className="App">
-      <Comp />
+    <div className="Appuid">
       <h1>辅助前端开发</h1>
       <div>
         <a href="https://reactjs.org" target="_blank" rel="noreferrer">

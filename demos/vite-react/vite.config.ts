@@ -7,6 +7,11 @@ import markjsx from './vite-plugin-react-markjsx';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    headers: {
+      'Origin-Agent-Cluster': '?0',
+    },
+  },
   build: {
     rollupOptions: {
       input: {
@@ -16,23 +21,23 @@ export default defineConfig({
     },
   },
   plugins: [
-    {
-      ...markjsx(),
-      enforce: 'pre',
-    },
-    react(
     // {
-    //   babel: {
-    //     plugins: [
-    //       [
-    //         'firefly-babel-jsx/dist',
-    //         {
-    //           env: 'development',
-    //         },
-    //       ],
-    //     ],
-    //   },
-    // }
+    //   ...markjsx(),
+    //   enforce: 'pre',
+    // },
+    react(
+      {
+        babel: {
+          plugins: [
+            [
+              'firefly-babel-jsx/dist',
+              {
+                env: 'development',
+              },
+            ],
+          ],
+        },
+      },
     ),
     resolveExternalsPlugin({
       '@firefly/auto-engine': 'AliLowCodeEngine',

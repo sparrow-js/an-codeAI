@@ -64,6 +64,18 @@ function appendUidAttribute(uid: string, attributes: JsxAttributes) {
   properties.push(TS.factory.createJsxAttribute(TS.factory.createIdentifier('data-uid'), TS.factory.createStringLiteral(uid)));
 }
 
+function appendAttribute(attributes: JsxAttributes, key: string, value: string) {
+  const { properties } = attributes as any;
+
+  properties.push(
+    TS.factory.createJsxAttribute(
+      TS.factory.createIdentifier(key), TS.factory.createStringLiteral(value),
+      ),
+    );
+    console.log('*****9', properties);
+}
+
+
 function parseJSXElementName(node: Node, sourceFile: TS.SourceFile) {
   return (node as any).tagName.getText(sourceFile);
 }
@@ -75,11 +87,6 @@ function setJsxElementUid(nodeList: Node[], sourceFile: TS.SourceFile) {
     if (node.kind === TS.SyntaxKind.JsxElement) {
       const props = getAttributes((node as any).openingElement.attributes, sourceFile);
       const hash = Hash({
-        fileName: sourceFile.fileName,
-        name: parseJSXElementName((node as any).openingElement, sourceFile),
-        props,
-      });
-      console.log(hash, {
         fileName: sourceFile.fileName,
         name: parseJSXElementName((node as any).openingElement, sourceFile),
         props,
@@ -116,6 +123,12 @@ function setJsxElementUid(nodeList: Node[], sourceFile: TS.SourceFile) {
   return cacheJsxList;
 }
 
+function setRootNodePath(path: string, nodeList: any[]) {
+  nodeList.forEach((node) => {
+    appendAttribute((node as any).openingElement.attributes, 'data-path', path);
+  });
+}
+
 export default function markjsx() {
     return {
       name: 'transform-file',
@@ -135,10 +148,14 @@ export default function markjsx() {
                 const oldParse = cacheTree[id] || null;
                 fixParseSuccessUIDs(oldParse, cacheJsx);
                 cacheTree[id] = cacheJsx;
+                setRootNodePath(id, jsxNodeList);
               }
             });
           }
           const uidMap = Store.getInstance().getOldUidToOriginUid();
+          syncNodeIdMap({
+            uidMap,
+          });
           const printer = TS.createPrinter();
           code = printer.printNode(TS.EmitHint.Unspecified, sourceFile, sourceFile);
         }

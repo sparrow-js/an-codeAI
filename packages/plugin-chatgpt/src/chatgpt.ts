@@ -121,8 +121,8 @@ import { ChatCompletionRequestMessage, Role, OperateType } from '../types';
 
     async getProjectRootPath() {
       const Iframe = document.getElementsByClassName('lc-simulator-content-frame')[0] as HTMLIFrameElement;
-      const app = Iframe.contentDocument?.querySelector('div[data-locatorjs-id*="/"]');
-      const pages = Iframe.contentDocument?.querySelector('div[data-locatorjs-id*="pages"]');
+      const app = Iframe.contentDocument?.querySelector('div[data-uid*="/"]');
+      const pages = Iframe.contentDocument?.querySelector('div[data-uid*="pages"]');
 
       if (app) {
         let path = (app as HTMLElement).dataset['locatorjsId'];

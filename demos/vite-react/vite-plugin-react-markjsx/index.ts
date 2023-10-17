@@ -10,9 +10,11 @@ import TS, {
 import Hash from 'object-hash';
 import { generateConsistentUID } from './uid-utils';
 import { fixParseSuccessUIDs } from './uid-fix';
+import { syncNodeIdMap } from './request';
+import Store from './store';
 
 const cacheTree = {};
-const alreadyExistingUIDs: Set<string> = new Set();
+let alreadyExistingUIDs: Set<string> = new Set();
 // factory.createJsxAttribute
 
 function getFunctionJsx(functionNode: Node) {
@@ -77,6 +79,11 @@ function setJsxElementUid(nodeList: Node[], sourceFile: TS.SourceFile) {
         name: parseJSXElementName((node as any).openingElement, sourceFile),
         props,
       });
+      console.log(hash, {
+        fileName: sourceFile.fileName,
+        name: parseJSXElementName((node as any).openingElement, sourceFile),
+        props,
+      });
 
       const uid = generateConsistentUID(hash, alreadyExistingUIDs);
       leaf['uid'] = uid;
@@ -114,6 +121,7 @@ export default function markjsx() {
       name: 'transform-file',
       transform(code: string, id: string) {
         const root = {};
+        alreadyExistingUIDs = new Set();
         if (id.includes('/src/') && id.includes('.ts')) {
           console.log('file path', id);
           const sourceFile = TS.createSourceFile(id, code, TS.ScriptTarget.ESNext);
@@ -130,6 +138,7 @@ export default function markjsx() {
               }
             });
           }
+          const uidMap = Store.getInstance().getOldUidToOriginUid();
           const printer = TS.createPrinter();
           code = printer.printNode(TS.EmitHint.Unspecified, sourceFile, sourceFile);
         }

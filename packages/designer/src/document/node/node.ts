@@ -66,7 +66,7 @@ export function isNode(node: any): node is Node {
     return node && node.isNode;
 }
 
-export const NODE_ID = 'locatorjsId';
+export const NODE_ID = 'uid';
 
 export interface NodeParam {
   path: string;
@@ -120,7 +120,7 @@ export class Node<Schema extends NodeSchema = NodeSchema> {
         this.id = id || '';
         this.componentName = componentName;
         this.instance = instance;
-        let firstChild = instance.querySelector('div[data-locatorjs-id*="/"]');
+        let firstChild = instance.querySelector('div[data-uid*="/"]');
         const childInstance = [];
         while (firstChild) {
             childInstance.push({

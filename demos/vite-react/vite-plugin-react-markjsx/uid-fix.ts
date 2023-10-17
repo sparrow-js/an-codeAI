@@ -8,6 +8,8 @@ import TS, {
     factory,
   } from 'typescript';
 
+import Store from './store';
+
 export function fixJSXElementUIDs(
     oldElement: any,
     newElement: any,
@@ -35,12 +37,19 @@ function updateUID(
         const propIndex = properties.findIndex((property) => {
             return (property.name as any).escapedText === 'data-uid';
         });
+        let originUid = '';
+
         if (propIndex >= 0) {
+            originUid = properties[propIndex]?.initializer.text;
             properties.splice(propIndex, 1);
+        }
+
+        if (originUid && uid && originUid !== uid) {
+            Store.getInstance().addUidMap(uid, originUid);
         }
         properties.push(
             TS.factory.createJsxAttribute(TS.factory.createIdentifier('data-uid'), TS.factory.createStringLiteral(uid)),
-);
+        );
     }
 }
 

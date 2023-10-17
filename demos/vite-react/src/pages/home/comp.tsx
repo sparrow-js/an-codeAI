@@ -5,7 +5,7 @@ function Comp() {
   const [count, setCount] = useState(0);
   return (
     <div>
-      <h1>辅助前开发</h1>
+      <h1 className="test">辅助开发</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}

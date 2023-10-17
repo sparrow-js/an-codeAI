@@ -21,22 +21,22 @@ export default defineConfig({
     },
   },
   plugins: [
-    // {
-    //   ...markjsx(),
-    //   enforce: 'pre',
-    // },
+    {
+      ...markjsx(),
+      enforce: 'pre',
+    },
     react(
       {
-        babel: {
-          plugins: [
-            [
-              'firefly-babel-jsx/dist',
-              {
-                env: 'development',
-              },
-            ],
-          ],
-        },
+        // babel: {
+        //   plugins: [
+        //     [
+        //       'firefly-babel-jsx/dist',
+        //       {
+        //         env: 'development',
+        //       },
+        //     ],
+        //   ],
+        // },
       },
     ),
     resolveExternalsPlugin({

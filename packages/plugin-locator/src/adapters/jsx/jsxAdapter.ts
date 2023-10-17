@@ -13,7 +13,7 @@ function getLocatorData() {
 }
 
 export function getElementInfo(target: HTMLElement): FullElementInfo | null {
-  const found = target.closest('[data-locatorjs-id]') as HTMLElement;
+  const found = target.closest('[data-uid]') as HTMLElement;
   if (
     found &&
     // found instanceof HTMLElement &&

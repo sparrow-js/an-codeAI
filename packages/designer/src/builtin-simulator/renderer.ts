@@ -149,7 +149,7 @@ function cacheReactKey(el: Element): Element {
 
 const SYMBOL_VNID = Symbol('_LCNodeId');
 const SYMBOL_VDID = Symbol('_LCDocId');
-const NODE_ID = 'locatorjsId';
+const NODE_ID = 'uid';
 
 function getClosestNodeInstance(from: ReactInstance, specId?: string): NodeInstance<ReactInstance> | null {
   let el: any = from;

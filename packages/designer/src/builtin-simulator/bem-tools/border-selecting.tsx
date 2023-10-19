@@ -13,6 +13,8 @@ import { BuiltinSimulatorHost } from '../host';
 import classNames from 'classnames';
 import { OffsetObserver } from '../../designer';
 import { Node } from '../../document';
+import { getNearPath } from '@firefly/auto-utils';
+import { editDeleteNode } from '../../document/api';
 
 @observer
 export class BorderSelectingInstance extends Component<{
@@ -49,9 +51,16 @@ export class BorderSelectingInstance extends Component<{
 
 @observer
 class Toolbar extends Component<{ observed: OffsetObserver }> {
-  removeNode = () => {
-    const { observed } = this.props;
-    console.log('*', observed.node);
+  removeNode = async () => {
+    const { observed: { node } } = this.props;
+    const { instance } = node;
+    const path = getNearPath(instance);
+    const { uid } = instance.dataset;
+    const res = await editDeleteNode({
+      path,
+      uid,
+    });
+    console.log('*', res);
   };
 
   render() {

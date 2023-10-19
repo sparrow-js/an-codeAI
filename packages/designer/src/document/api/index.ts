@@ -11,3 +11,12 @@ export async function editInsertNode(options?: { [key: string]: any }) {
       params: options,
     });
 }
+
+/* GET /edit/insertNode */
+export async function editDeleteNode(options?: { [key: string]: any }) {
+  return request('/edit/deleteNode', {
+    method: 'GET',
+    params: options,
+  });
+}
+

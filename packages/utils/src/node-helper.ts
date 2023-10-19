@@ -24,3 +24,17 @@ export const canClickNode = (node: Node, e: unknown): boolean => {
   const canClick = typeof onClickHook === 'function' ? onClickHook(e as MouseEvent, node) : true;
   return canClick;
 };
+
+
+export const getNearPath = (element: HTMLElement | null) => {
+  let path = '';
+  while (element) {
+    const { dataset } = element;
+    if (dataset && dataset.path) {
+      path = dataset.path;
+      break;
+    }
+    element = element.parentElement;
+  }
+  return path;
+};

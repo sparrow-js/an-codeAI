@@ -620,6 +620,7 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
       containerInstance,
       // container.componentMeta.rootSelector,
     );
+    console.log('*********', edge);
 
     if (!edge) {
       return null;
@@ -655,6 +656,7 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     // }
 
     if (!children || children.size < 1 || !edge) {
+      console.log('**********12', locationData);
       return this.designer.createLocation(locationData);
     }
 
@@ -744,6 +746,7 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         }
       }
     }
+    console.log('**********67', locationData);
     return this.designer.createLocation(locationData);
   }
 

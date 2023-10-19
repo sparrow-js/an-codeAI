@@ -120,7 +120,7 @@ export class Node<Schema extends NodeSchema = NodeSchema> {
         this.id = id || '';
         this.componentName = componentName;
         this.instance = instance;
-        let firstChild = instance.querySelector('div[data-uid*="/"]');
+        let firstChild = instance.querySelector('[data-uid]');
         const childInstance = [];
         while (firstChild) {
             childInstance.push({

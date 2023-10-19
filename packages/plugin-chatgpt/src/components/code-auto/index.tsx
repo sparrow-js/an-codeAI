@@ -109,15 +109,15 @@ export default class CodeAuto extends React.Component<
           const node = nodes[0];
           if (node) {
             const { instance } = node;
-            const unique = instance.dataset['unique'];
-            const interval = unique.split('::');
-            const res = await editInsertNode({
-              path: node.id.split('::')[0],
-              start: interval[0],
-              end: interval[1],
-              position: 0,
-              content: this.props.chatgpt.selection,
-            });
+            // const unique = instance.dataset['unique'];
+            // const interval = unique.split('::');
+            // const res = await editInsertNode({
+            //   path: node.id.split('::')[0],
+            //   start: interval[0],
+            //   end: interval[1],
+            //   position: 0,
+            //   content: this.props.chatgpt.selection,
+            // });
           }
         }
       };

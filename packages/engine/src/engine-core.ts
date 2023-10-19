@@ -85,38 +85,39 @@ let engineInited = false;
   };
   defaultPanelRegistry.pluginName = '___default_panel___';
   await plugins.register(defaultPanelRegistry);
+
   // 组件面板
-  // const componentPanelRegistry = (ctx: ILowCodePluginContext) => {
-  //   return {
-  //     init() {
-  //       innerSkeleton.add({
-  //           area: 'leftArea',
-  //           type: 'PanelDock',
-  //           name: 'componentsPane',
-  //           content: {
-  //             name: 'component-pane',
-  //             props: {
-  //               icon: IconOutline,
-  //               description: null,
-  //               editor,
-  //             },
-  //             content: ComponentPane,
-  //           },
-  //           contentProps: {
-  //             editor,
-  //           },
-  //           panelProps: {
-  //             area: 'leftFloatArea',
-  //             keepVisibleWhileDragging: true,
-  //           },
-  //         });
-  //     },
-  //   };
-  // };
+  const componentPanelRegistry = (ctx: ILowCodePluginContext) => {
+    return {
+      init() {
+        innerSkeleton.add({
+            area: 'leftArea',
+            type: 'PanelDock',
+            name: 'componentsPane',
+            content: {
+              name: 'component-pane',
+              props: {
+                icon: IconOutline,
+                description: null,
+                editor,
+              },
+              content: ComponentPane,
+            },
+            contentProps: {
+              editor,
+            },
+            panelProps: {
+              area: 'leftFloatArea',
+              keepVisibleWhileDragging: true,
+            },
+          });
+      },
+    };
+  };
 
-  // componentPanelRegistry.pluginName = '___component_panel___';
+  componentPanelRegistry.pluginName = '___component_panel___';
 
-  // await plugins.register(componentPanelRegistry);
+  await plugins.register(componentPanelRegistry);
 
   // chatGPT面板
   const chatGPTPanelRegistry = (ctx: ILowCodePluginContext) => {

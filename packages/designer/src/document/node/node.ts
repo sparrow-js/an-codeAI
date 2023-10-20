@@ -3,6 +3,7 @@ import { obx, computed, autorun, makeObservable, runInAction, action } from '@fi
 import { DocumentModel } from '../document-model';
 import { NodeChildren } from './node-children';
 import { editInsertNode } from '../api';
+import { getNearPath } from '@firefly/auto-utils';
 // import {
 //     isDOMText,
 //     isJSExpression,
@@ -209,12 +210,17 @@ export function isRootNode(node: Node): node is RootNode {
 }
 
 export function insertChildren(
-    container: ParentalNode,
-    nodeParam: NodeParam,
-    nodes: Node[] | NodeData[],
-    at?: number | null,
-    copy?: boolean,
+    loc: any,
   ): any {
-    console.log('*****8', container, nodeParam, nodes, at, copy);
-    editInsertNode({ ...nodeParam });
+    const containerId = loc.target.id;
+    const { detail: { near } } = loc;
+    const nearData = {
+      pos: near.pos,
+      id: near.node.id,
+    };
+    editInsertNode({
+      containerId,
+      path: getNearPath(loc.target.instance),
+      near: nearData,
+    });
   }

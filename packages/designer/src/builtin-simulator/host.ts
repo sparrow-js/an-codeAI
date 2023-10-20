@@ -746,7 +746,6 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         }
       }
     }
-    console.log('**********67', locationData);
     return this.designer.createLocation(locationData);
   }
 

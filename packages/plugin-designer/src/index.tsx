@@ -42,7 +42,7 @@ export default class DesignerPlugin extends PureComponent<PluginProps, DesignerP
     constructor(props: any) {
         super(props);
         const url = new URL(location.href);
-        this.state.simulatorUrl = url.searchParams.get('url') || 'http://localhost:5173/';
+        this.state.simulatorUrl = url.searchParams.get('url');
     }
 
 

@@ -38,7 +38,6 @@ function processChildrenDetail(sim: ISimulatorHost, container: ParentalNode, det
     edge,
     insertType: 'before',
   };
-  console.log('************123912');
 
 
   if (detail.near) {
@@ -59,8 +58,6 @@ function processChildrenDetail(sim: ISimulatorHost, container: ParentalNode, det
     }
     return ret;
   }
-
-  console.log('****************5679', ret, container);
 
   // from outline-tree: has index, but no near
   // TODO: think of shadowNode & ConditionFlow
@@ -104,15 +101,11 @@ function processChildrenDetail(sim: ISimulatorHost, container: ParentalNode, det
 function processDetail({ target, detail, document }: DropLocation): InsertionData {
   const sim = document.simulator;
   if (!sim) {
-    console.log('************123913');
     return {};
   }
   if (isLocationChildrenDetail(detail)) {
-    console.log('************123911', processChildrenDetail(sim, target, detail));
-
     return processChildrenDetail(sim, target, detail);
   } else {
-    console.log('************123912');
     // TODO: others...
     const instances = sim.getComponentInstances(target);
     if (!instances) {
@@ -138,7 +131,6 @@ export class InsertionView extends Component<{ host: BuiltinSimulatorHost }> {
 
     const { scale, scrollX, scrollY } = host.viewport;
     const { edge, insertType, coverRect, nearRect, vertical, nearNode } = processDetail(loc);
-    console.log('************12391', processDetail(loc));
     if (!edge) {
       return null;
     }
@@ -172,13 +164,11 @@ export class InsertionView extends Component<{ host: BuiltinSimulatorHost }> {
         style.width = nearRect.width * scale;
       }
       if (y === 0 && (nearNode as NodeSchema)?.componentMeta?.isTopFixed) {
-        console.log('************1231');
         return null;
       }
     }
     style.transform = `translate3d(${x}px, ${y}px, 0)`;
     // style.transition = 'all 0.2s ease-in-out';
-    console.log('************123', style, className);
 
     return <div className={className} style={style} />;
   }

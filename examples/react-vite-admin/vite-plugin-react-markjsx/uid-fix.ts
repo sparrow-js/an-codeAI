@@ -59,7 +59,7 @@ function fixArrayElements<T>(
 ) {
     let oldElementIndexesUsed: Set<number> = new Set();
     let workingArray: T[] = [];
-    newElements.forEach((newElement, newElementIndex) => {
+    Array.isArray(newElements) && newElements.forEach((newElement, newElementIndex) => {
         const { uid } = newElement;
         let possibleOldElement: T | undefined;
 
@@ -80,7 +80,7 @@ function fixArrayElements<T>(
         }
     });
 
-    return newElements.map((newElement, newElementIndex) => {
+    return Array.isArray(newElements) ? newElements.map((newElement, newElementIndex) => {
         if (newElementIndex in workingArray) {
             return workingArray[newElementIndex];
         } else if (!oldElementIndexesUsed.has(newElementIndex)) {
@@ -89,7 +89,7 @@ function fixArrayElements<T>(
         } else {
             return fixJSXElementUIDs(newElement, newElement);
         }
-    });
+    }) : [];
 }
 
 

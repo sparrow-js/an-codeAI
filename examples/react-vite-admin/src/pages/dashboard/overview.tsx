@@ -134,7 +134,6 @@ const config = {
   return (
     <Row gutter={[12, 12]}>
       <ColCard
-        componentId="111"
         loading={loading}
         metaName={formatMessage({ id: "app.dashboard.overview.totalSales" })}
         metaCount="¥ 126,560"

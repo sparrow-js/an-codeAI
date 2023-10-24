@@ -14,9 +14,9 @@ import { syncNodeIdMap } from './request';
 import Store from './store';
 
 const cacheTree = {};
-let alreadyExistingUIDs: Set<string> = new Set();
+let alreadyExistingUIDs: Map<string, any> = new Map();
 // factory.createJsxAttribute
-let jsxContainerMap = {};
+let jsxContainerList = [];
 
 function getJsx(functionNode: Node) {
   const jsxArr: any[] = [];
@@ -84,6 +84,7 @@ function setJsxElementUid(nodeList: Node[], sourceFile: TS.SourceFile) {
   const cacheJsxList = [];
   function walk(node: Node) {
     const leaf = {};
+    const alreadyExistingUIDsFile = alreadyExistingUIDs.get(sourceFile.fileName);
     if (node.kind === TS.SyntaxKind.JsxElement) {
       const props = getAttributes((node as any).openingElement.attributes, sourceFile);
       const hash = Hash({
@@ -91,13 +92,12 @@ function setJsxElementUid(nodeList: Node[], sourceFile: TS.SourceFile) {
         name: parseJSXElementName((node as any).openingElement, sourceFile),
         props,
       });
-
-      const uid = generateConsistentUID(hash, alreadyExistingUIDs);
+      const uid = generateConsistentUID(hash, alreadyExistingUIDsFile);
       leaf['uid'] = uid;
       leaf['tagName'] = (node as any).openingElement.tagName.getText(sourceFile);
       leaf['linkAttributes'] = (node as any).openingElement.attributes;
       leaf['linkNode'] = node;
-      alreadyExistingUIDs.add(uid);
+      alreadyExistingUIDsFile.add(uid);
       appendUidAttribute(uid, (node as any).openingElement.attributes);
     } else if (node.kind === TS.SyntaxKind.JsxSelfClosingElement) {
       const props = getAttributes((node as any).attributes, sourceFile);
@@ -107,12 +107,12 @@ function setJsxElementUid(nodeList: Node[], sourceFile: TS.SourceFile) {
         props,
       });
 
-      const uid = generateConsistentUID(hash, alreadyExistingUIDs);
+      const uid = generateConsistentUID(hash, alreadyExistingUIDsFile);
       leaf['uid'] = uid;
       leaf['tagName'] = (node as any).tagName.getText(sourceFile);
       leaf['linkAttributes'] = (node as any).attributes;
       leaf['linkNode'] = node;
-      alreadyExistingUIDs.add(uid);
+      alreadyExistingUIDsFile.add(uid);
       appendUidAttribute(uid, (node as any).attributes);
     } else {
       return null;
@@ -149,7 +149,7 @@ function parseArrowFunction(initializer, escapedText) {
   Array.isArray(statements) && statements.forEach((node) => {
     if (node.kind === TS.SyntaxKind.ReturnStatement) {
       const jsx = getJsx(node);
-      jsxContainerMap[escapedText] = jsx;
+      jsxContainerList.push(...jsx);
     }
   });
 }
@@ -164,7 +164,7 @@ function parseVariableDeclarationList(declarations) {
 }
 
 function findJsxNode(node: Node) {
-  jsxContainerMap = {};
+  jsxContainerList = [];
   const dfs = function (node: Node) {
     if (!node) return;
     if (node.kind === TS.SyntaxKind.JsxElement) {
@@ -185,7 +185,7 @@ function findJsxNode(node: Node) {
   child.forEach(item => {
     dfs(item);
   });
-  return jsxContainerMap;
+  return jsxContainerList;
 }
 
 export default function markjsx() {
@@ -193,31 +193,22 @@ export default function markjsx() {
       name: 'transform-file',
       transform(code: string, id: string) {
         const root = {};
-        alreadyExistingUIDs = new Set();
-        if (id.includes('/src/pages') && id.includes('tsx')) {
+        alreadyExistingUIDs.set(id, new Set());
+        if (id.includes('/src') && id.includes('tsx')) {
           const sourceFile = TS.createSourceFile(id, code, TS.ScriptTarget.ESNext);
           const nodeObject = sourceFile.getChildren()[0];
           findJsxNode(nodeObject);
-          Object.keys(jsxContainerMap).forEach((key) => {
-              const jsxNodeList: Node = jsxContainerMap[key];
-              const cacheJsx = setJsxElementUid(jsxNodeList, sourceFile);
-              if (!cacheTree[id]) {
-                cacheTree[id] = {};
-              }
-              const oldParse = cacheTree[id][key] || null;
-              fixParseSuccessUIDs(oldParse, cacheJsx);
-              cacheTree[id][key] = cacheJsx;
-              setRootNodePath(id, jsxNodeList);
-          });
+          const cacheJsx = setJsxElementUid(jsxContainerList, sourceFile);
+          const oldParse = cacheTree[id] || null;
+          fixParseSuccessUIDs(oldParse, cacheJsx);
+          cacheTree[id] = cacheJsx;
+          setRootNodePath(id, jsxContainerList);
           const uidMap = Store.getInstance().getOldUidToOriginUid();
           // syncNodeIdMap({
           //   uidMap,
           // });
           const printer = TS.createPrinter();
           code = printer.printNode(TS.EmitHint.Unspecified, sourceFile, sourceFile);
-          if (id.includes('/dashboard/index')) {
-            console.log(code);
-          }
         }
         return {
           code,

@@ -24,4 +24,4 @@ pnpm run start:dev
 - 快速验证方案，对还原度要求不高的项目
 
 ## 合作
-如果有合作意向欢迎加wx：sparrow777-js，<span style="color: red;">不闲聊，没有具体事情请不要加🙏</span>
+如果有合作意向欢迎加wx：sparrow777-js，<font color="red">不闲聊，没有具体事情请不要加🙏</font>

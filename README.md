@@ -14,7 +14,7 @@ pnpm run dev
 // service
 pnpm run start:dev
 ```
-
+## 设置
 <img width="558" alt="Pasted Graphic" src="https://github.com/sparrow-js/firefly/assets/59440091/b08ca5a1-2e6a-463c-892f-647d63b44dbd">
 
 [reference material screenshot-to-code](https://github.com/abi/screenshot-to-code) 

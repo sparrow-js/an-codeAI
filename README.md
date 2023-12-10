@@ -17,7 +17,6 @@ pnpm run start:dev
 ## 设置
 <img width="558" alt="Pasted Graphic" src="https://github.com/sparrow-js/firefly/assets/59440091/b08ca5a1-2e6a-463c-892f-647d63b44dbd">
 
-[reference material screenshot-to-code](https://github.com/abi/screenshot-to-code) 
 
 ## 使用场景
 - 中后台项目
@@ -25,3 +24,6 @@ pnpm run start:dev
 
 ## 合作
 如果有合作意向欢迎加wx：sparrow777-js，<font color="red">不闲聊，没有具体事情请不要加🙏</font>
+
+
+[reference material screenshot-to-code](https://github.com/abi/screenshot-to-code) 

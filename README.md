@@ -15,7 +15,11 @@ pnpm run dev
 pnpm run start:dev
 ```
 ## 🛠 设置
-<img width="558" alt="Pasted Graphic" src="https://github.com/sparrow-js/firefly/assets/59440091/b08ca5a1-2e6a-463c-892f-647d63b44dbd">
+<img width="558" alt="Pasted Graphic 1" src="https://github.com/sparrow-js/firefly/assets/59440091/2daf0da1-dc53-4c2a-b450-2667abcf940b">
+
+- OpenAI API Key
+- OpenAI Base URL
+- Mock AI Response(mock AI返回的数据，不直接请求AI)，直接请求OpenAI 接口会消耗费用
 
 
 ## 🔥 使用场景

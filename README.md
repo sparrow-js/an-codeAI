@@ -18,7 +18,7 @@ pnpm run start:dev
 <img width="558" alt="Pasted Graphic 1" src="https://github.com/sparrow-js/firefly/assets/59440091/2daf0da1-dc53-4c2a-b450-2667abcf940b">
 
 - OpenAI API Key
-- OpenAI Base URL
+- OpenAI Base URL(代理地址，默认：https://api.openai.com/v1)
 - Mock AI Response(mock AI返回的数据，不直接请求AI)，直接请求OpenAI 接口会消耗费用
 
 

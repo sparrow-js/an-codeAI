@@ -4,7 +4,7 @@
 
 https://github.com/sparrow-js/firefly/assets/59440091/e1880b97-b2a4-41b3-aa81-38e019bc2d4f
 
-## 试用
+## 🚀 试用
 暂时可以下载下来本地运行，将尽快找服务器部署到线上。
 ```bash
 // client
@@ -14,16 +14,17 @@ pnpm run dev
 // service
 pnpm run start:dev
 ```
-## 设置
+## 🛠 设置
 <img width="558" alt="Pasted Graphic" src="https://github.com/sparrow-js/firefly/assets/59440091/b08ca5a1-2e6a-463c-892f-647d63b44dbd">
 
 
-## 使用场景
+## 🔥 使用场景
 - 中后台项目
 - 快速验证方案，对还原度要求不高的项目
 
-## 合作
-如果有合作意向欢迎加wx：sparrow777-js，<font color="red">不闲聊，没有具体事情请不要加🙏</font>
+##  🙋‍♂️ 合作
+- 如果有合作意向欢迎加wx：sparrow777-js，不闲聊，没有具体事情请不要加🙏
+- bug，意见等直接提交到git上
 
 
 [reference material screenshot-to-code](https://github.com/abi/screenshot-to-code) 

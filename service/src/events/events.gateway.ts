@@ -1,40 +1,22 @@
 import {
-  MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
+  // WsResponse,
 } from '@nestjs/websockets';
-import { from, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Server, Socket } from 'socket.io';
+// import { from, Observable } from 'rxjs';
+// import { map } from 'rxjs/operators';
+import { Server } from 'ws';
+import * as WebSocket from 'ws';
 import { streamGenerateCode } from './generateCode';
 
-@WebSocketGateway({
-  path: '/generate',
-  cors: {
-    origin: '*',
-  },
-})
+@WebSocketGateway(9000)
 export class EventsGateway {
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('events')
-  findAll(@MessageBody() data: any): Observable<WsResponse<number>> {
-    console.log('findAll', data);
-    return from([1, 2, 3]).pipe(
-      map((item) => ({ event: 'events', data: item })),
-    );
-  }
-
-  @SubscribeMessage('identity')
-  async identity(@MessageBody() data: number): Promise<number> {
-    return data;
-  }
-
   @SubscribeMessage('generatecode')
-  async generateCode(client: Socket, data: any): Promise<void> {
+  async generateCode(client: WebSocket, data: any): Promise<void> {
     /**
      {
       generationType: 'create',
@@ -50,6 +32,6 @@ export class EventsGateway {
     }
      */
     await streamGenerateCode(data, client);
-    client.disconnect();
+    client.close();
   }
 }

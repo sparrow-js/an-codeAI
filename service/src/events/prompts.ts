@@ -133,9 +133,8 @@ In terms of libraries,
     <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/dayjs@1.11.10/dayjs.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+
 - Use this script to include Ant Design: <script src="https://unpkg.com/antd@5.12.1/dist/antd.min.js"></script>
-- You can use Google Fonts
-- Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
 
 Return only the full code in <html></html> tags.
 Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.

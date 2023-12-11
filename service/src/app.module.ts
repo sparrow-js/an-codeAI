@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { EventsModule } from './events/events.module';
 import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 const envFilePath = ['.env'];
 export const IS_DEV = process.env.RUNNING_ENV !== 'prod';
 if (IS_DEV) {
@@ -10,16 +10,16 @@ if (IS_DEV) {
 } else {
   envFilePath.unshift('.env.prod');
 }
-
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client'),
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath,
     }),
-    EventsModule,
+    EventsModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

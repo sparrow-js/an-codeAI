@@ -1,4 +1,4 @@
-# firefly-code
+# ant-codeAI
 
 这个项目通过使用AI技术生成高可用代码，（React，Vue，Tailwind CSS）等代码，使用GPT-4 Vision生成，参考screenshot-to-code代码服务端改为node，通过截图转化到代码，将持续新增功能。
 

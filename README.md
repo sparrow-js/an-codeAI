@@ -5,7 +5,7 @@
 https://github.com/sparrow-js/ant-codeAI/assets/59440091/cd2b9b4b-9940-47fe-a75c-c64759455f53
 
 ## 🚀 试用
-暂时可以下载下来本地运行，将尽快找服务器部署到线上。
+可以下载下来本地运行，[临时线上体验地址](https://service-1fiqz1da-1253530766.gz.tencentapigw.com/release/)。
 ```bash
 cd client
 yarn dev

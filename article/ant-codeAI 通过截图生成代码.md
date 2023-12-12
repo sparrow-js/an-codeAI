@@ -1,5 +1,8 @@
 ### 一、✨简介
 最近开源项目screenshot-to-code火爆，在screenshot-to-code基础上将后端代码改为node，开源地址[ant-codeAI](https://github.com/sparrow-js/ant-codeAI)，提供了截图生成代码的功能，使用GPT-4 Vision生成，在原有（React，Tailwind CSS）等代码基础上，新增react/ant design的代码输出，后续会逐步迭代自己的创意。
+
+https://github.com/sparrow-js/ant-codeAI/assets/59440091/cd2b9b4b-9940-47fe-a75c-c64759455f53
+
 ### 二、🚀 试用
 暂时可以先下载下来本地运行尝试，将尽快找服务器部署到线上（有没有免费的部署环境帮推荐一个🤦‍♂️）。
 ```shell

@@ -25,6 +25,7 @@ npm run start:dev
 ## 🔥 使用场景
 - 中后台项目
 - 快速验证方案，对还原度要求不高的项目
+- 输出代码后自补全细节
 
 <img width="500" alt="截屏2023-12-11 下午8 48 49" src="https://github.com/sparrow-js/firefly-codeAI/assets/59440091/781e496e-6141-413b-804a-72e7c17f0fe1">
 

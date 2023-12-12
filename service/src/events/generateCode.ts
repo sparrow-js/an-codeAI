@@ -16,6 +16,7 @@ export interface IGenerateCodeParams {
   accessCode?: boolean;
   resultImage?: string;
 }
+
 export async function streamGenerateCode(
   params: IGenerateCodeParams,
   socket: WebSocket,
@@ -37,6 +38,10 @@ export async function streamGenerateCode(
     }
   } catch (e) {
     console.log(e);
+    noticeHost({
+      type: 'error',
+      value: 'Prompt error!',
+    });
   }
 
   if (params['generationType'] === 'update') {
@@ -62,11 +67,18 @@ export async function streamGenerateCode(
     try {
       completion = await streamingOpenAIResponses(
         prompt_messages,
-        (content) => {
-          noticeHost({
-            type: 'chunk',
-            value: content,
-          });
+        (content: string, event?: string) => {
+          if (event === 'error') {
+            noticeHost({
+              type: 'error',
+              value: content,
+            });
+          } else {
+            noticeHost({
+              type: 'chunk',
+              value: content,
+            });
+          }
         },
         {
           openAiApiKey: params.openAiApiKey,
@@ -75,6 +87,10 @@ export async function streamGenerateCode(
       );
     } catch (e) {
       console.log(e);
+      noticeHost({
+        type: 'error',
+        value: 'openAI request error!',
+      });
     }
   }
   const updated_html = completion;

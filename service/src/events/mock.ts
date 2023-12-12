@@ -198,74 +198,92 @@ export const NO_IMAGES_NYTIMES_MOCK_CODE = `
 const REACT_ANTD_MOCK_CODE = `
 <html>
 <head>
-    <title>Form Page</title>
-    <script src="https://unpkg.com/react/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/dayjs@1.11.10/dayjs.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
-    <script src="https://unpkg.com/antd@5.12.1/dist/antd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-        }
-        #app {
-            max-width: 600px;
-            margin: 50px auto;
-        }
-    </style>
+  <title>Registration Form</title>
+  <link rel="stylesheet" href="https://unpkg.com/antd@5.12.1/dist/antd.min.css">
 </head>
 <body>
-    <div id="app"></div>
+  <div id="root"></div>
 
-    <script type="text/babel">
-        const { Form, Input, Button } = antd;
+  <script src="https://unpkg.com/react/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/dayjs@1.11.10/dayjs.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+  <script src="https://unpkg.com/antd@5.12.1/dist/antd.min.js"></script>
 
-        function App() {
-            return (
-                <Form layout="vertical">
-                    <Form.Item
-                        label="Name:"
-                        name="name"
-                        rules={[{ required: true, message: 'Please input your name!' }]}
-                    >
-                        <Input placeholder="Enter your name" />
-                    </Form.Item>
-                    <Form.Item
-                        label="Email:"
-                        name="email"
-                    >
-                        <Input placeholder="Enter your email" />
-                    </Form.Item>
-                    <Form.Item
-                        label="Age:"
-                        name="age"
-                    >
-                        <Input placeholder="Enter your age" />
-                    </Form.Item>
-                    <Form.Item
-                        label="Website:"
-                        name="website"
-                    >
-                        <Input placeholder="Enter your website" />
-                    </Form.Item>
-                    <Form.Item
-                        label="Introduction:"
-                        name="introduction"
-                    >
-                        <Input.TextArea placeholder="Introduce yourself" />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                    </Form.Item>
-                </Form>
-            );
-        }
+  <script type="text/babel">
+    const { Form, Input, Cascader, Checkbox, Button,  Select} = antd;
 
-        ReactDOM.render(<App />, document.getElementById('app'));
-    </script>
+    const residenceOptions = [
+      {
+        value: 'zhejiang',
+        label: 'Zhejiang',
+        children: [
+          {
+            value: 'hangzhou',
+            label: 'Hangzhou',
+            children: [
+              {
+                value: 'westlake',
+                label: 'West Lake',
+              },
+            ],
+          },
+        ],
+      },
+      // ...other province options
+    ];
+
+    function RegistrationForm() {
+      return (
+        <Form
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          layout="horizontal"
+        >
+          <Form.Item label="Nickname" required tooltip="This is a required field">
+            <Input placeholder="" />
+          </Form.Item>
+          <Form.Item label="Habitual Residence" required>
+            <Cascader
+              options={residenceOptions}
+              defaultValue={['zhejiang', 'hangzhou', 'westlake']}
+              placeholder="Please select your habitual residence"
+            />
+          </Form.Item>
+          <Form.Item label="Phone Number" required>
+            <Input addonBefore={<Select defaultValue="+86" style={{ width: 70 }}>
+              {/* Add other country codes as needed */}
+            </Select>} style={{ width: '100%' }} />
+          </Form.Item>
+          <Form.Item label="Donation" required>
+            <Input placeholder="" />
+          </Form.Item>
+          <Form.Item label="Website" required>
+            <Input placeholder="website" />
+          </Form.Item>
+          <Form.Item label="Intro" required>
+            <Input.TextArea showCount maxLength={100} />
+          </Form.Item>
+          <Form.Item label="Gender" required>
+            <Select placeholder="select your gender">
+              {/* Add gender options as needed */}
+            </Select>
+          </Form.Item>
+          <Form.Item label="Captcha" extra="We must make sure that your are a human.">
+            <Input />
+          </Form.Item>
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Checkbox>I have read the agreement</Checkbox>
+          </Form.Item>
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Button type="primary">Register</Button>
+          </Form.Item>
+        </Form>
+      );
+    }
+
+    ReactDOM.render(<RegistrationForm />, document.getElementById('root'));
+  </script>
 </body>
 </html>
 `;

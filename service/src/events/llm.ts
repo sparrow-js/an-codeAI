@@ -1,6 +1,10 @@
 import OpenAI from 'openai';
 
 export async function streamingOpenAIResponses(messages, callback, params) {
+  if (!params.openAiApiKey) {
+    callback('No openai key', 'error');
+    return '';
+  }
   const openai = new OpenAI({
     apiKey: params.openAiApiKey || process.env['OPENAI_API_KEY'], // defaults to process.env["OPENAI_API_KEY"]
     baseURL:

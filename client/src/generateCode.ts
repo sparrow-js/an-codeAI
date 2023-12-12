@@ -23,8 +23,8 @@ export function generateCode(
   onStatusUpdate: (status: string) => void,
   onComplete: () => void
 ) {
-  const wsUrl = `wss://service-cav5mava-1253530766.gz.tencentapigw.com/release/`;
-  // const wsUrl = `ws://localhost:9000`;
+  // const wsUrl = `wss://service-cav5mava-1253530766.gz.tencentapigw.com/release/`;
+  const wsUrl = `ws://localhost:9000`;
   console.log("Connecting to backend @ ", wsUrl);
 
   const ws = new WebSocket(wsUrl);
@@ -39,7 +39,6 @@ export function generateCode(
   });
 
   ws.addEventListener("message", async (event: MessageEvent) => {
-    console.log(event);
     const response = JSON.parse(event.data);
     if (response.type === "chunk") {
       onChange(response.value);
@@ -58,7 +57,7 @@ export function generateCode(
       toast.success(STOP_MESSAGE);
     } else if (event.code !== 1000) {
       console.error("WebSocket error code", event);
-      toast.error(ERROR_MESSAGE);
+      // toast.error(ERROR_MESSAGE);
     }
     onComplete();
   });

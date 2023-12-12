@@ -7,12 +7,12 @@ https://github.com/sparrow-js/ant-codeAI/assets/59440091/cd2b9b4b-9940-47fe-a75c
 ## 🚀 试用
 暂时可以下载下来本地运行，将尽快找服务器部署到线上。
 ```bash
-// client
-pnpm run dev
+cd client
+yarn dev
 
 
-// service
-pnpm run start:dev
+cd service
+npm run start:dev
 ```
 ## 🛠 设置
 <img width="558" alt="Pasted Graphic 1" src="https://github.com/sparrow-js/firefly/assets/59440091/2daf0da1-dc53-4c2a-b450-2667abcf940b">

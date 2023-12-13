@@ -31,10 +31,15 @@ export async function streamGenerateCode(
       prompt_messages = assemblePrompt(
         params['image'],
         generated_code_config,
+        params['promptCode'],
         params['resultImage'],
       );
     } else {
-      prompt_messages = assemblePrompt(params['image'], generated_code_config);
+      prompt_messages = assemblePrompt(
+        params['image'],
+        generated_code_config,
+        params['promptCode'],
+      );
     }
   } catch (e) {
     console.log(e);

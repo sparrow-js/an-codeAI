@@ -1,0 +1,114 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Form Layout</title>
+  <link rel="stylesheet" href="https://cdn.staticfile.org/ant-design-pro/2.3.2/ant-design-pro.css" />
+
+  <style>
+    #app {
+      background-color: #f0f2f5;
+      padding: 24px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .ant-row {
+      margin-bottom: 24px;
+    }
+    .ant-col-8 {
+      padding-right: 8px;
+    }
+    .ant-col-16 {
+      padding-left: 8px;
+    }
+  </style>
+  <script src="https://cdn.staticfile.org/react/18.2.0/umd/react.development.js"></script>
+  <script src="https://cdn.staticfile.org/react-dom/18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://cdn.staticfile.org/dayjs/1.11.10/dayjs.min.js"></script>
+  <script src="https://cdn.staticfile.org/babel-standalone/7.23.6/babel.js"></script>
+  <script src="https://cdn.staticfile.org/antd/5.12.2/antd.min.js"></script>
+  <script src="https://unpkg.com/@ant-design/pro-components@2.6.43/dist/pro-components.min.js"></script>
+</head>
+<body>
+<div id="app"></div>
+
+<script type="text/babel">
+  const { Input, Form, Card, Col, Row } = antd;
+  const { ProForm, ProFormText, ProFormSelect, ProFormDatePicker } = ProComponents;
+
+  function App() {
+    return (
+      <ProForm>
+        <Card title="仓库管理" bordered={false}>
+          <Row gutter={16}>
+            <Col lg={8} md={12} sm={24}>
+              <ProFormText
+                name="name"
+                label="仓库名"
+                placeholder="请输入仓库名称"
+              />
+            </Col>
+            <Col lg={8} md={12} sm={24}>
+              <ProFormText
+                name="url"
+                label="仓库域名"
+                placeholder="请输入"
+                fieldProps={{
+                  addonBefore: 'http://',
+                  addonAfter: '.com',
+                }}
+              />
+            </Col>
+            <Col lg={8} md={12} sm={24}>
+              <ProFormSelect
+                name="owner"
+                label="仓库管理员"
+                placeholder="请选择管理员"
+                options={[
+                  { label: '选项1', value: 'option1' },
+                  { label: '选项2', value: 'option2' },
+                  { label: '选项3', value: 'option3' },
+                ]}
+              />
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col lg={8} md={12} sm={24}>
+              <ProFormSelect
+                name="approver"
+                label="审批人"
+                placeholder="请选择审批人"
+                options={[
+                  { label: '选项1', value: 'option1' },
+                  { label: '选项2', value: 'option2' },
+                  { label: '选项3', value: 'option3' },
+                ]}
+              />
+            </Col>
+            <Col lg={8} md={12} sm={24}>
+              <ProFormDatePicker
+                name="dateRange"
+                label="生效日期"
+                placeholder="请选择生效日期"
+              />
+            </Col>
+            <Col lg={8} md={12} sm={24}>
+              <ProFormSelect
+                name="type"
+                label="仓库类型"
+                placeholder="请选择仓库类型"
+                options={[
+                  { label: '私密', value: 'private' },
+                  { label: '公开', value: 'public' },
+                ]}
+              />
+            </Col>
+          </Row>
+        </Card>
+      </ProForm>
+    );
+  }
+
+  ReactDOM.render(<App />, document.getElementById('app'));
+</script>
+</body>
+</html>

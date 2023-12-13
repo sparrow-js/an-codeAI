@@ -1193,6 +1193,11 @@
   resolved "https://registry.npmmirror.com/@types/json-schema/-/json-schema-7.0.15.tgz#596a1747233694d50f6ad8a7869fcb6f56cf5841"
   integrity sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==
 
+"@types/lodash@^4.14.202":
+  version "4.14.202"
+  resolved "https://registry.npmmirror.com/@types/lodash/-/lodash-4.14.202.tgz#f09dbd2fb082d507178b2f2a5c7e74bd72ff98f8"
+  integrity sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==
+
 "@types/prop-types@*":
   version "15.7.11"
   resolved "https://registry.npmmirror.com/@types/prop-types/-/prop-types-15.7.11.tgz#2596fb352ee96a1379c657734d4b913a613ad563"
@@ -1223,6 +1228,11 @@
   version "7.5.6"
   resolved "https://registry.npmmirror.com/@types/semver/-/semver-7.5.6.tgz#c65b2bfce1bec346582c07724e3f8c1017a20339"
   integrity sha512-dn1l8LaMea/IjDoHNd9J52uBbInB796CDffS6VdIxvqYCPSG0V0DzHp76GpaWnlhg88uYyPbXCDIowa86ybd5A==
+
+"@types/uuid@^9.0.7":
+  version "9.0.7"
+  resolved "https://registry.npmmirror.com/@types/uuid/-/uuid-9.0.7.tgz#b14cebc75455eeeb160d5fe23c2fcc0c64f724d8"
+  integrity sha512-WUtIVRUZ9i5dYXefDEAI7sh9/O7jGvHg7Df/5O/gtH3Yabe5odI3UWopVR1qbPXQtvOxWu3mM4XxlYeZtMWF4g==
 
 "@typescript-eslint/eslint-plugin@^6.10.0":
   version "6.14.0"
@@ -3230,6 +3240,11 @@ utrie@^1.0.2:
   integrity sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==
   dependencies:
     base64-arraybuffer "^1.0.2"
+
+uuid@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.npmmirror.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
+  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
 vite-node@1.0.4:
   version "1.0.4"

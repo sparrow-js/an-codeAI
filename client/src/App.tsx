@@ -31,6 +31,7 @@ import { History } from "./components/history/history_types";
 import HistoryDisplay from "./components/history/HistoryDisplay";
 import { extractHistoryTree } from "./components/history/utils";
 import toast from "react-hot-toast";
+import PromptPanel from './components/PromptPanel';
 
 const IS_OPENAI_DOWN = false;
 
@@ -55,6 +56,7 @@ function App() {
       isTermOfServiceAccepted: false,
       accessCode: null,
       mockAiResponse: false,
+      promptCode: '',
     },
     "setting"
   );
@@ -246,11 +248,31 @@ function App() {
     <div className="mt-2 dark:bg-black dark:text-white">
       <div className="lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-96 lg:flex-col">
         <div className="flex grow flex-col gap-y-2 overflow-y-auto border-r border-gray-200 bg-white px-6 dark:bg-zinc-950 dark:text-white">
-          <div className="flex items-center justify-between mt-10 mb-2">
+          <div className="flex items-center justify-between mt-5 mb-2">
             <h1 className="text-2xl ">Ant CodeAI</h1>
-            <SettingsDialog settings={settings} setSettings={setSettings} />
+            <div className="flex">
+            {appState === AppState.CODE_READY && (
+              <>
+                <span
+                    onClick={reset}
+                    className="mr-3"                  >
+                    <FaUndo />
+                    {/* Reset */}
+                </span>
+                <span
+                  onClick={downloadCode}
+                  className="mr-3"
+                >
+                  <FaDownload />
+                </span>
+              </>
+          
+            )}
+         
+              <SettingsDialog settings={settings} setSettings={setSettings} />
+            </div>
           </div>
-
+     
           <OutputSettingsSection
             generatedCodeConfig={settings.generatedCodeConfig}
             setGeneratedCodeConfig={(config: GeneratedCodeConfig) =>
@@ -263,6 +285,7 @@ function App() {
               appState === AppState.CODING || appState === AppState.CODE_READY
             }
           />
+        
 
           {IS_RUNNING_ON_CLOUD &&
             !(settings.openAiApiKey || settings.accessCode) && (
@@ -323,21 +346,6 @@ function App() {
                       Update
                     </Button>
                   </div>
-                  <div className="flex items-center gap-x-2 mt-2">
-                    <Button
-                      onClick={downloadCode}
-                      className="flex items-center gap-x-2 dark:text-white dark:bg-gray-700"
-                    >
-                      <FaDownload /> Download
-                    </Button>
-                    <Button
-                      onClick={reset}
-                      className="flex items-center gap-x-2 dark:text-white dark:bg-gray-700"
-                    >
-                      <FaUndo />
-                      Reset
-                    </Button>
-                  </div>
                 </div>
               )}
 
@@ -375,6 +383,7 @@ function App() {
               </div>
             </>
           )}
+          <PromptPanel settings={settings} setSettings={setSettings} />
           {
             <HistoryDisplay
               history={appHistory}

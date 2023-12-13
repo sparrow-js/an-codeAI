@@ -23,6 +23,7 @@ export interface Settings {
   isTermOfServiceAccepted: boolean;
   accessCode: string | null;
   mockAiResponse: boolean;
+  promptCode: string;
 }
 
 export enum AppState {

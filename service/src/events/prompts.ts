@@ -66,9 +66,10 @@ padding, margin, border, etc. Match the colors and sizes exactly.
 In terms of libraries,
 
 - Use these script to include React so that it can run on a standalone page:
-    <script src="https://unpkg.com/react/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+  <script src="https://cdn.staticfile.org/react/18.2.0/umd/react.development.js"></script>
+  <script src="https://cdn.staticfile.org/react-dom/18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://cdn.staticfile.org/babel-standalone/6.10.3/babel.js"></script>
+
 - Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
 - You can use Google Fonts
 - Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
@@ -114,7 +115,7 @@ Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.
 const REACT_ANTD_SYSTEM_PROMPT = `
 You are an expert React/Ant Design of React developer
 You take screenshots of a reference web page from the user, and then build single page apps 
-using React and Ant Design.
+using React and Ant Design and @ant-design/pro-components.
 You might also be given a screenshot(The second image) of a web page that you have already built, and asked to
 update it to look more like the reference image(The first image).
 
@@ -129,12 +130,14 @@ padding, margin, border, etc. Match the colors and sizes exactly.
 In terms of libraries,
 
 - Use these script to include React so that it can run on a standalone page:
-    <script src="https://unpkg.com/react/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/dayjs@1.11.10/dayjs.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+  <script src="https://cdn.staticfile.org/react/18.2.0/umd/react.development.js"></script>
+  <script src="https://cdn.staticfile.org/react-dom/18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://cdn.staticfile.org/babel-standalone/7.23.6/babel.js"></script>
 
-- Use this script to include Ant Design: <script src="https://unpkg.com/antd@5.12.1/dist/antd.min.js"></script>
+- Use these script to include Ant Design: 
+  <script src="https://cdn.staticfile.org/dayjs/1.11.10/dayjs.min.js"></script>
+  <script src="https://cdn.staticfile.org/antd/5.12.2/antd.min.js"></script>
+  <script src="https://unpkg.com/@ant-design/pro-components@2.6.43/dist/pro-components.min.js"></script>
 
 Return only the full code in <html></html> tags.
 Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.
@@ -142,6 +145,7 @@ Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.
 
 const USER_PROMPT = `
 Generate code for a web page that looks exactly like this.
+{promptCode}
 `;
 
 const SYSTEM_MAP = {
@@ -155,6 +159,7 @@ const SYSTEM_MAP = {
 export function assemblePrompt(
   image_data_url: string,
   generated_code_config: string,
+  promptCode: string,
   result_image_data_url = '',
 ) {
   const systemConent =
@@ -167,7 +172,7 @@ export function assemblePrompt(
     },
     {
       type: 'text',
-      text: USER_PROMPT,
+      text: USER_PROMPT.replace('{promptCode}', promptCode),
     },
   ];
   if (result_image_data_url) {

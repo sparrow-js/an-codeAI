@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <title>Ant Design Form Example</title>
+    <script src="https://cdn.staticfile.org/react/18.2.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/7.23.6/babel.js"></script>
+    <script src="https://cdn.staticfile.org/dayjs/1.11.10/dayjs.min.js"></script>
+    <script src="https://cdn.staticfile.org/antd/5.12.2/antd.min.js"></script>
+    <script src="https://unpkg.com/@ant-design/pro-components@2.6.43/dist/pro-components.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const { ProForm, ProFormText, ProFormSelect } = window['@ant-design/pro-components'];
+      const { Card } = antd;
+
+      function App() {
+        return (
+          <div style={{ background: '#ECECEC', padding: '30px' }}>
+            <Card title="全局管理" bordered={false} style={{ width: '100%' }}>
+              <ProForm
+                submitter={false}
+                layout="horizontal"
+                grid={true}
+                colProps={{ span: 8 }}
+              >
+                <ProFormText
+                  name="name"
+                  label="全名字"
+                  placeholder="请输入全名字"
+                />
+                <ProFormText
+                  name="domain"
+                  label="全域名"
+                  placeholder="http://"
+                  addonAfter=".com"
+                />
+                <ProFormSelect
+                  name="status"
+                  label="全局管理员"
+                  placeholder="请选择全局管理员"
+                  options={[
+                    { label: '管理员1', value: 'admin1' },
+                    { label: '管理员2', value: 'admin2' },
+                    // Repeat for all options
+                  ]}
+                />
+                <ProFormSelect
+                  name="owner"
+                  label="负责人"
+                  placeholder="请选择负责人"
+                  options={[
+                    { label: '负责人1', value: 'owner1' },
+                    { label: '负责人2', value: 'owner2' },
+                    // Repeat for all options
+                  ]}
+                />
+                <ProFormText
+                  name="description"
+                  label="生效日期"
+                  placeholder="Please select a date..."
+                />
+                <ProFormSelect
+                  name="type"
+                  label="全局类型"
+                  placeholder="请选择全局类型"
+                  options={[
+                    { label: '类型1', value: 'type1' },
+                    { label: '类型2', value: 'type2' },
+                    // Repeat for all options
+                  ]}
+                />
+              </ProForm>
+            </Card>
+          </div>
+        );
+      }
+
+      ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+  </body>
+</html>

@@ -66,9 +66,9 @@ padding, margin, border, etc. Match the colors and sizes exactly.
 In terms of libraries,
 
 - Use these script to include React so that it can run on a standalone page:
-  <script src="https://cdn.staticfile.org/react/18.2.0/umd/react.development.js"></script>
-  <script src="https://cdn.staticfile.org/react-dom/18.2.0/umd/react-dom.development.js"></script>
-  <script src="https://cdn.staticfile.org/babel-standalone/6.10.3/babel.js"></script>
+  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
 
 - Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
 - You can use Google Fonts
@@ -123,6 +123,7 @@ update it to look more like the reference image(The first image).
 - Pay close attention to background color, text color, font size, font family, 
 padding, margin, border, etc. Match the colors and sizes exactly.
 - Use the exact text from the screenshot.
+- import component example:  const { ProForm, ProFormText, ProFormSelect } = ProComponents; const { Card } = antd;
 - Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
 - Repeat elements as needed to match the screenshot. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
 - For images, use placeholder images from https://placehold.co and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
@@ -130,14 +131,14 @@ padding, margin, border, etc. Match the colors and sizes exactly.
 In terms of libraries,
 
 - Use these script to include React so that it can run on a standalone page:
-  <script src="https://cdn.staticfile.org/react/18.2.0/umd/react.development.js"></script>
-  <script src="https://cdn.staticfile.org/react-dom/18.2.0/umd/react-dom.development.js"></script>
-  <script src="https://cdn.staticfile.org/babel-standalone/7.23.6/babel.js"></script>
+  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
 
 - Use these script to include Ant Design: 
-  <script src="https://cdn.staticfile.org/dayjs/1.11.10/dayjs.min.js"></script>
-  <script src="https://cdn.staticfile.org/antd/5.12.2/antd.min.js"></script>
-  <script src="https://unpkg.com/@ant-design/pro-components@2.6.43/dist/pro-components.min.js"></script>
+  <script src="https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js"></script>
+  <script src="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.js"></script>
+  <script src="https://registry.npmmirror.com/@ant-design/pro-components/2.6.43/files/dist/pro-components.min.js"></script>
 
 Return only the full code in <html></html> tags.
 Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.

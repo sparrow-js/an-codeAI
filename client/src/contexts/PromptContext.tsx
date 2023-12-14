@@ -55,18 +55,26 @@ export function PromptProvider({ children }: { children: ReactNode }) {
 
 
     function addPrompt (prompt: PromptType) {
-        if (!prompt.id) {
-            prompt.id = uuidv4();
-        }
-
         if (!prompt.imgUrl) {
             prompt.imgUrl = 'https://placehold.co/600x400/png'
         }
-
-        setPromptList((prevState) => {
-            const newPrompts = [...prevState, prompt];
-            return newPrompts;
-        });
+        if (!prompt.id) {
+            prompt.id = uuidv4();
+            setPromptList((prevState) => {
+                const newPrompts = [...prevState, prompt];
+                return newPrompts;
+            });
+        } else {
+            setPromptList((prevState) => {
+                const newPrompts = [...prevState]
+                const curIndex = newPrompts.findIndex((curPrompt) => curPrompt.id === prompt.id);
+                if (curIndex >= 0) {
+                    newPrompts[curIndex] = prompt;
+                }
+                return newPrompts;
+            });
+        }
+     
     }
 
     function removePrompt(id: string) {

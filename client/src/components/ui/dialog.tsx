@@ -5,9 +5,7 @@ import { Cross2Icon } from "@radix-ui/react-icons"
 import { cn } from "@/lib/utils"
 
 const Dialog = DialogPrimitive.Root
-
 const DialogTrigger = DialogPrimitive.Trigger
-
 const DialogPortal = DialogPrimitive.Portal
 
 const DialogClose = DialogPrimitive.Close
@@ -26,6 +24,8 @@ const DialogOverlay = React.forwardRef<
   />
 ))
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
+
+
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
@@ -105,7 +105,6 @@ const DialogDescription = React.forwardRef<
   />
 ))
 DialogDescription.displayName = DialogPrimitive.Description.displayName
-
 export {
   Dialog,
   DialogPortal,

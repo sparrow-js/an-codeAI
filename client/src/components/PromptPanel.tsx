@@ -15,7 +15,7 @@ import {useContext, useRef, useState} from 'react';
 import {promptContext, PromptType} from '../contexts/PromptContext'
 import {GeneratedCodeConfig} from '../types'
 import { cloneDeep } from "lodash";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaTrashAlt, FaHammer } from "react-icons/fa";
 import classNames from "classnames";
 import { useEffect } from "react";
 
@@ -36,6 +36,7 @@ function PromptPanel({settings, setSettings}: Props) {
         type: GeneratedCodeConfig.REACT_ANTD
     }
     const [prompt, setPrompt] = useState<PromptType>(cloneDeep(initPrompt));
+    const [showDialog, setShowDialog] = useState<boolean>(false);
 
     async function addPromptHanler() {
         // generatedCodeConfig: "react_tailwind"
@@ -57,14 +58,23 @@ function PromptPanel({settings, setSettings}: Props) {
                 promptCode: '',
             }));
         }
-    }, [selectedId])
+    }, [selectedId]);
+
+    const updatePromptHandler = (e: any, id: string) => {
+        e.stopPropagation();
+        setShowDialog(true);
+        const prompt = getPromptById(id);
+        prompt && setPrompt(prompt);
+    }
     
     return (
         <div className="relative">
             <div className="grid grid-cols-2 gap-4">
                 <div key={'add'} className="border-dashed border-2 border-gray-300 p-6 rounded-lg flex justify-center items-center hover:shadow-lg">
-                <Dialog>
-                    <DialogTrigger className="w-full h-full">
+                <Dialog open={showDialog} onOpenChange={setShowDialog}>
+                    <DialogTrigger
+                        className="w-full h-full"
+                    >
                         <div>
                             + 新增
                         </div>
@@ -168,6 +178,11 @@ function PromptPanel({settings, setSettings}: Props) {
                                         <p className="text-gray-700 text-sm line-clamp-2">{prompt.des}</p>
                                     </div>
                                     <div className="flex p-3">
+                                        <span className="mr-2" onClick={(e) => {
+                                            updatePromptHandler(e, prompt.id)
+                                        }}>
+                                            <FaHammer className="hover:text-emerald-500"/>
+                                        </span>
                                         <span onClick={() => {
                                             removePrompt(prompt.id);
                                         }}>

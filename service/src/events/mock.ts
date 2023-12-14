@@ -203,12 +203,12 @@ const REACT_ANTD_MOCK_CODE = `
 <body>
   <div id="root"></div>
 
-  <script src="https://cdn.staticfile.org/react/18.2.0/umd/react.development.js"></script>
-  <script src="https://cdn.staticfile.org/react-dom/18.2.0/umd/react-dom.development.js"></script>
-  <script src="https://cdn.staticfile.org/dayjs/1.11.10/dayjs.min.js"></script>
-  <script src="https://cdn.staticfile.org/babel-standalone/7.23.6/babel.js"></script>
-  <script src="https://cdn.staticfile.org/antd/5.12.2/antd.min.js"></script>
-
+  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+  <script src="https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js"></script>
+  <script src="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.js"></script>
+  
   <script type="text/babel">
     const { Form, Input, Cascader, Checkbox, Button,  Select} = antd;
 

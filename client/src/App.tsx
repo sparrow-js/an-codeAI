@@ -81,6 +81,7 @@ function App() {
         generatedCodeConfig: GeneratedCodeConfig.HTML_TAILWIND,
       }));
     }
+    
   }, [settings.generatedCodeConfig, setSettings]);
 
   const takeScreenshot = async (): Promise<string> => {

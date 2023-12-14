@@ -1,83 +1,168 @@
-<html>
-  <head>
-    <title>Ant Design Form Example</title>
-    <meta charset="UTF-8" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ant Design Example</title>
     <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
     <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
     <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
     <script src="https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js"></script>
     <script src="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.js"></script>
     <script src="https://registry.npmmirror.com/@ant-design/pro-components/2.6.43/files/dist/pro-components.min.js"></script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="text/babel">
-      const { ProForm, ProFormText, ProFormSelect } = ProComponents;
-      const { Card } = antd;
+    <link rel="stylesheet" href="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.css">
+    <style>
+      .description{
+        max-height: 720px;
+        line-height: 22px;
+      }
+      .extra{
+        margin-top: 16px;
+        color: #999;
+        line-height: 22px;
+      }
+      .extra > em{
+        margin-left: 16px;
+        color: #ccc;
+        font-style: normal;
+      }
+    </style>
+</head>
+<body>
+<div id="container"></div>
 
-      function App() {
-        return (
-          <div style={{ background: '#ECECEC', padding: '30px' }}>
-            <ProForm
-                submitter={false}
-                layout="horizontal"
-                grid={true}
-                colProps={{ span: 8 }}
-              >
-            <Card title="全局管理" bordered={false} style={{ width: '100%' }}>
-                <ProFormText
-                  name="name"
-                  label="全局名"
-                  placeholder="请输入全局名"
-                />
-                <ProFormText
-                  name="domain"
-                  label="全局域名"
-                  placeholder="http://"
-                  addonAfter=".com"
-                />
-                <ProFormSelect
-                  name="status"
-                  label="全局管理"
-                  placeholder="请选择全局管理"
-                  options={[
-                    { label: '选项1', value: 'option1' },
-                    { label: '选项2', value: 'option2' },
-                    { label: '选项3', value: 'option3' },
-                  ]}
-                />
-                <ProFormSelect
-                  name="owner"
-                  label="负责人"
-                  placeholder="请选择负责人"
-                  options={[
-                    { label: '选项1', value: 'option1' },
-                    { label: '选项2', value: 'option2' },
-                    { label: '选项3', value: 'option3' },
-                  ]}
-                />
-                <ProFormText
-                  name="approver"
-                  label="生效日期"
-                  placeholder="Please select..."
-                />
-                <ProFormSelect
-                  name="type"
-                  label="全局类型"
-                  placeholder="请选择全局类型"
-                  options={[
-                    { label: '选项1', value: 'option1' },
-                    { label: '选项2', value: 'option2' },
-                    { label: '选项3', value: 'option3' },
-                  ]}
-                />
-            </Card>
-          </ProForm>
+<script type="text/babel">
+    const { useState } = React;
+    const { Button, Card, Col, Form, List, Row, Select, Tag, Avatar } = antd;
+
+    const categoryOptions = Array.from({ length: 12 }).map((_, index) => ({
+      value: `cat${index + 1}`,
+      label: `类目${index + 1}`,
+    }));
+
+
+    const list = [
+      {
+        id: 'fake-list-1',
+        owner: '鱼酱',
+        title: 'Alipay',
+        avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+        cover: 'https://gw.alipayobjects.com/zos/rmsportal/uMfMFlvUuceEyPpotzlq.png',
+        status: 'active',
+        percent: 50,
+        logo: 'https://gw.alipayobjects.com/zos/rmsportal/kZzEzemZyKLKFsojXItE.png',
+        href: 'https://ant.design',
+        updatedAt: new Date().getTime(),
+        createdAt: new Date().getTime(),
+        subDescription: '希望是一个好东西，也许是最好的，好东西是不会消亡的',
+        description:
+          '在中台产品的研发过程中，会出现不同的设计规范和实现方式，但其中往往存在很多类似的页面和组件，这些类似的组件会被抽离成一套标准规范。',
+        activeUser: Math.ceil(Math.random() * 100000) + 100000,
+        newUser: Math.ceil(Math.random() * 1000) + 1000,
+        star: Math.ceil(Math.random() * 100) + 100,
+        like: Math.ceil(Math.random() * 100) + 100,
+        message: Math.ceil(Math.random() * 10) + 10,
+        content:
+          '段落示意：蚂蚁金服设计平台 ant.design，用最小的工作量，无缝接入蚂蚁金服生态，提供跨越设计与开发的体验解决方案。蚂蚁金服设计平台 ant.design，用最小的工作量，无缝接入蚂蚁金服生态，提供跨越设计与开发的体验解决方案。',
+        members: [
+          {
+            avatar: 'https://gw.alipayobjects.com/zos/rmsportal/ZiESqWwCXBRQoaPONSJe.png',
+            name: '曲丽丽',
+            id: 'member1',
+          },
+          {
+            avatar: 'https://gw.alipayobjects.com/zos/rmsportal/tBOxZPlITHqwlGjsJWaF.png',
+            name: '王昭君',
+            id: 'member2',
+          },
+          {
+            avatar: 'https://gw.alipayobjects.com/zos/rmsportal/sBxjgqiuHMGRkIjqlQCd.png',
+            name: '董娜娜',
+            id: 'member3',
+          },
+        ],
+      }
+    ];
+
+
+
+    const App = () => {
+
+        const loadMore = () => {};
+        const loadingMore = true;
+
+        const loadMoreDom = list.length > 0 && (
+          <div style={{ textAlign: 'center', marginTop: 16 }}>
+            <Button onClick={loadMore} style={{ paddingLeft: 48, paddingRight: 48 }}>
+              {loadingMore ? (
+                <span>
+                  加载中...
+                </span>
+              ) : (
+                '加载更多'
+              )}
+            </Button>
           </div>
         );
-      }
 
-      ReactDOM.render(<App />, document.getElementById('root'));
-    </script>
-  </body>
+        function reload() {}
+        const loading = false;
+        const [form] = Form.useForm();
+
+        return (
+          <>
+            <Card
+              style={{ marginTop: 24 }}
+              bordered={false}
+              bodyStyle={{ padding: '8px 32px 32px 32px' }}
+            >
+              <List
+                size="large"
+                loading={loading}
+                rowKey="id"
+                itemLayout="vertical"
+                loadMore={loadMoreDom}
+                dataSource={list}
+                renderItem={(item) => (
+                  <List.Item
+                    key={item.id}
+                    actions={[
+                      <span>{item.star}</span>,
+                      <span>{item.like}</span>,
+                      <span>{item.message}</span>,
+                    ]}
+                    extra={<div className="" />}
+                  >
+                    <List.Item.Meta
+                      title={
+                        <a className='' href={item.href}>
+                          {item.title}
+                        </a>
+                      }
+                      description={
+                        <span>
+                          <Tag>Ant Design</Tag>
+                          <Tag>设计语言</Tag>
+                          <Tag>蚂蚁金服</Tag>
+                        </span>
+                      }
+                    />
+                    <div>
+                      <div className="description">{item.content}</div>
+                      <div className="extra">
+                        <Avatar src={item.avatar} size="small" />
+                        <a href={item.href}>{item.owner}</a> 发布在 <a href={item.href}>{item.href}</a>
+                        <em>{dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm')}</em>
+                      </div>
+                    </div>
+                  </List.Item>
+                )}></List>
+            </Card>
+          </>
+        );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('container'));
+</script>
+</body>
 </html>

@@ -18,6 +18,7 @@ import { cloneDeep } from "lodash";
 import { FaTrashAlt, FaHammer } from "react-icons/fa";
 import classNames from "classnames";
 import { useEffect } from "react";
+import { toast } from "react-hot-toast";
 
 interface Props {
     settings: Settings;
@@ -41,6 +42,10 @@ function PromptPanel({settings, setSettings}: Props) {
     async function addPromptHanler() {
         // generatedCodeConfig: "react_tailwind"
         prompt.type = settings.generatedCodeConfig;
+        if (!prompt.prompt) {
+            toast.error('enter prompt')
+            return;
+        }
         addPrompt(prompt);
         setPrompt(cloneDeep(initPrompt));
     }
@@ -60,6 +65,16 @@ function PromptPanel({settings, setSettings}: Props) {
         }
     }, [selectedId]);
 
+    useEffect(() => {
+        setSettings((prev) => ({
+            ...prev,
+            promptCode: '',
+        }));
+
+        setSelectedId('');
+        
+    }, [settings.generatedCodeConfig, setSettings]);
+
     const updatePromptHandler = (e: any, id: string) => {
         e.stopPropagation();
         setShowDialog(true);
@@ -76,7 +91,7 @@ function PromptPanel({settings, setSettings}: Props) {
                         className="w-full h-full"
                     >
                         <div>
-                            + 新增
+                            + Add Prompt
                         </div>
                     </DialogTrigger>
                     <DialogContent>
@@ -85,7 +100,7 @@ function PromptPanel({settings, setSettings}: Props) {
                         </DialogHeader>
                         <div className="flex flex-col space-y-4">
                             <Label htmlFor="prompt">
-                                <div>prompt des</div>
+                                <div>prompt example</div>
                             </Label>
                             <Textarea
                                 id="prompt"

@@ -1,114 +1,187 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Form Layout</title>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/ant-design-pro/2.3.2/ant-design-pro.css" />
-
-  <style>
-    #app {
-      background-color: #f0f2f5;
-      padding: 24px;
-      max-width: 960px;
-      margin: 0 auto;
-    }
-    .ant-row {
-      margin-bottom: 24px;
-    }
-    .ant-col-8 {
-      padding-right: 8px;
-    }
-    .ant-col-16 {
-      padding-left: 8px;
-    }
-  </style>
-  <script src="https://cdn.staticfile.org/react/18.2.0/umd/react.development.js"></script>
-  <script src="https://cdn.staticfile.org/react-dom/18.2.0/umd/react-dom.development.js"></script>
-  <script src="https://cdn.staticfile.org/dayjs/1.11.10/dayjs.min.js"></script>
-  <script src="https://cdn.staticfile.org/babel-standalone/7.23.6/babel.js"></script>
-  <script src="https://cdn.staticfile.org/antd/5.12.2/antd.min.js"></script>
-  <script src="https://unpkg.com/@ant-design/pro-components@2.6.43/dist/pro-components.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ant Design Table Example</title>
+    <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+    <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+    <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+    <script src="https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js"></script>
+    <script src="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.js"></script>
+    <script src="https://registry.npmmirror.com/@ant-design/pro-components/2.6.43/files/dist/pro-components.min.js"></script>
+    <link rel="stylesheet" href="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.css">
 </head>
 <body>
-<div id="app"></div>
+<div id="container"></div>
 
 <script type="text/babel">
-  const { Input, Form, Card, Col, Row } = antd;
-  const { ProForm, ProFormText, ProFormSelect, ProFormDatePicker } = ProComponents;
+const { Table, Button, Popconfirm, Form, Input, Typography } = antd;
+const { useState } = React;
 
-  function App() {
-    return (
-      <ProForm>
-        <Card title="仓库管理" bordered={false}>
-          <Row gutter={16}>
-            <Col lg={8} md={12} sm={24}>
-              <ProFormText
-                name="name"
-                label="仓库名"
-                placeholder="请输入仓库名称"
-              />
-            </Col>
-            <Col lg={8} md={12} sm={24}>
-              <ProFormText
-                name="url"
-                label="仓库域名"
-                placeholder="请输入"
-                fieldProps={{
-                  addonBefore: 'http://',
-                  addonAfter: '.com',
-                }}
-              />
-            </Col>
-            <Col lg={8} md={12} sm={24}>
-              <ProFormSelect
-                name="owner"
-                label="仓库管理员"
-                placeholder="请选择管理员"
-                options={[
-                  { label: '选项1', value: 'option1' },
-                  { label: '选项2', value: 'option2' },
-                  { label: '选项3', value: 'option3' },
-                ]}
-              />
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col lg={8} md={12} sm={24}>
-              <ProFormSelect
-                name="approver"
-                label="审批人"
-                placeholder="请选择审批人"
-                options={[
-                  { label: '选项1', value: 'option1' },
-                  { label: '选项2', value: 'option2' },
-                  { label: '选项3', value: 'option3' },
-                ]}
-              />
-            </Col>
-            <Col lg={8} md={12} sm={24}>
-              <ProFormDatePicker
-                name="dateRange"
-                label="生效日期"
-                placeholder="请选择生效日期"
-              />
-            </Col>
-            <Col lg={8} md={12} sm={24}>
-              <ProFormSelect
-                name="type"
-                label="仓库类型"
-                placeholder="请选择仓库类型"
-                options={[
-                  { label: '私密', value: 'private' },
-                  { label: '公开', value: 'public' },
-                ]}
-              />
-            </Col>
-          </Row>
-        </Card>
-      </ProForm>
-    );
-  }
+const initialData = [];
+for (let i = 0; i < 5; i++) {
+  initialData.push({
+    key: i.toString(),
+    ruleName: `TradeCode ${i}`,
+    description: '32',
+    updateTimer: '1000-10-10 10:20',
+    status: `London Park no. ${i}`,
+  });
+}
 
-  ReactDOM.render(<App />, document.getElementById('app'));
+const EditableCell = ({
+  editing,
+  dataIndex,
+  title,
+  inputType,
+  record,
+  index,
+  children,
+  ...restProps
+}) => {
+  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+  return (
+    <td {...restProps}>
+      {editing ? (
+        <Form.Item
+          name={dataIndex}
+          style={{ margin: 0 }}
+          rules={[{ required: true, message: `Please Input ${title}!` }]}
+        >
+          {inputNode}
+        </Form.Item>
+      ) : (
+        children
+      )}
+    </td>
+  );
+};
+
+const App = () => {
+  const [form] = Form.useForm();
+  const [data, setData] = useState(initialData);
+  const [editingKey, setEditingKey] = useState('');
+
+  const isEditing = (record) => record.key === editingKey;
+
+  const edit = (record) => {
+    form.setFieldsValue({ ...record });
+    setEditingKey(record.key);
+  };
+
+  const cancel = () => {
+    setEditingKey('');
+  };
+
+  const save = async (key) => {
+    try {
+      const row = await form.validateFields();
+      const newData = [...data];
+      const index = newData.findIndex((item) => key === item.key);
+
+      if (index > -1) {
+        const item = newData[index];
+        newData.splice(index, 1, { ...item, ...row });
+        setData(newData);
+        setEditingKey('');
+      }
+    } catch (errInfo) {
+      console.log('Validate Failed:', errInfo);
+    }
+  };
+
+  const columns = [
+    {
+      title: 'Rule Name',
+      dataIndex: 'ruleName',
+      editable: true,
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      editable: true,
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      editable: true,
+    },
+    {
+      title: 'Update Timer',
+      dataIndex: 'updateTimer',
+      editable: true,
+    },
+    {
+      title: 'operation',
+      dataIndex: 'operation',
+      render: (_, record) => {
+        const editable = isEditing(record);
+        return editable ? (
+          <span>
+            <Typography.Link
+              onClick={() => save(record.key)}
+              style={{ marginRight: 8 }}
+            >
+              Save
+            </Typography.Link>
+            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+              <a>Cancel</a>
+            </Popconfirm>
+          </span>
+        ) : (
+          <span>
+            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+              Edit
+            </Typography.Link>
+            <Typography.Link style={{ marginLeft: 8 }}>
+              Configuration
+            </Typography.Link>
+          </span>
+        );
+      },
+    },
+  ];
+
+  const mergedColumns = columns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record) => ({
+        record,
+        inputType: 'text',
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: isEditing(record),
+      }),
+    };
+  });
+
+  return (
+    <Form form={form} component={false}>
+      <Table
+        components={{
+          body: {
+            cell: EditableCell,
+          },
+        }}
+        bordered
+        dataSource={data}
+        columns={mergedColumns}
+        rowClassName="editable-row"
+        pagination={{
+          onChange: cancel,
+          pageSize: 10,
+          showSizeChanger: true,
+        }}
+      />
+    </Form>
+  );
+};
+
+ReactDOM.render(<App />, document.getElementById('container'));
 </script>
 </body>
 </html>

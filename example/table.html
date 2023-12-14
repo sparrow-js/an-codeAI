@@ -1,34 +1,24 @@
-Refer to the following code format to output the screenshot code.
-<!--   -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ant Design Example</title>
+    <title>Ant Design Table Example</title>
     <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
     <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
     <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
     <script src="https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js"></script>
     <script src="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.js"></script>
     <script src="https://registry.npmmirror.com/@ant-design/pro-components/2.6.43/files/dist/pro-components.min.js"></script>
+    <link rel="stylesheet" href="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.css">
 </head>
 <body>
 <div id="container"></div>
 
 <script type="text/babel">
-const {  Form, Input, InputNumber, Popconfirm, Table, Typography } = antd;
-const {useState} = React;
+const { Table, Button, Space, Popconfirm, Form, Input, Typography } = antd;
+const { useState } = React;
 
-const originData = [];
-for (let i = 0; i < 100; i++) {
-  originData.push({
-    key: i.toString(),
-    name: `Edward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-  });
-}
 const EditableCell = ({
   editing,
   dataIndex,
@@ -39,21 +29,14 @@ const EditableCell = ({
   children,
   ...restProps
 }) => {
-  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+  const inputNode = <Input />;
   return (
     <td {...restProps}>
       {editing ? (
         <Form.Item
           name={dataIndex}
-          style={{
-            margin: 0,
-          }}
-          rules={[
-            {
-              required: true,
-              message: `Please Input ${title}!`,
-            },
-          ]}
+          style={{ margin: 0 }}
+          rules={[{ required: true, message: `Please Input ${title}!` }]}
         >
           {inputNode}
         </Form.Item>
@@ -63,38 +46,48 @@ const EditableCell = ({
     </td>
   );
 };
+
 const App = () => {
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
+  const [data, setData] = useState([
+    {
+      key: '0',
+      ruleName: 'TradeCode 0',
+      description: '32',
+      status: 'London Park no. 0',
+      updateTimer: '1000-10-10 10:20',
+    },
+    {
+      key: '1',
+      ruleName: 'TradeCode 1',
+      description: '32',
+      status: 'London Park no. 1',
+      updateTimer: '1000-10-10 10:20',
+    },
+    // ... more data
+  ]);
   const [editingKey, setEditingKey] = useState('');
+
   const isEditing = (record) => record.key === editingKey;
+
   const edit = (record) => {
-    form.setFieldsValue({
-      name: '',
-      age: '',
-      address: '',
-      ...record,
-    });
+    form.setFieldsValue({ ...record });
     setEditingKey(record.key);
   };
+
   const cancel = () => {
     setEditingKey('');
   };
+
   const save = async (key) => {
     try {
       const row = await form.validateFields();
       const newData = [...data];
       const index = newData.findIndex((item) => key === item.key);
+
       if (index > -1) {
         const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        setData(newData);
-        setEditingKey('');
-      } else {
-        newData.push(row);
+        newData.splice(index, 1, { ...item, ...row });
         setData(newData);
         setEditingKey('');
       }
@@ -102,23 +95,26 @@ const App = () => {
       console.log('Validate Failed:', errInfo);
     }
   };
+
   const columns = [
     {
-      title: 'name',
-      dataIndex: 'name',
-      width: '25%',
+      title: 'Rule Name',
+      dataIndex: 'ruleName',
       editable: true,
     },
     {
-      title: 'age',
-      dataIndex: 'age',
-      width: '15%',
+      title: 'Description',
+      dataIndex: 'description',
       editable: true,
     },
     {
-      title: 'address',
-      dataIndex: 'address',
-      width: '40%',
+      title: 'Status',
+      dataIndex: 'status',
+      editable: true,
+    },
+    {
+      title: 'Update Timer',
+      dataIndex: 'updateTimer',
       editable: true,
     },
     {
@@ -127,27 +123,28 @@ const App = () => {
       render: (_, record) => {
         const editable = isEditing(record);
         return editable ? (
-          <span>
-            <Typography.Link
-              onClick={() => save(record.key)}
-              style={{
-                marginRight: 8,
-              }}
-            >
+          <Space size="middle">
+            <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
               Save
             </Typography.Link>
             <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
               <a>Cancel</a>
             </Popconfirm>
-          </span>
+          </Space>
         ) : (
-          <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-            Edit
-          </Typography.Link>
+          <Space size="middle">
+            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+              Edit
+            </Typography.Link>
+            <Typography.Link>
+              Configuration
+            </Typography.Link>
+          </Space>
         );
       },
     },
   ];
+
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -156,13 +153,14 @@ const App = () => {
       ...col,
       onCell: (record) => ({
         record,
-        inputType: col.dataIndex === 'age' ? 'number' : 'text',
+        inputType: 'text',
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
       }),
     };
   });
+
   return (
     <Form form={form} component={false}>
       <Table
@@ -177,13 +175,14 @@ const App = () => {
         rowClassName="editable-row"
         pagination={{
           onChange: cancel,
+          pageSize: 10,
         }}
       />
     </Form>
   );
 };
 
-    ReactDOM.render(<App />, document.getElementById('container'));
+ReactDOM.render(<App />, document.getElementById('container'));
 </script>
 </body>
 </html>

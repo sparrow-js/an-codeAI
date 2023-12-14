@@ -1,7 +1,8 @@
-import { createContext, ReactNode, useState, useEffect } from 'react';
+import { createContext, ReactNode, useState, useEffect, useRef } from 'react';
 import {GeneratedCodeConfig} from '../types'
 import {cloneDeep} from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
+import InitPromptData from '../promptdata';
 
 export type PromptType = {
     id: string;
@@ -43,13 +44,15 @@ export const promptContext = createContext<locationContextType>(initialValue);
 export function PromptProvider({ children }: { children: ReactNode }) {
 
     const [promptList, setPromptList] = useState<PromptType[]>([]);
+    const didMountRef = useRef(false);
 
     useEffect(() => {
         let cookie = window.localStorage.getItem('promptData');
-        console.log('*******1244', cookie);
         if (cookie) {
             let cookieObject: PromptState = JSON.parse(cookie);
             setPromptList(cookieObject.promptList);
+        } else {
+            setPromptList(InitPromptData.promptList);
         }
     }, []);
 
@@ -91,8 +94,8 @@ export function PromptProvider({ children }: { children: ReactNode }) {
 
     function save() {
         let SavePrompts = cloneDeep(promptList);
-        if (SavePrompts.length) {
-            window.localStorage.setItem(
+        if (SavePrompts) {
+          window.localStorage.setItem(
             'promptData',
             JSON.stringify({ promptList }),
           );
@@ -104,10 +107,13 @@ export function PromptProvider({ children }: { children: ReactNode }) {
     }
 
     useEffect(() => {
-        // save tabs locally
-        // console.log(id);
-        save();
-      }, [promptList]);
+        if (didMountRef.current) {
+            save();
+        } else {
+            didMountRef.current = true;
+        }
+        
+      }, [promptList, setPromptList]);
 
     return (
       <promptContext.Provider
@@ -123,4 +129,3 @@ export function PromptProvider({ children }: { children: ReactNode }) {
       </promptContext.Provider>
     );
 }
-

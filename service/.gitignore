@@ -38,3 +38,7 @@ lerna-debug.log*
 .env
 .env.dev
 .env.prod
+
+
+/client/*
+/article/*

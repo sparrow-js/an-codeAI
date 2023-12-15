@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+<div id="app"></div>
+
+
+
+<script type="module">
+    const { createApp, ref, defineComponent } = Vue;
+
+    const ThirdParty = defineComponent({
+        setup() {
+            const thirdParty = ref('ThirdParty lib')
+            return { thirdParty }
+        },
+        template: `<div>{{ thirdParty }}</div>`
+    })
+
+    const MyComponent = {
+        components: {
+            ThirdParty
+        },  
+        setup() {
+            const count = ref(0)
+            return { count }
+        },
+        template: `
+        <div>
+            count is {{ count }}
+            <third-party />
+        </div>`
+    }
+
+    createApp(MyComponent).mount('#app')
+</script>
+</body>
+</html>

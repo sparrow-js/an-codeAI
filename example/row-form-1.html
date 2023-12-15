@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ant Design Form Example</title>
+    <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+    <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+    <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+    <script src="https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js"></script>
+    <script src="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.js"></script>
+    <script src="https://registry.npmmirror.com/@ant-design/pro-components/2.6.43/files/dist/pro-components.min.js"></script>
+    <link rel="stylesheet" href="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.css">
+</head>
+<body>
+<div id="container"></div>
+
+<script type="text/babel">
+    const { ProForm, ProFormText, ProFormSelect, ProFormDatePicker, ProFormSwitch } = ProComponents;
+    const { Card } = antd;
+
+    function App() {
+        return (
+            <div style={{ background: '#ECECEC', padding: '30px' }}>
+                <Card title="任务管理" bordered={false} style={{ width: '100%' }}>
+                    <ProForm layout="horizontal" submitter={false}>
+                        <ProForm.Group>
+                            <ProFormText width="md" name="taskName" label="任务名" placeholder="Please enter" />
+                            <ProFormText width="md" name="taskDesc" label="任务描述" placeholder="Please enter" />
+                            <ProFormSelect width="md" name="executor" label="执行人" placeholder="Please select" />
+                        </ProForm.Group>
+                        <ProForm.Group>
+                            <ProFormDatePicker width="md" name="startDate" label="生效日期" placeholder="请选择日期" />
+                            <ProFormSwitch name="status" label="生效启用" />
+                            <ProFormSelect width="md" name="taskType" label="任务类型" placeholder="Please select" />
+                        </ProForm.Group>
+                    </ProForm>
+                </Card>
+            </div>
+        );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('container'));
+</script>
+</body>
+</html>

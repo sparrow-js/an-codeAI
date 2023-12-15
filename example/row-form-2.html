@@ -1,0 +1,109 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Form Layout</title>
+  <style>
+    #app {
+      background-color: #f0f2f5;
+      padding: 24px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .ant-row {
+      margin-bottom: 24px;
+    }
+    .ant-col-8 {
+      padding-right: 8px;
+    }
+    .ant-col-16 {
+      padding-left: 8px;
+    }
+  </style>
+  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+  <script src="https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js"></script>
+  <script src="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.js"></script>
+  <script src="https://registry.npmmirror.com/@ant-design/pro-components/2.6.43/files/dist/pro-components.min.js"></script>
+</head>
+<body>
+<div id="app"></div>
+
+<script type="text/babel">
+  const { Card, Col, Row } = antd;
+  const { ProForm, ProFormText, ProFormSelect, ProFormSwitch, ProFormDatePicker } = ProComponents;
+
+  function App() {
+    return (
+      <ProForm>
+        <Card title="任务管理" bordered={false}>
+          <Row gutter={16}>
+            <Col span={8}>
+              <ProFormText
+                name="taskName"
+                label="任务名"
+                placeholder="Please enter"
+              />
+            </Col>
+            <Col span={8}>
+              <ProFormText
+                name="taskDesc"
+                label="任务描述"
+                placeholder="Please enter"
+              />
+            </Col>
+            <Col span={8}>
+              <ProFormSelect
+                name="executor"
+                label="执行人"
+                placeholder="Please select"
+                options={[
+                  { label: '请选择', value: 'option1' },
+                  { label: '选项二', value: 'option2' },
+                  { label: '选项三', value: 'option3' }
+                ]}
+              />
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={8}>
+              <ProFormSelect
+                name="approver"
+                label="审批人"
+                placeholder="Please select"
+                options={[
+                  { label: '请选择审批人员', value: 'option1' },
+                  { label: '审批人员二', value: 'option2' },
+                  { label: '审批人员三', value: 'option3' }
+                ]}
+              />
+            </Col>
+            <Col span={8}>
+              <ProFormDatePicker
+                name="startDate"
+                label="生效日期"
+                placeholder="请选择日期"
+              />
+            </Col>
+            <Col span={8}>
+              <ProFormSelect
+                name="taskType"
+                label="任务类型"
+                placeholder="Please select"
+                options={[
+                  { label: '请选择任务类型', value: 'option1' },
+                  { label: '类型二', value: 'option2' },
+                  { label: '类型三', value: 'option3' }
+                ]}
+              />
+            </Col>
+          </Row>
+        </Card>
+      </ProForm>
+    );
+  }
+
+  ReactDOM.render(<App />, document.getElementById('app'));
+</script>
+</body>
+</html>

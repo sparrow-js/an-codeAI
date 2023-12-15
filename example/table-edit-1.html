@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <title>Ant Design Table Example</title>
+    <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+    <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+    <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+    <script src="https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js"></script>
+    <script src="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.js"></script>
+    <script src="https://registry.npmmirror.com/@ant-design/pro-components/2.6.43/files/dist/pro-components.min.js"></script>
+    <link rel="stylesheet" href="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.css" />
+  </head>
+  <body>
+    <div id="container" />
+
+    <script type="text/babel">
+      const { Table, Tag, Space } = antd;
+
+      const columns = [
+        {
+          title: 'Rule Name',
+          dataIndex: 'name',
+          key: 'name',
+        },
+        {
+          title: 'Description',
+          dataIndex: 'description',
+          key: 'description',
+        },
+        {
+          title: 'Status',
+          dataIndex: 'status',
+          key: 'status',
+        },
+        {
+          title: 'Update Timer',
+          dataIndex: 'updateTime',
+          key: 'updateTime',
+        },
+        {
+          title: 'Operation',
+          key: 'operation',
+          render: () => (
+            <Space size="middle">
+              <a>Edit</a>
+              <a>Configuration</a>
+            </Space>
+          ),
+        },
+      ];
+
+      const data = [
+        {
+          key: '1',
+          name: 'TradeCode 0',
+          description: '32',
+          status: 'London Park no. 0',
+          updateTime: '1000-10-10 10:20',
+        },
+        {
+          key: '2',
+          name: 'TradeCode 1',
+          description: '32',
+          status: 'London Park no. 1',
+          updateTime: '1000-10-10 10:20',
+        },
+        {
+          key: '3',
+          name: 'TradeCode 2',
+          description: '32',
+          status: 'London Park no. 2',
+          updateTime: '1000-10-10 10:20',
+        },
+        {
+          key: '4',
+          name: 'TradeCode 3',
+          description: '32',
+          status: 'London Park no. 3',
+          updateTime: '1000-10-10 10:20',
+        },
+        {
+          key: '5',
+          name: 'TradeCode 4',
+          description: '32',
+          status: 'London Park no. 4',
+          updateTime: '1000-10-10 10:20',
+        },
+      ];
+
+      function App() {
+        return <Table columns={columns} dataSource={data} pagination={{ pageSize: 10 }} />;
+      }
+
+      ReactDOM.render(<App />, document.getElementById('container'));
+    </script>
+  </body>
+</html>

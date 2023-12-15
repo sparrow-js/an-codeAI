@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ant Design Table Example</title>
+    <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+    <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+    <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+    <script src="https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js"></script>
+    <script src="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.js"></script>
+    <script src="https://registry.npmmirror.com/@ant-design/pro-components/2.6.43/files/dist/pro-components.min.js"></script>
+    <link rel="stylesheet" href="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.css">
+</head>
+<body>
+<div id="container"></div>
+
+<script type="text/babel">
+const { useState } = React;
+const { Table, Typography, Space, Popconfirm, Form, Input, InputNumber } = antd;
+
+const EditableCell = ({
+  editing,
+  dataIndex,
+  title,
+  inputType,
+  record,
+  index,
+  children,
+  ...restProps
+}) => {
+  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+  return (
+    <td {...restProps}>
+      {editing ? (
+        <Form.Item
+          name={dataIndex}
+          style={{ margin: 0 }}
+          rules={[{ required: true, message: `Please Input ${title}!` }]}
+        >
+          {inputNode}
+        </Form.Item>
+      ) : (
+        children
+      )}
+    </td>
+  );
+};
+
+const App = () => {
+  const [form] = Form.useForm();
+  const [data, setData] = useState([
+    {
+      key: '0',
+      ruleName: 'TradeCode 0',
+      description: '32',
+      status: 'London Park no. 0',
+      updateTimer: '1000-10-10 10:20',
+    },
+    {
+      key: '1',
+      ruleName: 'TradeCode 1',
+      description: '32',
+      status: 'London Park no. 1',
+      updateTimer: '1000-10-10 10:20',
+    },
+    {
+      key: '2',
+      ruleName: 'TradeCode 2',
+      description: '32',
+      status: 'London Park no. 2',
+      updateTimer: '1000-10-10 10:20',
+    },
+    {
+      key: '3',
+      ruleName: 'TradeCode 3',
+      description: '32',
+      status: 'London Park no. 3',
+      updateTimer: '1000-10-10 10:20',
+    },
+    {
+      key: '4',
+      ruleName: 'TradeCode 4',
+      description: '32',
+      status: 'London Park no. 4',
+      updateTimer: '1000-10-10 10:20',
+    },
+  ]);
+  const [editingKey, setEditingKey] = useState('');
+
+  const isEditing = (record) => record.key === editingKey;
+
+  const edit = (record) => {
+    form.setFieldsValue({ ...record });
+    setEditingKey(record.key);
+  };
+
+  const cancel = () => {
+    setEditingKey('');
+  };
+
+  const save = async (key) => {
+    try {
+      const row = await form.validateFields();
+      const newData = [...data];
+      const index = newData.findIndex((item) => key === item.key);
+
+      if (index > -1) {
+        const item = newData[index];
+        newData.splice(index, 1, { ...item, ...row });
+        setData(newData);
+        setEditingKey('');
+      }
+    } catch (errInfo) {
+      console.log('Validate Failed:', errInfo);
+    }
+  };
+
+  const columns = [
+    {
+      title: 'Rule Name',
+      dataIndex: 'ruleName',
+      width: '20%',
+      editable: true,
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      width: '15%',
+      editable: true,
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      width: '25%',
+      editable: true,
+    },
+    {
+      title: 'Update Timer',
+      dataIndex: 'updateTimer',
+      width: '20%',
+      editable: true,
+    },
+    {
+      title: 'operation',
+      dataIndex: 'operation',
+      render: (_, record) => {
+        const editable = isEditing(record);
+        return editable ? (
+          <span>
+            <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
+              Save
+            </Typography.Link>
+            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+              <a>Cancel</a>
+            </Popconfirm>
+          </span>
+        ) : (
+          <Space size="middle">
+            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+              Edit
+            </Typography.Link>
+            <Typography.Link>
+              Configuration
+            </Typography.Link>
+          </Space>
+        );
+      },
+    },
+  ];
+
+  const mergedColumns = columns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record) => ({
+        record,
+        inputType: col.dataIndex === 'description' ? 'number' : 'text',
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: isEditing(record),
+      }),
+    };
+  });
+
+  return (
+    <Form form={form} component={false}>
+      <Table
+        components={{
+          body: {
+            cell: EditableCell,
+          },
+        }}
+        bordered
+        dataSource={data}
+        columns={mergedColumns}
+        rowClassName="editable-row"
+        pagination={{
+          onChange: cancel,
+          pageSize: 10,
+        }}
+      />
+    </Form>
+  );
+};
+
+ReactDOM.render(<App />, document.getElementById('container'));
+</script>
+</body>
+</html>

@@ -36,13 +36,13 @@ function generateDisplayComponent(config: GeneratedCodeConfig) {
           <span className="font-semibold">Bootstrap</span>
         </div>
       );
-    case GeneratedCodeConfig.IONIC_TAILWIND:
-      return (
-        <div>
-          <span className="font-semibold">Ionic</span> +{" "}
-          <span className="font-semibold">Tailwind</span>
-        </div>
-      );
+    // case GeneratedCodeConfig.IONIC_TAILWIND:
+    //   return (
+    //     <div>
+    //       <span className="font-semibold">Ionic</span> +{" "}
+    //       <span className="font-semibold">Tailwind</span>
+    //     </div>
+    //   );
     default:
       // TODO: Should never reach this out. Error out
       return config;
@@ -88,9 +88,9 @@ function OutputSettingsSection({
               <SelectItem value={GeneratedCodeConfig.BOOTSTRAP}>
                 {generateDisplayComponent(GeneratedCodeConfig.BOOTSTRAP)}
               </SelectItem>
-              <SelectItem value={GeneratedCodeConfig.IONIC_TAILWIND}>
+              {/* <SelectItem value={GeneratedCodeConfig.IONIC_TAILWIND}>
                 {generateDisplayComponent(GeneratedCodeConfig.IONIC_TAILWIND)}
-              </SelectItem>
+              </SelectItem> */}
             </SelectGroup>
           </SelectContent>
         </Select>

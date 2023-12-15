@@ -38,4 +38,4 @@ https://github.com/sparrow-js/ant-codeAI/assets/59440091/810c6b55-ed85-4ef1-a49d
 - bug，意见等直接提交到git上即可
 
 
-[reference material screenshot-to-code](https://github.com/abi/screenshot-to-code) 
+[reference material screenshot-to-code](https://github.com/abi/screenshot-to-code)

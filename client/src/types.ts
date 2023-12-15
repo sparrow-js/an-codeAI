@@ -8,7 +8,7 @@ export enum GeneratedCodeConfig {
   HTML_TAILWIND = "html_tailwind",
   REACT_TAILWIND = "react_tailwind",
   BOOTSTRAP = "bootstrap",
-  IONIC_TAILWIND = "ionic_tailwind",
+  // IONIC_TAILWIND = "ionic_tailwind",
   REACT_ANTD = "react_antd",
 }
 

@@ -10,6 +10,7 @@ export enum GeneratedCodeConfig {
   BOOTSTRAP = "bootstrap",
   // IONIC_TAILWIND = "ionic_tailwind",
   REACT_ANTD = "react_antd",
+  VUE_TAILWIND = 'vue_tailwind',
 }
 
 export interface Settings {

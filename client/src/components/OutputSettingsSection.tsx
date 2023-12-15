@@ -36,6 +36,15 @@ function generateDisplayComponent(config: GeneratedCodeConfig) {
           <span className="font-semibold">Bootstrap</span>
         </div>
       );
+    case GeneratedCodeConfig.VUE_TAILWIND:
+      return (
+        <div>
+          <span className="font-semibold">vue</span> +{" "}
+          <span className="font-semibold">Tailwind</span>
+          <span className="text-orange-600 ml-[20px]">Beta</span>
+        </div>
+      );
+      // VUE_TAILWIND 
     // case GeneratedCodeConfig.IONIC_TAILWIND:
     //   return (
     //     <div>
@@ -87,6 +96,9 @@ function OutputSettingsSection({
               </SelectItem>
               <SelectItem value={GeneratedCodeConfig.BOOTSTRAP}>
                 {generateDisplayComponent(GeneratedCodeConfig.BOOTSTRAP)}
+              </SelectItem>
+               <SelectItem value={GeneratedCodeConfig.VUE_TAILWIND}>
+                {generateDisplayComponent(GeneratedCodeConfig.VUE_TAILWIND)}
               </SelectItem>
               {/* <SelectItem value={GeneratedCodeConfig.IONIC_TAILWIND}>
                 {generateDisplayComponent(GeneratedCodeConfig.IONIC_TAILWIND)}

@@ -2,24 +2,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://registry.npmmirror.com/vue/3.3.11/files/dist/vue.global.js"></script>
     <!-- import CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <link rel="stylesheet" href="https://registry.npmmirror.com/element-plus/2.4.4/files/dist/index.css">
     <!-- import JavaScript -->
-    <script src="https://unpkg.com/element-plus"></script>
+    <script src="https://registry.npmmirror.com/element-plus/2.4.4/files/dist/index.full.js"></script>
     <title>Element Plus demo</title>
   </head>
   <body>
-    <div id="app">
-      <el-button>{{ message }}</el-button>
-    </div>
+    <div id="app"></div>
     <script>
       const App = {
-        data() {
+        setup() {
           return {
             message: "Hello Element Plus",
           };
         },
+        template: `
+<el-button>{{ message }}</el-button>
+        `
       };
       const app = Vue.createApp(App);
       app.use(ElementPlus);

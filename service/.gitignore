@@ -40,5 +40,4 @@ lerna-debug.log*
 .env.prod
 
 
-/client/*
 /article/*

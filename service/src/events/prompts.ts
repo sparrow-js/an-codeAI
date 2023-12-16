@@ -197,7 +197,7 @@ update it to look more like the reference image(The first image).
 - Make sure the app looks exactly like the screenshot.
 - Pay close attention to background color, text color, font size, font family, 
 padding, margin, border, etc. Match the colors and sizes exactly.
-- Make sure the generated HTML elements are placed on the Vue template an Make sure the do not add any html elements to the div id="app" under the body.
+- Make sure the generated HTML elements are placed on the Vue template and Make sure the do not add any html elements to the div id="app" under the body.
 example:
 <div id="app"></div>
 <script>
@@ -211,9 +211,9 @@ example:
         messageObj,
       };
     },
-    template: \`
-<el-button>{{ messageObj.message }}</el-button>
-    \`
+    template: \`<div>
+      <el-button>{{ messageObj.message }}</el-button>
+    </div>\`
   };
   const app = createApp(App);
   app.use(ElementPlus);

@@ -1,77 +1,121 @@
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-  <script src="https://registry.npmmirror.com/vue/3.3.11/files/dist/vue.global.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Element Plus Example</title>
+    <link rel="stylesheet" href="https://registry.npmmirror.com/element-plus/2.4.4/files/dist/index.css">
+    <script src="https://registry.npmmirror.com/vue/3.3.11/files/dist/vue.global.js"></script>
+    <script src="https://registry.npmmirror.com/element-plus/2.4.4/files/dist/index.full.js"></script>
+    <style>
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+        #app {
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .el-form-item {
+            margin-bottom: 24px;
+        }
+        .el-button--primary {
+            background-color: #409EFF;
+            border-color: #409EFF;
+        }
+    </style>
 </head>
 <body>
-  <div id="app"></div>
-  <script type="module">
-    const { createApp } = Vue;
-    createApp({
-      template: `
-        <div class="flex justify-center items-center min-h-screen bg-gray-100">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
-            <!-- Freelancer Card -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-              <h3 class="text-lg font-semibold">Freelancer</h3>
-              <p class="text-gray-600">The essentials to provide your best work for clients.</p>
-              <div class="my-4">
-                <span class="text-4xl font-bold">$15</span><span class="text-gray-600">/month</span>
-              </div>
-              <button class="bg-blue-600 text-white rounded-md px-6 py-2 mb-4">Buy plan</button>
-              <ul class="text-sm">
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-600"></i><span>5 products</span></li>
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-600"></i><span>Up to 1,000 subscribers</span></li>
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-600"></i><span>Basic analytics</span></li>
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-600"></i><span>48-hour support response time</span></li>
-              </ul>
-            </div>
+    <div id="app">
+        <el-form ref="form" :model="form" label-width="80px">
+            <el-form-item label="版本号" required>
+                <el-input v-model="form.version" placeholder="v1.0.0"></el-input>
+            </el-form-item>
+            <el-form-item label="时区" required>
+                <el-select v-model="form.timezone" placeholder="Asia/Shanghai">
+                    <el-option label="Asia/Shanghai" value="Asia/Shanghai"></el-option>
+                    <!-- Add other timezones as needed -->
+                </el-select>
+            </el-form-item>
+            <el-form-item label="禁止访问IP">
+                <el-input
+                    type="textarea"
+                    :rows="2"
+                    placeholder="禁止访问站点的ip列表，每一个"
+                    v-model="form.ipList">
+                </el-input>
+            </el-form-item>
+            <el-form-item label="配置分组" required>
+                <el-row :gutter="20">
+                    <el-col :span="11">
+                        <el-input placeholder="basics" v-model="form.configGroup.key"></el-input>
+                    </el-col>
+                    <el-col :span="11">
+                        <el-input placeholder="Basics" v-model="form.configGroup.value"></el-input>
+                    </el-col>
+                    <el-col :span="2">
+                        <el-button type="text"><i class="fas fa-trash-alt"></i></el-button>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="11">
+                        <el-input placeholder="mail" v-model="form.configGroup.key"></el-input>
+                    </el-col>
+                    <el-col :span="11">
+                        <el-input placeholder="Mail" v-model="form.configGroup.value"></el-input>
+                    </el-col>
+                    <el-col :span="2">
+                        <el-button type="text"><i class="fas fa-trash-alt"></i></el-button>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="11">
+                        <el-input placeholder="config_quick_entrance" v-model="form.configGroup.key"></el-input>
+                    </el-col>
+                    <el-col :span="11">
+                        <el-input placeholder="Config Quick entrance" v-model="form.configGroup.value"></el-input>
+                    </el-col>
+                    <el-col :span="2">
+                        <el-button type="text"><i class="fas fa-trash-alt"></i></el-button>
+                    </el-col>
+                </el-row>
+                <el-button type="primary" icon="el-icon-plus" @click="addConfigGroup">添加</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary">保存</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
 
-            <!-- Startup Card -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-              <h3 class="text-lg font-semibold">Startup</h3>
-              <p class="text-gray-600">A plan that scales with your rapidly growing business.</p>
-              <div class="my-4">
-                <span class="text-4xl font-bold">$30</span><span class="text-gray-600">/month</span>
-              </div>
-              <button class="bg-blue-600 text-white rounded-md px-6 py-2 mb-4">Buy plan</button>
-              <ul class="text-sm">
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-600"></i><span>25 products</span></li>
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-600"></i><span>Up to 10,000 subscribers</span></li>
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-600"></i><span>Advanced analytics</span></li>
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-600"></i><span>24-hour support response time</span></li>
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-600"></i><span>Marketing automations</span></li>
-              </ul>
-            </div>
+    <script>
+        const { createApp, reactive } = Vue;
 
-            <!-- Enterprise Card -->
-            <div class="bg-gray-800 text-white rounded-xl shadow-lg p-6">
-              <h3 class="text-lg font-semibold">Enterprise</h3>
-              <p class="text-gray-400">Dedicated support and infrastructure for your company.</p>
-              <div class="my-4">
-                <span class="text-4xl font-bold">Custom</span>
-              </div>
-              <button class="bg-gray-600 text-white rounded-md px-6 py-2 mb-4">Contact sales</button>
-              <ul class="text-sm">
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-400"></i><span>Unlimited products</span></li>
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-400"></i><span>Unlimited subscribers</span></li>
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-400"></i><span>Advanced analytics</span></li>
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-400"></i><span>1-hour, dedicated support response time</span></li>
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-400"></i><span>Marketing automations</span></li>
-                <li class="flex items-center space-x-2"><i class="fas fa-check text-blue-400"></i><span>Custom reporting tools</span></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      `
-    }).mount('#app');
-  </script>
+        const App = {
+            setup() {
+                const form = reactive({
+                    version: '',
+                    timezone: '',
+                    ipList: '',
+                    configGroup: {
+                        key: '',
+                        value: ''
+                    }
+                });
+
+                const addConfigGroup = () => {
+                    // Logic to add new config group
+                };
+
+                return {
+                    form,
+                    addConfigGroup
+                };
+            },
+        };
+
+        const app = createApp(App);
+        app.use(ElementPlus);
+        app.mount("#app");
+    </script>
 </body>
 </html>

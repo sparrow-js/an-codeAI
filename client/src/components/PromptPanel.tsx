@@ -89,6 +89,9 @@ function PromptPanel({settings, setSettings}: Props) {
                 <Dialog open={showDialog} onOpenChange={setShowDialog}>
                     <DialogTrigger
                         className="w-full h-full"
+                        onClick={() => {
+                            setPrompt(cloneDeep(initPrompt));
+                        }}
                     >
                         <div>
                             + Add Prompt

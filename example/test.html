@@ -1,3 +1,5 @@
+Refer to the following code format to output the screenshot code.
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -7,110 +9,47 @@
     <link rel="stylesheet" href="https://registry.npmmirror.com/element-plus/2.4.4/files/dist/index.css">
     <script src="https://registry.npmmirror.com/vue/3.3.11/files/dist/vue.global.js"></script>
     <script src="https://registry.npmmirror.com/element-plus/2.4.4/files/dist/index.full.js"></script>
-    <style>
-        body {
-            font-family: 'Source Sans Pro', sans-serif;
-        }
-        #app {
-            padding: 20px;
-            max-width: 600px;
-            margin: auto;
-        }
-        .el-form-item {
-            margin-bottom: 24px;
-        }
-        .el-button--primary {
-            background-color: #409EFF;
-            border-color: #409EFF;
-        }
-    </style>
 </head>
 <body>
-    <div id="app">
-        <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item label="版本号" required>
-                <el-input v-model="form.version" placeholder="v1.0.0"></el-input>
-            </el-form-item>
-            <el-form-item label="时区" required>
-                <el-select v-model="form.timezone" placeholder="Asia/Shanghai">
-                    <el-option label="Asia/Shanghai" value="Asia/Shanghai"></el-option>
-                    <!-- Add other timezones as needed -->
-                </el-select>
-            </el-form-item>
-            <el-form-item label="禁止访问IP">
-                <el-input
-                    type="textarea"
-                    :rows="2"
-                    placeholder="禁止访问站点的ip列表，每一个"
-                    v-model="form.ipList">
-                </el-input>
-            </el-form-item>
-            <el-form-item label="配置分组" required>
-                <el-row :gutter="20">
-                    <el-col :span="11">
-                        <el-input placeholder="basics" v-model="form.configGroup.key"></el-input>
-                    </el-col>
-                    <el-col :span="11">
-                        <el-input placeholder="Basics" v-model="form.configGroup.value"></el-input>
-                    </el-col>
-                    <el-col :span="2">
-                        <el-button type="text"><i class="fas fa-trash-alt"></i></el-button>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="20">
-                    <el-col :span="11">
-                        <el-input placeholder="mail" v-model="form.configGroup.key"></el-input>
-                    </el-col>
-                    <el-col :span="11">
-                        <el-input placeholder="Mail" v-model="form.configGroup.value"></el-input>
-                    </el-col>
-                    <el-col :span="2">
-                        <el-button type="text"><i class="fas fa-trash-alt"></i></el-button>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="20">
-                    <el-col :span="11">
-                        <el-input placeholder="config_quick_entrance" v-model="form.configGroup.key"></el-input>
-                    </el-col>
-                    <el-col :span="11">
-                        <el-input placeholder="Config Quick entrance" v-model="form.configGroup.value"></el-input>
-                    </el-col>
-                    <el-col :span="2">
-                        <el-button type="text"><i class="fas fa-trash-alt"></i></el-button>
-                    </el-col>
-                </el-row>
-                <el-button type="primary" icon="el-icon-plus" @click="addConfigGroup">添加</el-button>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary">保存</el-button>
-            </el-form-item>
-        </el-form>
-    </div>
+    <div id="app"></div>
 
     <script>
         const { createApp, reactive } = Vue;
 
         const App = {
             setup() {
-                const form = reactive({
-                    version: '',
-                    timezone: '',
-                    ipList: '',
-                    configGroup: {
-                        key: '',
-                        value: ''
-                    }
+                const des = reactive({
+                  currentDate: '2023-10-01',
                 });
 
-                const addConfigGroup = () => {
-                    // Logic to add new config group
-                };
-
                 return {
-                    form,
-                    addConfigGroup
+                  des
                 };
             },
+            template: `
+<el-row>
+  <el-col
+    v-for="(o, index) in 2"
+    :key="o"
+    :span="8"
+    :offset="index > 0 ? 2 : 0"
+  >
+    <el-card :body-style="{ padding: '0px' }">
+      <img
+        src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+        class="image"
+      />
+      <div style="padding: 14px">
+        <span>Yummy hamburger</span>
+        <div class="bottom">
+          <time class="time">{{ des.currentDate }}</time>
+          <el-button text class="button">Operating</el-button>
+        </div>
+      </div>
+    </el-card>
+  </el-col>
+</el-row>
+            `
         };
 
         const app = createApp(App);

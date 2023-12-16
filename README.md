@@ -1,6 +1,6 @@
 # ant-codeAI
 
-项目通过使用AI技术生成高可用代码，（React，Vue，Tailwind CSS）等代码，使用GPT-4 Vision生成，参考screenshot-to-code代码服务端改为node，通过截图转化到代码，将持续新增功能。
+项目通过使用AI技术生成高可用代码，（React，Vue，Tailwind CSS）等代码，使用GPT-4 Vision生成，通过截图转化到代码，可以自定义prompt生成可控代码。
 
 https://github.com/sparrow-js/ant-codeAI/assets/59440091/cd2b9b4b-9940-47fe-a75c-c64759455f53
 

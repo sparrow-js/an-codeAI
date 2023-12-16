@@ -177,7 +177,7 @@ createApp({
 In terms of libraries,
 
 - Use these script to include React so that it can run on a standalone page:
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://registry.npmmirror.com/vue/3.3.11/files/dist/vue.global.js"></script>
 
 - Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
 - You can use Google Fonts

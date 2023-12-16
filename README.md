@@ -29,6 +29,13 @@ npm run start:dev
 
 <img width="500" alt="截屏2023-12-11 下午8 48 49" src="https://github.com/sparrow-js/firefly-codeAI/assets/59440091/781e496e-6141-413b-804a-72e7c17f0fe1">
 
+
+## 生成对比
+| 原图 | 生成网页 |
+| --- | --- |
+| <img width="1090" alt="截屏2023-12-16 上午12 14 18" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/0620753c-9c48-4878-a40f-3d79e40f1230"> | <img width="979" alt="截屏2023-12-16 上午8 30 51" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/d8d021af-ba67-4d3f-a392-4c8c9865e32f"> |
+
+
 ## prompt 示例
 
 https://github.com/sparrow-js/ant-codeAI/assets/59440091/810c6b55-ed85-4ef1-a49d-090ae6d478eb

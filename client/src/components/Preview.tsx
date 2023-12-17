@@ -30,8 +30,8 @@ function Preview({ code, device }: Props) {
           "border-[4px] border-black rounded-[20px] shadow-lg",
           "transform scale-[0.9] origin-top",
           {
-            "w-full h-[832px]": device === "desktop",
-            "w-[400px] h-[832px]": device === "mobile",
+            "w-full h-[700px]": device === "desktop",
+            "w-[400px] h-[700px]": device === "mobile",
           }
         )}
       ></iframe>

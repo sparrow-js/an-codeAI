@@ -76,8 +76,8 @@ function CodeTab({ code, setCode, settings }: Props) {
           />
         </Button>
       </div>
-      <Editor 
-        height="80vh" 
+      <Editor
+        height="70vh" 
         defaultLanguage="html" 
         defaultValue="// some comment" 
         value={code}

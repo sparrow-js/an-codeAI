@@ -23,7 +23,7 @@ export function generateCode(
   onStatusUpdate: (status: string) => void,
   onComplete: () => void
 ) {
-  // const wsUrl = `wss://service-cav5mava-1253530766.gz.tencentapigw.com/release/`;
+
   const wsUrl = `ws://localhost:9000`;
   console.log("Connecting to backend @ ", wsUrl);
 

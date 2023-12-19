@@ -45,6 +45,9 @@ function App() {
   const [executionConsole, setExecutionConsole] = useState<string[]>([]);
   const [updateInstruction, setUpdateInstruction] = useState("");
 
+  const [showWhiteboardDialog, setShowWhiteboardDialog] = useState<boolean>(false);
+
+
   // Settings
   const [settings, setSettings] = usePersistedState<Settings>(
     {
@@ -123,6 +126,10 @@ function App() {
     setExecutionConsole([]);
     setAppHistory([]);
   };
+
+  const closeWhiteboardDialog = () => {
+    setShowWhiteboardDialog(false)
+  }
 
   const stop = () => {
     wsRef.current?.close?.(USER_CLOSE_WEB_SOCKET_CODE);
@@ -271,8 +278,7 @@ function App() {
               </>
           
             )}
-
-              <Whiteboard doCreate={doCreate}/>
+              <FaPencilRuler onClick={() => setShowWhiteboardDialog(true)}  className="mr-3"/>
               <SettingsDialog settings={settings} setSettings={setSettings} />
             </div>
           </div>
@@ -453,6 +459,14 @@ function App() {
           </div>
         )}
       </main>
+      <div className={classNames(
+        "fixed top-0 z-[1000] w-full h-full",
+        {
+          "hidden": !showWhiteboardDialog,
+        }
+      )}>
+        <Whiteboard closeWhiteboardDialog={closeWhiteboardDialog} doCreate={doCreate}/>
+      </div>
     </div>
   );
 }

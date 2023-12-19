@@ -11,7 +11,7 @@ import {
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Input } from "./ui/input";
-import {useContext, useRef, useState} from 'react';
+import {useContext, useState} from 'react';
 import {promptContext, PromptType} from '../contexts/PromptContext'
 import {GeneratedCodeConfig} from '../types'
 import { cloneDeep } from "lodash";

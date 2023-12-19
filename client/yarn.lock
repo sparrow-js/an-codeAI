@@ -470,6 +470,11 @@
   resolved "https://registry.npmmirror.com/@eslint/js/-/js-8.55.0.tgz#b721d52060f369aa259cf97392403cb9ce892ec6"
   integrity sha512-qQfo2mxH5yVom1kacMtZZJFVdW+E70mqHMJvVg6WTLo+VBuQJ4TojZlfWBjK0ve5BdEeNAVxOsl/nvNMpJOaJA==
 
+"@excalidraw/excalidraw@^0.17.2":
+  version "0.17.2"
+  resolved "https://registry.npmmirror.com/@excalidraw/excalidraw/-/excalidraw-0.17.2.tgz#9a636a1e6bb3c88c5883347d3a7e75e9cce8ab96"
+  integrity sha512-7pqUWD8+mPjDhF4XxG3gw4rvE2JGaLW3Vss5UZfTbITPxAtFaGEc1K081bncitnaYhUwN9ENJE0i87QB3poDwQ==
+
 "@floating-ui/core@^1.4.2":
   version "1.5.2"
   resolved "https://registry.npmmirror.com/@floating-ui/core/-/core-1.5.2.tgz#53a0f7a98c550e63134d504f26804f6b83dbc071"

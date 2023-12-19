@@ -85,7 +85,7 @@ function PromptPanel({settings, setSettings}: Props) {
     return (
         <div className="relative">
             <div className="grid grid-cols-2 gap-4">
-                <div key={'add'} className="border-dashed border-2 border-gray-300 p-6 rounded-lg flex justify-center items-center hover:shadow-lg">
+                <div className="border-dashed border-2 border-gray-300 p-6 rounded-lg flex justify-center items-center hover:shadow-lg">
                 <Dialog open={showDialog} onOpenChange={setShowDialog}>
                     <DialogTrigger
                         className="w-full h-full"

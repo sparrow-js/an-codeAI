@@ -11,6 +11,7 @@ import {
   FaDownload,
   FaMobile,
   FaUndo,
+  FaPencilRuler,
 } from "react-icons/fa";
 
 import { Switch } from "./components/ui/switch";
@@ -32,6 +33,7 @@ import HistoryDisplay from "./components/history/HistoryDisplay";
 import { extractHistoryTree } from "./components/history/utils";
 import toast from "react-hot-toast";
 import PromptPanel from './components/PromptPanel';
+import Whiteboard from './components/Whiteboard';
 
 const IS_OPENAI_DOWN = false;
 
@@ -269,7 +271,8 @@ function App() {
               </>
           
             )}
-         
+
+              <Whiteboard doCreate={doCreate}/>
               <SettingsDialog settings={settings} setSettings={setSettings} />
             </div>
           </div>

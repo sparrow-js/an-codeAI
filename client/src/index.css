@@ -113,3 +113,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.excalidraw-modal-container{
+  pointer-events: auto;
+}
+
+.excalidraw .layer-ui__wrapper__top-right{
+  margin-right: 60px;
+}

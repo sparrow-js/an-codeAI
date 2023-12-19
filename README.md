@@ -2,7 +2,14 @@
 
 项目通过使用AI技术生成高可用代码，（React，Vue，Tailwind CSS）等代码，使用GPT-4 Vision生成，通过截图转化到代码，可以自定义prompt生成可控代码。
 
-https://github.com/sparrow-js/ant-codeAI/assets/59440091/810c6b55-ed85-4ef1-a49d-090ae6d478eb
+| 截图 | 白板绘制 |
+| --- | --- |
+| https://github.com/sparrow-js/ant-codeAI/assets/59440091/810c6b55-ed85-4ef1-a49d-090ae6d478eb | https://github.com/sparrow-js/ant-codeAI/assets/59440091/b80cedac-68e1-4de9-ac2f-ec960c09b135 |
+
+
+
+
+
 
 ## 🚀 试用
 可以下载下来本地运行，[临时线上体验地址，图片最大可上传200KB](https://service-1fiqz1da-1253530766.gz.tencentapigw.com/release/)。

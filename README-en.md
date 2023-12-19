@@ -1,8 +1,14 @@
 # ant-codeAI
+The project generates highly available code using AI technology, such as React, Vue, Tailwind CSS, etc. It is generated using GPT-4 Vision and converted to code through screenshots. It is possible to customize prompts to generate controllable code.
 
-This project utilizes AI technology to generate high-quality code for frontend frameworks such as React, Vue, and Tailwind CSS. The code generation process is powered by GPT-4 Vision and is inspired by the screenshot-to-code approach. The server-side implementation has been transitioned to Node.js, enabling the conversion of screenshots into executable code. Continuous efforts will be made to add new features.
+screenshot
 
 https://github.com/sparrow-js/ant-codeAI/assets/59440091/cd2b9b4b-9940-47fe-a75c-c64759455f53
+
+whiteboard
+
+https://github.com/sparrow-js/ant-codeAI/assets/59440091/b80cedac-68e1-4de9-ac2f-ec960c09b135
+
 
 ## 🚀 Try It Out
 You can download the project and run it locally. An [temporary online demo](https://service-1fiqz1da-1253530766.gz.tencentapigw.com/release/) is also available.

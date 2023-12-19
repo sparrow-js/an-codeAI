@@ -22,6 +22,7 @@ function Whiteboard({doCreate, closeWhiteboardDialog}: Props) {
       if (!excalidrawAPI) {
         return
       }
+
       const elements = (excalidrawAPI as any).getSceneElements();
       if (!elements || !elements.length) {
         return
@@ -58,7 +59,17 @@ function Whiteboard({doCreate, closeWhiteboardDialog}: Props) {
                   </>
               )}
               // @ts-ignore
-              excalidrawAPI={(api) => setExcalidrawAPI(api)}/>
+              excalidrawAPI={(api) => setExcalidrawAPI(api)}
+            >
+
+            {/* <MainMenu>
+              <MainMenu.Item onSelect={() => {
+                (excalidrawAPI as any).resetScene();
+              }}>
+                help
+              </MainMenu.Item>
+            </MainMenu> */}
+            </Excalidraw>
       </div>
   );
 }

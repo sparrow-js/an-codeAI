@@ -121,3 +121,7 @@
 .excalidraw .layer-ui__wrapper__top-right{
   margin-right: 60px;
 }
+/* 隐藏excalidraw links*/
+.dropdown-menu-container .dropdown-menu-group {
+  display: none;
+}

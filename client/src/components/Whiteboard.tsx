@@ -17,7 +17,8 @@ const initialData = {
 function Whiteboard({doCreate, closeWhiteboardDialog}: Props) {
 
   const [excalidrawAPI, setExcalidrawAPI] = useState(null);
-  
+  // const [canvasUrl, setCanvasUrl] = useState("");
+
   const exportImg = async () => {
       if (!excalidrawAPI) {
         return
@@ -34,8 +35,9 @@ function Whiteboard({doCreate, closeWhiteboardDialog}: Props) {
           exportWithDarkMode: false,
         },
         files: (excalidrawAPI as any).getFiles(),
-        getDimensions: () => { return {width: 750, height: 750}}
+        // getDimensions: () => { return {width: 750, height: 750}}
       });
+      // setCanvasUrl(canvas.toDataURL());
       doCreate([canvas.toDataURL()])
       closeWhiteboardDialog();
     }

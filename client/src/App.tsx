@@ -56,7 +56,7 @@ function App() {
       screenshotOneApiKey: null,
       isImageGenerationEnabled: true,
       editorTheme: EditorTheme.COBALT,
-      generatedCodeConfig: GeneratedCodeConfig.REACT_ANTD,
+      generatedCodeConfig: GeneratedCodeConfig.HTML_TAILWIND,
       // Only relevant for hosted version
       isTermOfServiceAccepted: false,
       accessCode: null,

@@ -51,7 +51,7 @@ npm run start:dev
 
 ##  🙋‍♂️ 合作
 - 如果有合作意向欢迎加wx：sparrow777-js，不闲聊，没有具体事情请不要加🙏。
-- 如果不知道怎么获取OpenAI key和 OpenAI proxy url可以先加微信充几块钱体验下。
+- 如果不知道怎么获取OpenAI key和 OpenAI proxy url有需要可以先加微信充几块钱体验下。
 - bug，意见等直接提交到git上即可
 
 

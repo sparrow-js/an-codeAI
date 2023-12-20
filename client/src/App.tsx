@@ -265,20 +265,25 @@ function App() {
               <>
                 <span
                     onClick={reset}
-                    className="mr-3"                  >
+                    className="hover:bg-slate-200 p-2 rounded-sm"                  >
                     <FaUndo />
                     {/* Reset */}
                 </span>
                 <span
                   onClick={downloadCode}
-                  className="mr-3"
+                  className="hover:bg-slate-200 p-2 rounded-sm"
                 >
                   <FaDownload />
                 </span>
               </>
           
             )}
-              <FaPencilRuler onClick={() => setShowWhiteboardDialog(true)}  className="mr-3"/>
+              <span
+                onClick={() => setShowWhiteboardDialog(true)}
+                className="hover:bg-slate-200 p-2 rounded-sm"
+              >
+                <FaPencilRuler />
+              </span>
               <SettingsDialog settings={settings} setSettings={setSettings} />
             </div>
           </div>

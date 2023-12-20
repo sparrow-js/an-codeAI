@@ -28,12 +28,12 @@ function SettingsDialog({ settings, setSettings }: Props) {
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <FaCog />
+      <DialogTrigger className="hover:bg-slate-200 rounded-sm pl-2 pr-2">
+          <FaCog />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="mb-4">Settings</DialogTitle>
+          <DialogTitle className="mb-4 ">Settings</DialogTitle>
         </DialogHeader>
 
         {/* Access code */}

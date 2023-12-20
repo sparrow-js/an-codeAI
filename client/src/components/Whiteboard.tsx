@@ -47,15 +47,18 @@ function Whiteboard({doCreate, closeWhiteboardDialog}: Props) {
           <Excalidraw   
               renderTopRightUI={() => (
                   <>
-                    <FaHourglass  
-                        className="mt-[10px]"
-                        onClick={exportImg}
-                    />
+
+                    <span className="hover:bg-slate-200 p-2 rounded-sm">
+                      <FaHourglass  
+                          onClick={exportImg}
+                      />
+                    </span>
+
                     <span 
                         onClick={() => {
                           closeWhiteboardDialog();
                         }}
-                        className="absolute right-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                        className="hover:bg-slate-200 p-2 absolute right-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
                       <Cross2Icon />
                     </span>
                   </>

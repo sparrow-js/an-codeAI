@@ -200,10 +200,12 @@ export default {
             "keywords": [],
             "main": "src/index.js",
             "dependencies": {
-            "react": "18.2.*",
-            "react-dom": "18.2.*",
-            "react-native-web": "0.19.*",
-            "react-scripts": "3.3.0"
+              "react": "18.2.*",
+              "react-dom": "18.2.*",
+              "react-native-web": "0.19.*",
+              "react-scripts": "3.3.0",
+              "react-native-vector-icons": "6.4.2",
+              "react-native-web-vector-icons": "4.4.3",
             },
             "devDependencies": {},
             "scripts": {

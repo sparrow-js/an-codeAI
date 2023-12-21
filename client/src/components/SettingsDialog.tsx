@@ -14,10 +14,6 @@ import { Switch } from "./ui/switch";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 
-import { IS_RUNNING_ON_CLOUD } from "../config";
-
-import AccessCodeSection from "./settings/AccessCodeSection";
-
 interface Props {
   settings: Settings;
   setSettings: React.Dispatch<React.SetStateAction<Settings>>;
@@ -35,11 +31,6 @@ function SettingsDialog({ settings, setSettings }: Props) {
         <DialogHeader>
           <DialogTitle className="mb-4 ">Settings</DialogTitle>
         </DialogHeader>
-
-        {/* Access code */}
-        {IS_RUNNING_ON_CLOUD && (
-          <AccessCodeSection settings={settings} setSettings={setSettings} />
-        )}
 
         {/* <div className="flex items-center space-x-2">
           <Label htmlFor="image-generation">
@@ -80,7 +71,7 @@ function SettingsDialog({ settings, setSettings }: Props) {
             }
           />
 
-          {!IS_RUNNING_ON_CLOUD && (
+          {(
             <>
               <Label htmlFor="openai-api-key">
                 <div>OpenAI Base URL (optional)</div>

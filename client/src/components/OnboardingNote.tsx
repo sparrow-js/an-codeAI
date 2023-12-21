@@ -1,17 +1,13 @@
 export function OnboardingNote() {
   return (
-    <div className="flex flex-col space-y-4 bg-green-700 p-2 rounded text-stone-200 text-sm">
+    <div className="flex flex-col space-y-4 bg-sky-200 p-2 rounded text-slate-700 text-sm">
       <span>
-        use your own OpenAI API key with GPT4 vision access.{" "}
-        <a
-          href="https://github.com/abi/screenshot-to-code/blob/main/Troubleshooting.md"
-          className="inline underline hover:opacity-70"
-          target="_blank"
-        >
-          Follow these instructions to get yourself a key.
-        </a>{" "}
-        and paste it in the Settings dialog (gear icon above). Your key is only
-        stored in your browser. Never stored on our servers.
+       体验ant-codeAI，花费预估10元/20次生成
+       <p>
+       (只体验不可超过10元)<span className="text-red-600">不退款</span>
+       </p>
+       <p>wx：sparrow777-js</p>
+       如有openAI API key自行设置使用即可。
       </span>
     </div>
   );

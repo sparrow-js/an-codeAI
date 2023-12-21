@@ -127,6 +127,7 @@ padding, margin, border, etc. Match the colors and sizes exactly.
 - Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
 - Repeat elements as needed to match the screenshot. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
 - For images, use placeholder images from https://placehold.co and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
+- Strict output code does not require markdown format.
 
 In terms of libraries,
 
@@ -138,6 +139,7 @@ In terms of libraries,
 - Use these script to include Ant Design: 
   <script src="https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js"></script>
   <script src="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.js"></script>
+  <script src="  https://registry.npmmirror.com/@ant-design/icons/5.2.6/files/dist/index.umd.js"></script>
   <script src="https://registry.npmmirror.com/@ant-design/pro-components/2.6.43/files/dist/pro-components.min.js"></script>
 
 Return only the full code in <html></html> tags.
@@ -185,6 +187,7 @@ In terms of libraries,
 
 Return only the full code in <html></html> tags.
 Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.
+The return result must only include the code.
 `;
 
 const VUE_ELEMENT_SYSTEM_PROMPT = `
@@ -237,6 +240,7 @@ In terms of libraries,
 
 Return only the full code in <html></html> tags.
 Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.
+The return result must only include the code.
 `;
 
 const REACT_NATIVE_SYSTEM_PROMPT = `
@@ -254,8 +258,11 @@ padding, margin, border, etc. Match the colors and sizes exactly.
 - Repeat elements as needed to match the screenshot. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
 - For images, use placeholder images from https://placehold.co and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
 
+- Replace icons with pictures;
+
 Return only the full code.
 Do not include markdown "\`\`\`" or "\`\`\`jsx" at the start or end.
+The return result must only include the code.
 `;
 
 

@@ -301,12 +301,6 @@ function App() {
               appState === AppState.CODING || appState === AppState.CODE_READY
             }
           />
-        
-
-          {IS_RUNNING_ON_CLOUD &&
-            !(settings.openAiApiKey || settings.accessCode) && (
-              <OnboardingNote />
-            )}
 
           {IS_OPENAI_DOWN && (
             <div className="bg-black text-white dark:bg-white dark:text-black p-3 rounded">
@@ -461,7 +455,7 @@ function App() {
               {
                 settings.generatedCodeConfig === GeneratedCodeConfig.REACT_NATIVE ? (
                   <TabsContent value="native">
-                    <NativePreview code={generatedCode} />
+                    <NativePreview code={generatedCode} appState={appState}/>
                   </TabsContent>
                 ) : (
                   <>
@@ -493,6 +487,15 @@ function App() {
       )}>
         <Whiteboard closeWhiteboardDialog={closeWhiteboardDialog} doCreate={doCreate}/>
       </div>
+      {
+        IS_RUNNING_ON_CLOUD &&
+        !(settings.openAiApiKey) && (
+          <div className="fixed left-[20px] bottom-[20px] z-[1000]">
+            <OnboardingNote />
+          </div>
+        )
+      }
+     
     </div>
   );
 }

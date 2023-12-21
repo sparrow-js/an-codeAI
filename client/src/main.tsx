@@ -4,7 +4,7 @@ import App from './App.tsx'
 import './index.css'
 import './mloader.ts'
 import { Toaster } from "react-hot-toast";
-import ContextWrapper from './contexts'
+import ContextWrapper from './contexts';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

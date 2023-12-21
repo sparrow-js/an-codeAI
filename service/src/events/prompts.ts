@@ -239,8 +239,28 @@ Return only the full code in <html></html> tags.
 Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.
 `;
 
+const REACT_NATIVE_SYSTEM_PROMPT = `
+You are an expert React Native developer
+You take screenshots of a reference App from the user, and then build single apps 
+using React Native.
+You might also be given a screenshot(The second image) of a app that you have already built, and asked to
+update it to look more like the reference image(The first image).
+
+- Make sure the app looks exactly like the screenshot.
+- Pay close attention to background color, text color, font size, font family, 
+padding, margin, border, etc. Match the colors and sizes exactly.
+- Use the exact text from the screenshot.
+- Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
+- Repeat elements as needed to match the screenshot. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
+- For images, use placeholder images from https://placehold.co and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
+
+Return only the full code.
+Do not include markdown "\`\`\`" or "\`\`\`jsx" at the start or end.
+`;
+
+
 const USER_PROMPT = `
-Generate code for a web page that looks exactly like this.
+Generate code for a app that looks exactly like this.
 {promptCode}
 `;
 
@@ -252,6 +272,7 @@ const SYSTEM_MAP = {
   react_antd: REACT_ANTD_SYSTEM_PROMPT,
   vue_tailwind: VUE_TAILWIND_SYSTEM_PROMPT,
   vue_element: VUE_ELEMENT_SYSTEM_PROMPT,
+  react_native: REACT_NATIVE_SYSTEM_PROMPT,
 };
 
 export function assemblePrompt(

@@ -34,6 +34,7 @@ import { extractHistoryTree } from "./components/history/utils";
 import toast from "react-hot-toast";
 import PromptPanel from './components/PromptPanel';
 import Whiteboard from './components/Whiteboard';
+import NativePreview from './components/NativeMobile';
 
 const IS_OPENAI_DOWN = false;
 
@@ -432,27 +433,47 @@ function App() {
 
         {(appState === AppState.CODING || appState === AppState.CODE_READY) && (
           <div className="ml-4">
-            <Tabs defaultValue="desktop">
+            <Tabs defaultValue={settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop'}>
               <div className="flex justify-end mr-8 mb-4">
                 <TabsList>
-                  <TabsTrigger value="desktop" className="flex gap-x-2">
-                    <FaDesktop /> Desktop
-                  </TabsTrigger>
-                  <TabsTrigger value="mobile" className="flex gap-x-2">
-                    <FaMobile /> Mobile
-                  </TabsTrigger>
+                  {
+                    settings.generatedCodeConfig === GeneratedCodeConfig.REACT_NATIVE ? (
+                      <TabsTrigger value="native" className="flex gap-x-2">
+                      <FaDesktop /> native Mobile
+                    </TabsTrigger>
+                    ) : (
+                      <>
+                        <TabsTrigger value="desktop" className="flex gap-x-2">
+                          <FaDesktop /> Desktop
+                        </TabsTrigger>
+                        <TabsTrigger value="mobile" className="flex gap-x-2">
+                          <FaMobile /> Mobile
+                        </TabsTrigger>
+                      </>
+                    )
+                  }
                   <TabsTrigger value="code" className="flex gap-x-2">
                     <FaCode />
                     Code
                   </TabsTrigger>
                 </TabsList>
               </div>
-              <TabsContent value="desktop">
-                <Preview code={generatedCode} device="desktop" />
-              </TabsContent>
-              <TabsContent value="mobile">
-                <Preview code={generatedCode} device="mobile" />
-              </TabsContent>
+              {
+                settings.generatedCodeConfig === GeneratedCodeConfig.REACT_NATIVE ? (
+                  <TabsContent value="native">
+                    <NativePreview code={generatedCode} />
+                  </TabsContent>
+                ) : (
+                  <>
+                    <TabsContent value="desktop">
+                      <Preview code={generatedCode} device="desktop" />
+                    </TabsContent>
+                    <TabsContent value="mobile">
+                      <Preview code={generatedCode} device="mobile" />
+                    </TabsContent>
+                  </>
+                )
+              }
               <TabsContent value="code">
                 <CodeTab
                   code={generatedCode}

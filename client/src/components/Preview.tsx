@@ -8,7 +8,7 @@ interface Props {
 }
 
 function Preview({ code, device }: Props) {
-  const throttledCode = useThrottle(code, 200);
+  const throttledCode = useThrottle(code, 500);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   useEffect(() => {

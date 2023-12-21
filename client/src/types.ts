@@ -12,6 +12,7 @@ export enum GeneratedCodeConfig {
   REACT_ANTD = "react_antd",
   VUE_TAILWIND = 'vue_tailwind',
   VUE_ELEMENT = 'vue_element',
+  REACT_NATIVE = 'react_native',
   // VUE_ELEMENT_SYSTEM_PROMPT
 }
 

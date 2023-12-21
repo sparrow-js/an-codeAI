@@ -23,6 +23,13 @@ function generateDisplayComponent(config: GeneratedCodeConfig) {
           <span className="font-semibold">Tailwind</span>
         </div>
       );
+    case GeneratedCodeConfig.REACT_NATIVE:
+      return (
+        <div>
+          <span className="font-semibold">react</span> +{" "}
+          <span className="font-semibold">native</span>
+        </div>
+      );  
     case GeneratedCodeConfig.REACT_TAILWIND:
       return (
         <div>
@@ -98,6 +105,9 @@ function OutputSettingsSection({
               </SelectItem>
               <SelectItem value={GeneratedCodeConfig.HTML_TAILWIND}>
                 {generateDisplayComponent(GeneratedCodeConfig.HTML_TAILWIND)}
+              </SelectItem>
+              <SelectItem value={GeneratedCodeConfig.REACT_NATIVE}>
+                {generateDisplayComponent(GeneratedCodeConfig.REACT_NATIVE)}
               </SelectItem>
               <SelectItem value={GeneratedCodeConfig.REACT_TAILWIND}>
                 {generateDisplayComponent(GeneratedCodeConfig.REACT_TAILWIND)}

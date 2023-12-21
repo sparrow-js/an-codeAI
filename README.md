@@ -6,9 +6,9 @@
 
 https://github.com/sparrow-js/ant-codeAI/assets/59440091/810c6b55-ed85-4ef1-a49d-090ae6d478eb
 
-白板绘制
+app 支持
 
-https://github.com/sparrow-js/ant-codeAI/assets/59440091/b80cedac-68e1-4de9-ac2f-ec960c09b135
+https://github.com/sparrow-js/ant-codeAI/assets/59440091/1f60f5a6-3bbd-4cca-8a9a-7e9a211de8ff
 
 
 

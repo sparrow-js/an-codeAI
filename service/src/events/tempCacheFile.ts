@@ -32,7 +32,9 @@ export function mergeFile(hash: string, ws: WebSocket) {
     let fileFull = '';
     Object.keys(file).forEach((item, index) => {
       const chunkContent = file[`${hash}_${index}`];
-      fileFull += chunkContent;
+      if (chunkContent) {
+        fileFull += chunkContent;
+      }
     });
     ws.send(
       JSON.stringify({

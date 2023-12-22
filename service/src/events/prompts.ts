@@ -251,6 +251,7 @@ You might also be given a screenshot(The second image) of a app that you have al
 update it to look more like the reference image(The first image).
 
 - Make sure the app looks exactly like the screenshot.
+- Strict output code does not require markdown format.
 - Pay close attention to background color, text color, font size, font family, 
 padding, margin, border, etc. Match the colors and sizes exactly.
 - Use the exact text from the screenshot.

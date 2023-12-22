@@ -35,7 +35,6 @@ export function generateCode(
 
   ws.addEventListener("open",async () => {
     const data = await uploadChunks(ws, params.image);
-    console.log('*******0', data);
     if (data) {
       params.image = data;
       params.isChunk = true;

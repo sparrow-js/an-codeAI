@@ -13,7 +13,7 @@ https://github.com/sparrow-js/ant-codeAI/assets/59440091/1f60f5a6-3bbd-4cca-8a9a
 
 
 ## 🚀 试用
-可以下载下来本地运行，[临时线上体验地址，图片最大可上传200KB](https://service-1fiqz1da-1253530766.gz.tencentapigw.com/release/)。
+可以下载下来本地运行，[临时线上体验地址，图片最大可上传1MB](https://service-1fiqz1da-1253530766.gz.tencentapigw.com/release/)。
 ```bash
 cd client
 yarn dev

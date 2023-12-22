@@ -9,13 +9,6 @@ import { GeneratedCodeConfig } from "../types";
 
 function generateDisplayComponent(config: GeneratedCodeConfig) {
   switch (config) {
-    case GeneratedCodeConfig.REACT_ANTD:
-      return (
-        <div>
-          <span className="font-semibold">react</span> +{" "}
-          <span className="font-semibold">antd</span>
-        </div>
-      );
     case GeneratedCodeConfig.HTML_TAILWIND:
       return (
         <div>
@@ -43,6 +36,13 @@ function generateDisplayComponent(config: GeneratedCodeConfig) {
           <span className="font-semibold">Bootstrap</span>
         </div>
       );
+    case GeneratedCodeConfig.REACT_ANTD:
+      return (
+        <div>
+          <span className="font-semibold">react</span> +{" "}
+          <span className="font-semibold">antd</span>
+        </div>
+      );  
     case GeneratedCodeConfig.VUE_TAILWIND:
       return (
         <div>
@@ -100,17 +100,17 @@ function OutputSettingsSection({
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value={GeneratedCodeConfig.REACT_ANTD}>
-                {generateDisplayComponent(GeneratedCodeConfig.REACT_ANTD)}
-              </SelectItem>
               <SelectItem value={GeneratedCodeConfig.HTML_TAILWIND}>
                 {generateDisplayComponent(GeneratedCodeConfig.HTML_TAILWIND)}
               </SelectItem>
-              <SelectItem value={GeneratedCodeConfig.REACT_NATIVE}>
-                {generateDisplayComponent(GeneratedCodeConfig.REACT_NATIVE)}
-              </SelectItem>
               <SelectItem value={GeneratedCodeConfig.REACT_TAILWIND}>
                 {generateDisplayComponent(GeneratedCodeConfig.REACT_TAILWIND)}
+              </SelectItem>
+              <SelectItem value={GeneratedCodeConfig.REACT_ANTD}>
+                {generateDisplayComponent(GeneratedCodeConfig.REACT_ANTD)}
+              </SelectItem>
+              <SelectItem value={GeneratedCodeConfig.REACT_NATIVE}>
+                {generateDisplayComponent(GeneratedCodeConfig.REACT_NATIVE)}
               </SelectItem>
               <SelectItem value={GeneratedCodeConfig.BOOTSTRAP}>
                 {generateDisplayComponent(GeneratedCodeConfig.BOOTSTRAP)}

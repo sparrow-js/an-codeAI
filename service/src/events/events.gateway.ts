@@ -9,6 +9,7 @@ import {
 import { Server } from 'ws';
 import * as WebSocket from 'ws';
 import { streamGenerateCode } from './generateCode';
+import { cacheFileChunk, mergeFile, TempCacheFile } from './tempCacheFile';
 
 @WebSocketGateway(9000)
 export class EventsGateway {
@@ -31,7 +32,20 @@ export class EventsGateway {
       accessCode: null
     }
      */
+    if (data.isChunk) {
+      data.image = TempCacheFile.get(data.image)['full'];
+    }
     await streamGenerateCode(data, client);
+    TempCacheFile.delete(data.hash);
     client.close();
+  }
+
+  @SubscribeMessage('uploadFile')
+  async uploadFile(client: WebSocket, data: any): Promise<void> {
+    if (data.handler === 'mergeUploadFile') {
+      mergeFile(data.hash, client);
+    } else {
+      cacheFileChunk(data, client);
+    }
   }
 }

@@ -56,6 +56,8 @@ export function generateCode(
     console.log("Connection closed", event.code, event.reason);
     if (event.code === USER_CLOSE_WEB_SOCKET_CODE) {
       toast.success(STOP_MESSAGE);
+    } else if (event.code === 1009) {
+      toast.error('Error must image < 200kb');
     } else if (event.code !== 1000) {
       console.error("WebSocket error code", event);
       // toast.error(ERROR_MESSAGE);

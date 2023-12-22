@@ -3,10 +3,10 @@ export function OnboardingNote() {
     <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm mx-auto ring-1 ring-slate-900/10">
         <div className="flex items-baseline space-x-2 mb-6">
           <span className="text-5xl font-bold">10元/20</span>
-          <span className="text-gray-500">次生成</span>
+          <span className="text-gray-500">次预计生成</span>
         </div>
         <p className="text-gray-700 mb-6">
-        不退款(初次使用只体验不可超过10元)      
+        不退款(初次使用体验不可超过10元)      
         </p>
         <hr className="mb-6"/>
         <div className="space-y-4">

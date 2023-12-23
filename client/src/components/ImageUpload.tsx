@@ -5,14 +5,14 @@ import { toast } from "react-hot-toast";
 
 const baseStyle = {
   flex: 1,
-  width: "80%",
+  width: "100%",
   margin: "0 auto",
   minHeight: "400px",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  padding: "20px",
+  padding: "0px",
   borderWidth: 2,
   borderRadius: 2,
   borderColor: "#eeeeee",

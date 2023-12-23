@@ -11,7 +11,7 @@ import {
   FaDownload,
   FaMobile,
   FaUndo,
-  FaPencilRuler,
+  FaCloudUploadAlt,
 } from "react-icons/fa";
 
 import { Switch } from "./components/ui/switch";
@@ -45,9 +45,8 @@ function App() {
   const [referenceImages, setReferenceImages] = useState<string[]>([]);
   const [executionConsole, setExecutionConsole] = useState<string[]>([]);
   const [updateInstruction, setUpdateInstruction] = useState("");
-
-  const [showWhiteboardDialog, setShowWhiteboardDialog] = useState<boolean>(false);
-
+  const [showImageUpload, setShowImageUpload] = useState<boolean>(true);
+  const [showPreview, setShowPreview] = useState<boolean>(true);
 
   // Settings
   const [settings, setSettings] = usePersistedState<Settings>(
@@ -127,10 +126,6 @@ function App() {
     setExecutionConsole([]);
     setAppHistory([]);
   };
-
-  const closeWhiteboardDialog = () => {
-    setShowWhiteboardDialog(false)
-  }
 
   const stop = () => {
     wsRef.current?.close?.(USER_CLOSE_WEB_SOCKET_CODE);
@@ -256,7 +251,7 @@ function App() {
 
 
   return (
-    <div className="mt-2 dark:bg-black dark:text-white">
+    <div className="mt-2 dark:bg-black dark:text-white h-full">
       <div className="lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-96 lg:flex-col">
         <div className="flex grow flex-col gap-y-2 overflow-y-auto border-r border-gray-200 bg-white px-6 dark:bg-zinc-950 dark:text-white">
           <div className="flex items-center justify-between mt-5 mb-2">
@@ -279,12 +274,6 @@ function App() {
               </>
           
             )}
-              <span
-                onClick={() => setShowWhiteboardDialog(true)}
-                className="hover:bg-slate-200 p-2 rounded-sm"
-              >
-                <FaPencilRuler />
-              </span>
               <SettingsDialog settings={settings} setSettings={setSettings} />
             </div>
           </div>
@@ -414,9 +403,31 @@ function App() {
         </div>
       </div>
 
-      <main className="py-2 lg:pl-96">
+      <main className="lg:ml-96 relative h-full">
         {appState === AppState.INITIAL && (
-          <div className="flex flex-col justify-center items-center gap-y-10">
+          <div onClick={() => {
+            setShowImageUpload(false);
+          }}>
+            <Whiteboard doCreate={doCreate}/>
+          </div>
+        )}
+        {
+          appState === AppState.INITIAL && (
+            <div className="absolute top-20 right-10 z-[10]">
+              <div  
+                onClick={() => setShowImageUpload(!showImageUpload)}
+                className="flex justify-center items-center w-12 h-12 rounded-full ring-2 ring-gray-900 hover:bg-slate-200 text-gray-800 size-2 mb-2"
+              >
+                <FaCloudUploadAlt />
+              </div>
+            </div>
+          )
+        }
+        {appState === AppState.INITIAL && (
+          <div className={classNames(
+            "absolute left-[50%] -ml-[300px] z-[10] flex flex-col justify-center items-center gap-y-10 w-[600px] top-32",
+            {"hidden": !showImageUpload}
+          )}>
             <ImageUpload setReferenceImages={doCreate} />
             {/* <UrlInputSection
               doCreate={doCreate}
@@ -425,8 +436,8 @@ function App() {
           </div>
         )}
 
-        {(appState === AppState.CODING || appState === AppState.CODE_READY) && (
-          <div className="ml-4">
+        {(appState === AppState.CODING || appState === AppState.CODE_READY) && showPreview && (
+          <div className="ml-4 absolute top-5 z-[10] w-[80%] ml-[10%]">
             <Tabs defaultValue={settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop'}>
               <div className="flex justify-end mr-8 mb-4">
                 <TabsList>
@@ -479,14 +490,6 @@ function App() {
           </div>
         )}
       </main>
-      <div className={classNames(
-        "fixed top-0 z-[1000] w-full h-full",
-        {
-          "hidden": !showWhiteboardDialog,
-        }
-      )}>
-        <Whiteboard closeWhiteboardDialog={closeWhiteboardDialog} doCreate={doCreate}/>
-      </div>
       {
         IS_RUNNING_ON_CLOUD &&
         !(settings.openAiApiKey) && (

@@ -125,3 +125,16 @@
 .dropdown-menu-container .dropdown-menu-group {
   display: none;
 }
+
+html{
+  height: 100% !important;
+}
+body{
+  height: 100% !important;
+}
+#root{
+  height: 100%;
+}
+.container{
+  padding: 0 !important;
+}

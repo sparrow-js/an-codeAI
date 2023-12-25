@@ -50,8 +50,7 @@ npm run start:dev
 - 如果有合作意向欢迎加wx：sparrow777-js，不闲聊，没有具体事情请不要加🙏。
 - bug，意见等直接提交到git上即可
 - 如果不知道怎么获取OpenAI key和 OpenAI proxy url有需要可以充几块钱体验下。
-![2421703471862_ pic]()
 
-<img width="300" alt="付款二维码" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/950bad51-bddd-42c6-b29e-815052c8ff82">
+<img width="260" alt="付款二维码" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/950bad51-bddd-42c6-b29e-815052c8ff82">
 
 [reference material screenshot-to-code](https://github.com/abi/screenshot-to-code)

@@ -11,7 +11,7 @@ import * as WebSocket from 'ws';
 import { streamGenerateCode } from './generateCode';
 import { cacheFileChunk, mergeFile, TempCacheFile } from './tempCacheFile';
 
-@WebSocketGateway(9000)
+@WebSocketGateway(3000)
 export class EventsGateway {
   @WebSocketServer()
   server: Server;

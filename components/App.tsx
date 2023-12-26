@@ -496,7 +496,7 @@ function App() {
       {
         IS_RUNNING_ON_CLOUD &&
         !(settings.openAiApiKey) && (
-          <div className="fixed left-[20px] bottom-[20px] z-[1000]">
+          <div className="fixed left-[20px] bottom-[20px] z-[49]">
             <OnboardingNote />
           </div>
         )

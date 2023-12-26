@@ -1,4 +1,4 @@
-export default function OnboardingNote() {
+export function OnboardingNote() {
   return (
     <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm mx-auto ring-1 ring-slate-900/10">
         <div className="flex items-baseline space-x-2 mb-6">
@@ -6,23 +6,21 @@ export default function OnboardingNote() {
           <span className="text-gray-500">次预计生成</span>
         </div>
         <p className="text-gray-700 mb-6">
-        不退款(初次使用体验不可超过10元)      
+          不退款(初次使用体验不要超过10元),感觉对自己有用在继续使用。每天20:00前发送至邮箱，如有openAI API key自行设置使用即可。
         </p>
         <hr className="mb-6"/>
         <div className="space-y-4">
+          <div className="">
+            <span>
+              备注一定要添加自己邮箱地址
+            </span>
+            <img className="w-48" src="/2421703471862_.pic.jpg" />
+          </div>
           <div className="flex items-center">
             <i className="fas fa-check-circle text-blue-600 mr-2"></i>
             <span>
               email: sparrowwht7@gmail.com
             </span>
-          </div>
-          <div className="flex items-center">
-            <i className="fas fa-infinity text-blue-600 mr-2"></i>
-            <span>wx: sparrow777-js</span>
-          </div>
-          <div className="flex items-center">
-            <i className="fas fa-users text-blue-600 mr-2"></i>
-            <span>如有openAI API key自行设置使用即可。</span>
           </div>
         </div>
         <div className="flex absolute -bottom-px left-1/2 -ml-36 h-[2px] w-60">

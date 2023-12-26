@@ -1,4 +1,0 @@
-#!/bin/bash
-
-# SERVERLESS=1 /var/lang/node12/bin/npm run start -- -e /var/lang/node12/bin/node
-SERVERLESS=1 /var/lang/node18/bin/node ./dist/main.js

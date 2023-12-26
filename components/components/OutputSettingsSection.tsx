@@ -87,7 +87,6 @@ function OutputSettingsSection({
   return (
     <div className="flex flex-col gap-y-2 justify-between text-sm">
       <div className="grid grid-cols-3 items-center gap-4">
-        <span>Generating:</span>
         <Select
           value={generatedCodeConfig}
           onValueChange={(value: string) =>

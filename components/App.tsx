@@ -37,6 +37,7 @@ import PromptPanel from './components/PromptPanel';
 
 import Whiteboard from './components/Whiteboard';
 import NativePreview from './components/NativeMobile';
+import Header from "./components/Header";
 
 const IS_OPENAI_DOWN = false;
 
@@ -255,11 +256,25 @@ function App() {
 
   return (
     <div className="dark:bg-black dark:text-white h-full">
-      <div className="h-10"></div>
       <div className="lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-96 lg:flex-col">
         <div className="flex grow flex-col gap-y-2 overflow-y-auto border-r border-gray-200 bg-white px-6 dark:bg-zinc-950 dark:text-white">
-          <div className="flex items-center justify-between mt-5 mb-2">
+          <div className="bg-white flex justify-between p-2 pl-4 border-b-[1px] fixed left-0 lg:w-96 z-[49]">
             <h1 className="text-2xl ">Ant CodeAI</h1>
+            <Header />
+          </div>
+          <div className="flex items-center justify-between mb-2 mt-16">
+            <OutputSettingsSection
+              generatedCodeConfig={settings.generatedCodeConfig}
+              setGeneratedCodeConfig={(config: GeneratedCodeConfig) =>
+                setSettings((prev) => ({
+                  ...prev,
+                  generatedCodeConfig: config,
+                }))
+              }
+              shouldDisableUpdates={
+                appState === AppState.CODING || appState === AppState.CODE_READY
+              }
+            />
             <div className="flex">
             {appState === AppState.CODE_READY && (
               <>
@@ -281,19 +296,6 @@ function App() {
               <SettingsDialog settings={settings} setSettings={setSettings} />
             </div>
           </div>
-     
-          <OutputSettingsSection
-            generatedCodeConfig={settings.generatedCodeConfig}
-            setGeneratedCodeConfig={(config: GeneratedCodeConfig) =>
-              setSettings((prev) => ({
-                ...prev,
-                generatedCodeConfig: config,
-              }))
-            }
-            shouldDisableUpdates={
-              appState === AppState.CODING || appState === AppState.CODE_READY
-            }
-          />
 
           {IS_OPENAI_DOWN && (
             <div className="bg-black text-white dark:bg-white dark:text-black p-3 rounded">

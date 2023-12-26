@@ -1,4 +1,4 @@
-export function OnboardingNote() {
+export default function OnboardingNote() {
   return (
     <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm mx-auto ring-1 ring-slate-900/10">
         <div className="flex items-baseline space-x-2 mb-6">

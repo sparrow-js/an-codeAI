@@ -53,6 +53,7 @@ npm run start:dev
 <img width="260" alt="付款二维码" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/950bad51-bddd-42c6-b29e-815052c8ff82">
 
 > if this project is helpful to you, buy me a coffee.
+
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/sparrowwhtl)
 
 [reference material screenshot-to-code](https://github.com/abi/screenshot-to-code)

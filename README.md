@@ -10,8 +10,6 @@ app 支持（react native）
 https://github.com/sparrow-js/ant-codeAI/assets/59440091/1f60f5a6-3bbd-4cca-8a9a-7e9a211de8ff
 
 
-
-
 ## 🚀 试用
 可以下载下来本地运行，[临时线上体验地址，图片最大可上传1MB](https://service-1fiqz1da-1253530766.gz.tencentapigw.com/release/)。
 ```bash
@@ -53,5 +51,8 @@ npm run start:dev
 10元/20次预计生成,不退款(初次使用体验不要超过10元),感觉对自己有用在继续使用。每天20:00前发送至邮箱，如有openAI API key自行设置使用即可。
 - 备注一定要添加自己邮箱地址.
 <img width="260" alt="付款二维码" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/950bad51-bddd-42c6-b29e-815052c8ff82">
+
+> if this project is helpful to you, buy me a coffee.
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/sparrowwhtl)
 
 [reference material screenshot-to-code](https://github.com/abi/screenshot-to-code)

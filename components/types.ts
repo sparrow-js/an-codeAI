@@ -28,6 +28,7 @@ export interface Settings {
   accessCode: string | null;
   mockAiResponse: boolean;
   promptCode: string;
+  init: boolean;
 }
 
 export enum AppState {

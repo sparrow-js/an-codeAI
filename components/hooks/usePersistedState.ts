@@ -10,7 +10,9 @@ function usePersistedState<T>(defaultValue: T, key: string): PersistedState<T> {
     if (first) {
       const value = window.localStorage.getItem(key);
       if (value) {
-        setValue(value && JSON.parse(value));
+        const valueObj = JSON.parse(value)
+        valueObj.init = true;
+        setValue(valueObj);
       }
       setFirst(false);
     } else {

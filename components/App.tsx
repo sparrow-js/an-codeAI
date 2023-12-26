@@ -64,6 +64,7 @@ function App() {
       accessCode: null,
       mockAiResponse: false,
       promptCode: '',
+      init: false,
     },
     "setting"
   );
@@ -251,7 +252,6 @@ function App() {
     setGeneratedCode("");
     setUpdateInstruction("");
   }
-
 
   return (
     <div className="mt-2 dark:bg-black dark:text-white h-full">
@@ -495,7 +495,7 @@ function App() {
       </main>
       {
         IS_RUNNING_ON_CLOUD &&
-        !(settings.openAiApiKey) && (
+        !(settings.openAiApiKey) && settings.init && (
           <div className="fixed left-[20px] bottom-[20px] z-[49]">
             <OnboardingNote />
           </div>

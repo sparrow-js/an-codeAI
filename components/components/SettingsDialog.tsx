@@ -24,7 +24,7 @@ function SettingsDialog({ settings, setSettings }: Props) {
 
   return (
     <Dialog>
-      <DialogTrigger className="hover:bg-slate-200 rounded-sm pl-2 pr-2">
+      <DialogTrigger className="hover:bg-slate-200 rounded-sm p-2">
           <FaCog />
       </DialogTrigger>
       <DialogContent>

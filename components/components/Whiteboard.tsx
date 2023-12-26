@@ -58,7 +58,7 @@ function Whiteboard({doCreate}: Props) {
               renderTopRightUI={() => (
                   <>
 
-                    <span className="hover:bg-slate-200 p-2 rounded-sm">
+                    <span className="hover:bg-slate-200 p-2 rounded-sm top-6 flex justify-center items-center">
                       <FaHourglass  
                           onClick={exportImg}
                       />

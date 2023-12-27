@@ -11,7 +11,11 @@ https://github.com/sparrow-js/ant-codeAI/assets/59440091/1f60f5a6-3bbd-4cca-8a9a
 
 
 ## 🚀 试用
-可以下载下来本地运行，[线上地址]([www.ancodeai.com/](https://www.ancodeai.com/))[线上临时腾讯云地址，图片最大可上传1MB](https://service-1fiqz1da-1253530766.gz.tencentapigw.com/release/)。
+> [线上地址]，(https://www.ancodeai.com/)
+> [线上临时腾讯云地址，图片最大可上传1MB](https://service-1fiqz1da-1253530766.gz.tencentapigw.com/release/)
+
+
+可以下载下来本地运行.
 ```bash
 npm run dev
 ```

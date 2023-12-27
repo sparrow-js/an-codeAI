@@ -1,5 +1,5 @@
 # ant-codeAI
-通过使用AI技术生成高可用代码，web（React，Vue，Tailwind CSS），native（react native）等代码，使用GPT-4 Vision生成，通过截图转化到代码，可以自定义prompt生成可控代码。
+通过使用AI技术生成高可用代码，web（React，Vue，Tailwind CSS），native（react native）等代码，使用GPT-4 Vision生成，通过截图转化到代码，可以自定义prompt生成可控代码。提供白板功能可以绘制草稿生成代码。
 
 web 支持（React，Vue，Tailwind CSS）
 
@@ -11,14 +11,9 @@ https://github.com/sparrow-js/ant-codeAI/assets/59440091/1f60f5a6-3bbd-4cca-8a9a
 
 
 ## 🚀 试用
-可以下载下来本地运行，[临时线上体验地址，图片最大可上传1MB](https://service-1fiqz1da-1253530766.gz.tencentapigw.com/release/)。
+可以下载下来本地运行，[线上地址]([www.ancodeai.com/](https://www.ancodeai.com/))[线上临时腾讯云地址，图片最大可上传1MB](https://service-1fiqz1da-1253530766.gz.tencentapigw.com/release/)。
 ```bash
-cd client
-yarn dev
-
-
-cd service
-npm run start:dev
+npm run dev
 ```
 ## 🛠 设置
 <img width="558" alt="Pasted Graphic 1" src="https://github.com/sparrow-js/firefly/assets/59440091/2daf0da1-dc53-4c2a-b450-2667abcf940b">

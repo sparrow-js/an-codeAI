@@ -253,6 +253,27 @@ function App() {
     setGeneratedCode("");
     setUpdateInstruction("");
   }
+  
+  useEffect(() => {
+    if (updateInstruction.includes('Fix the code error and re-output the code')) {
+      doUpdate();
+    }
+  }, [
+    updateInstruction
+  ])
+
+  async function fixBug(error: {
+    message: string;
+    stack: string;
+  }) {
+    const errorPrompt = `
+Fix the code error and re-output the code.
+error message:
+${error.message}
+${error.stack}
+    `;
+    setUpdateInstruction(errorPrompt);
+  }
 
   return (
     <div className="dark:bg-black dark:text-white h-full">
@@ -477,10 +498,10 @@ function App() {
                 ) : (
                   <>
                     <TabsContent value="desktop">
-                      <Preview code={generatedCode} device="desktop" />
+                      <Preview code={generatedCode} device="desktop" appState={appState} fixBug={fixBug}/>
                     </TabsContent>
                     <TabsContent value="mobile">
-                      <Preview code={generatedCode} device="mobile" />
+                      <Preview code={generatedCode} device="mobile" appState={appState} fixBug={fixBug}/>
                     </TabsContent>
                   </>
                 )

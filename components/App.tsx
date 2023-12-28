@@ -460,7 +460,7 @@ ${error.stack}
         }
         {appState === AppState.INITIAL && (
           <div className={classNames(
-            "absolute left-[50%] -ml-[300px] z-[10] flex flex-col justify-center items-center gap-y-10 w-[600px] top-32",
+            "absolute left-[50%] -ml-[300px] z-[4] flex flex-col justify-center items-center gap-y-10 w-[600px] top-32",
             {"hidden": !showImageUpload}
           )}>
             <ImageUpload setReferenceImages={doCreate} />

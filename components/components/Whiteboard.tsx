@@ -2,7 +2,7 @@
 'use client';
 import React, {useState, useEffect, ReactElement} from "react";
 import { FaHourglass } from "react-icons/fa";
-import {Excalidraw, useHandleLibrary} from "@excalidraw/excalidraw";
+import {Excalidraw, useHandleLibrary, exportToCanvas} from "@excalidraw/excalidraw";
 
 interface Props {
     doCreate: (urls: string[]) => void;
@@ -12,23 +12,11 @@ const initialData = {
     appState: {}
 };
 
-let ExcalidrawModule: any = {
-  useHandleLibrary: function (options: any) {
-    useEffect(() => {})
-  }
-};
-
 
 function Whiteboard({doCreate}: Props) {
   const [excalidrawAPI, setExcalidrawAPI] = useState<any>(null);
   useHandleLibrary({ excalidrawAPI });
 
-  useEffect(() => {
-    if (!excalidrawAPI) return;
-    if (ExcalidrawModule) {
-      console.log(ExcalidrawModule);
-    }
-  }, [excalidrawAPI])
 
   const exportImg = async () => {
       if (!excalidrawAPI) {
@@ -39,26 +27,23 @@ function Whiteboard({doCreate}: Props) {
       if (!elements || !elements.length) {
         return
       }
-      if (ExcalidrawModule) {
-        const canvas = await (ExcalidrawModule).exportToCanvas ({
-          elements,
-          appState: {
-            ...initialData.appState,
-            exportWithDarkMode: false,
-          },
-          files: (excalidrawAPI as any).getFiles(),
-          // getDimensions: () => { return {width: 750, height: 750}}
-        });
-        // setCanvasUrl(canvas.toDataURL());
-        doCreate([canvas.toDataURL()])
-      }
-      
+      const canvas = await exportToCanvas ({
+        elements,
+        appState: {
+          ...initialData.appState,
+          exportWithDarkMode: false,
+        },
+        files: (excalidrawAPI as any).getFiles(),
+        // getDimensions: () => { return {width: 750, height: 750}}
+      });
+      // setCanvasUrl(canvas.toDataURL());
+      doCreate([canvas.toDataURL()])
    }
 
 
 
   return (
-      <div className="absolute top-0 z-[10] w-full h-full">
+      <div className="w-full h-full">
           {Excalidraw ? (
             // @ts-ignore
             <Excalidraw   

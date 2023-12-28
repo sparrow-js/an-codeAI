@@ -5,7 +5,7 @@ English · [中文](./README-zh_CN.md)
 
 web 支持（React，Vue，Tailwind CSS）
 
-https://github.com/sparrow-js/ant-codeAI/assets/59440091/b66c80fa-b121-442e-b482-f4d3a0cd2d88
+https://github.com/sparrow-js/ant-codeAI/assets/59440091/810c6b55-ed85-4ef1-a49d-090ae6d478eb
 
 app 支持（react native）
 

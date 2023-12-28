@@ -351,7 +351,6 @@ ${error.stack}
                       Stop
                     </Button>
                   </div>
-                  <CodePreview code={generatedCode} />
                 </div>
               )}
 
@@ -482,6 +481,13 @@ ${error.stack}
 
         {(appState === AppState.CODING || appState === AppState.CODE_READY) && showPreview && (
           <div className="ml-4 absolute top-5 z-[10] w-[80%] ml-[10%]">
+            {
+              appState === AppState.CODING && (
+                <div className="w-[160px] absolute top-20 z-[1] left-[50%] -ml-[80px]">
+                  <CodePreview code={generatedCode} />
+                </div>
+              )
+            }
             <Tabs defaultValue={settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop'}>
               <div className="flex justify-end mr-8 mb-4">
                 <TabsList>

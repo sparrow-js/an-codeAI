@@ -44,13 +44,15 @@ function Preview({ code, device, appState, fixBug }: Props) {
         const headContent = headMatch[0] + errorIframe;
         content = throttledCode.replace(patternHead, headContent);
       }
+
+      if (iframe && iframe.contentDocument) {
+        iframe.contentDocument.open();
+        iframe.contentDocument.write(content || code);
+        iframe.contentDocument.close();
+      }
     }
  
-    if (iframe && iframe.contentDocument) {
-      iframe.contentDocument.open();
-      iframe.contentDocument.write(content || throttledCode);
-      iframe.contentDocument.close();
-    }
+    
   }, [throttledCode]);
 
   useEffect(() => {

@@ -18,9 +18,12 @@ export default function OnboardingNote() {
    
         <hr className="mb-6"/>
         <div className="space-y-4">
+          <p>
+          如有openAI API key, 拥有GPT-4 Vision权限自行设置使用即可.
+          </p>
           <Dialog>
             <DialogTrigger className="rounded-sm w-full">
-              <a href="javascript:void(0);" className="mt-10 block w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <a href="javascript:void(0);" className="mt-6 block w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 购买
               </a>
             </DialogTrigger>
@@ -30,7 +33,7 @@ export default function OnboardingNote() {
               </DialogHeader>
               <div>
                 <p className="text-gray-700 pb-2">
-                不退款(初次使用体验不要超过10元),感觉对自己有用在继续使用。每天20:00前发送Key至邮箱，如有openAI API key自行设置使用即可。
+                不退款(初次使用体验不要超过10元),感觉对自己有用在继续使用。每天20:00前发送Key至邮箱.
                 </p> 
                 <div className="">
                   <p className="text-red-500 pb-2">

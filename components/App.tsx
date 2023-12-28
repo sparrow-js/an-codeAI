@@ -35,9 +35,17 @@ import { extractHistoryTree } from "./components/history/utils";
 import toast from "react-hot-toast";
 import PromptPanel from './components/PromptPanel';
 
-import Whiteboard from './components/Whiteboard';
 import NativePreview from './components/NativeMobile';
 import Header from "./components/Header";
+
+import dynamic from "next/dynamic";
+
+const Whiteboard = dynamic(
+  async () => (await import("./components/Whiteboard")),
+  {
+    ssr: false,
+  },
+)
 
 const IS_OPENAI_DOWN = false;
 

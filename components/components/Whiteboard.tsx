@@ -2,6 +2,8 @@
 'use client';
 import React, {useState, useEffect, ReactElement} from "react";
 import { FaHourglass } from "react-icons/fa";
+import {Excalidraw, useHandleLibrary} from "@excalidraw/excalidraw";
+
 interface Props {
     doCreate: (urls: string[]) => void;
 }
@@ -10,20 +12,23 @@ const initialData = {
     appState: {}
 };
 
-let ExcalidrawModule: any = null;
+let ExcalidrawModule: any = {
+  useHandleLibrary: function (options: any) {
+    useEffect(() => {})
+  }
+};
+
 
 function Whiteboard({doCreate}: Props) {
-  const [Excalidraw, setExcalidraw] = useState(null);
- 
   const [excalidrawAPI, setExcalidrawAPI] = useState<any>(null);
-  // const [canvasUrl, setCanvasUrl] = useState("");
+  useHandleLibrary({ excalidrawAPI });
 
   useEffect(() => {
-    import("@excalidraw/excalidraw").then((comp) => {
-      ExcalidrawModule = comp;
-      setExcalidraw(comp.Excalidraw as any);
-    });
-  }, []);
+    if (!excalidrawAPI) return;
+    if (ExcalidrawModule) {
+      console.log(ExcalidrawModule);
+    }
+  }, [excalidrawAPI])
 
   const exportImg = async () => {
       if (!excalidrawAPI) {
@@ -48,7 +53,9 @@ function Whiteboard({doCreate}: Props) {
         doCreate([canvas.toDataURL()])
       }
       
-    }
+   }
+
+
 
   return (
       <div className="absolute top-0 z-[10] w-full h-full">

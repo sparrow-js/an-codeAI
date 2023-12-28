@@ -1,11 +1,11 @@
 # ant-codeAI
-English · [中文](./README-zh_CN.md)
+中文 · [English](./README.md)
 
 通过使用AI技术生成高可用代码，web（React，Vue，Tailwind CSS），native（react native）等代码，使用GPT-4 Vision生成，通过截图转化到代码，可以自定义prompt生成可控代码。提供白板功能可以绘制草稿生成代码。
 
 web 支持（React，Vue，Tailwind CSS）
 
-https://github.com/sparrow-js/ant-codeAI/assets/59440091/810c6b55-ed85-4ef1-a49d-090ae6d478eb
+https://github.com/sparrow-js/ant-codeAI/assets/59440091/b66c80fa-b121-442e-b482-f4d3a0cd2d88
 
 app 支持（react native）
 
@@ -30,14 +30,6 @@ npm run dev
 - Mock AI Response(mock AI返回的数据，不直接请求AI)，直接请求OpenAI 接口会消耗费用
 
 
-## 🔥 使用场景
-- 中后台项目
-- 快速验证方案，对还原度要求不高的项目
-- 输出代码后自补全细节
-
-<img width="500" alt="截屏2023-12-11 下午8 48 49" src="https://github.com/sparrow-js/firefly-codeAI/assets/59440091/781e496e-6141-413b-804a-72e7c17f0fe1">
-
-
 ## 生成对比
 | 原图 | 生成网页 |
 | --- | --- |
@@ -54,8 +46,5 @@ npm run dev
 - 备注一定要添加自己邮箱地址.
 <img width="260" alt="付款二维码" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/950bad51-bddd-42c6-b29e-815052c8ff82">
 
-> if this project is helpful to you, buy me a coffee.
-
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/sparrowwhtl)
 
 [reference material screenshot-to-code](https://github.com/abi/screenshot-to-code)

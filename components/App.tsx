@@ -437,15 +437,24 @@ ${error.stack}
           }
         </div>
       </div>
-
+      {/* {classNames(
+            "absolute left-[50%] -ml-[300px] z-[4] flex flex-col justify-center items-center gap-y-10 w-[600px] top-32",
+            {"hidden": !showImageUpload}
+          )} */}
       <main className="lg:ml-96 relative h-full">
-        {appState === AppState.INITIAL && (
-          <div className="h-full" onClick={() => {
+      
+          <div className={
+            classNames(
+              "h-full",
+              {"hidden": !(appState === AppState.INITIAL)}
+            )
+          }
+          onClick={() => {
             setShowImageUpload(false);
           }}>
             <Whiteboard doCreate={doCreate}/>
           </div>
-        )}
+      
         {
           appState === AppState.INITIAL && (
             <div className="absolute top-20 right-10 z-[10]">

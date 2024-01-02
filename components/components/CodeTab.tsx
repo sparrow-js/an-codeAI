@@ -59,7 +59,7 @@ function CodeTab({ code, setCode, settings }: Props) {
   }, [code]);
 
   return (
-    <div className="relative">
+    <div className="relative h-full flex flex-col">
       <div className="flex justify-start items-center px-4 mb-2">
         <span
           title="Copy Code"
@@ -81,7 +81,6 @@ function CodeTab({ code, setCode, settings }: Props) {
         </Button>
       </div>
       <Editor
-        height="100%" 
         defaultLanguage="html" 
         defaultValue="" 
         value={code}

@@ -11,7 +11,7 @@ padding, margin, border, etc. Match the colors and sizes exactly.
 - Use the exact text from the screenshot.
 - Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
 - Repeat elements as needed to match the screenshot. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
-- For images, use placeholder images from https://placehold.co and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
+- For images, use placeholder images from /placeholder.svg and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
 
 In terms of libraries,
 
@@ -22,6 +22,29 @@ In terms of libraries,
 Return only the full code in <html></html> tags.
 Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.
 `;
+
+const TAILWIND_SYSTEM_PROMPT_TEXT = `
+You are an expert Tailwind developer
+You take detailed description of a reference web page from the user, and then build single page apps 
+using Tailwind, HTML and JS.
+
+- Make sure the app looks exactly like the detailed description.
+- Pay close attention to background color, text color, font size, font family, 
+padding, margin, border, etc. Match the colors and sizes exactly.
+- Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
+- Repeat elements as needed to match the detailed description. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
+- For images, use placeholder images from /placeholder.svg and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
+
+In terms of libraries,
+
+- Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
+- You can use Google Fonts
+- Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+
+Return only the full code in <html></html> tags.
+Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.
+`;
+
 
 const BOOTSTRAP_SYSTEM_PROMPT = `
 You are an expert Bootstrap developer
@@ -282,33 +305,50 @@ const SYSTEM_MAP = {
   vue_tailwind: VUE_TAILWIND_SYSTEM_PROMPT,
   vue_element: VUE_ELEMENT_SYSTEM_PROMPT,
   react_native: REACT_NATIVE_SYSTEM_PROMPT,
+  html_tailwind_text: TAILWIND_SYSTEM_PROMPT_TEXT,
 };
 
 export function assemblePrompt(
   image_data_url: string,
+  text_data: string,
   generated_code_config: string,
   promptCode: string,
   result_image_data_url = '',
 ) {
-  const systemConent =
+  let systemConent =
     (SYSTEM_MAP as any)[generated_code_config] || TAILWIND_SYSTEM_PROMPT;
+  if (text_data) {
+    systemConent = (SYSTEM_MAP as any)[`${generated_code_config}_text`] || TAILWIND_SYSTEM_PROMPT_TEXT;
+  }
 
-  const userContent = [
-    {
-      type: 'image_url',
-      image_url: { url: image_data_url, detail: 'high' },
-    },
+  const userContent: any[] = [
     {
       type: 'text',
       text: USER_PROMPT.replace('{promptCode}', promptCode),
     },
   ];
+
+  if (image_data_url) {
+    userContent.unshift({
+      type: 'image_url',
+      image_url: { url: image_data_url, detail: 'high' },
+    });
+  }
+
+  if (text_data) {
+    userContent.unshift({
+      type: 'text',
+      text: text_data,
+    });
+  }
+
   if (result_image_data_url) {
     userContent.splice(1, 0, {
       type: 'image_url',
       image_url: { url: result_image_data_url, detail: 'high' },
     });
   }
+
   return [
     {
       role: 'system',

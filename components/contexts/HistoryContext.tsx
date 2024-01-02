@@ -6,7 +6,7 @@ interface historyContextType {
     history: History;
     currentVersion: number | null;
     setCurrentVersion: (version: number | null) => void;
-    addHistory: (generationType: string, updateInstruction: string, referenceImages: string[], code: string) => void;
+    addHistory: (generationType: string, updateInstruction: string, referenceImages: string[], initText: string, code: string) => void;
     updateHistoryScreenshot: (img: string, version?: number) => void;
 }
 
@@ -14,7 +14,7 @@ const initialValue = {
     history: [],
     currentVersion: null,
     setCurrentVersion: (version: number | null) => {},
-    addHistory: (generationType: string, updateInstruction: string, referenceImages: string[], code: string) => {},
+    addHistory: (generationType: string, updateInstruction: string, referenceImages: string[], initText: string, code: string) => {},
     updateHistoryScreenshot: (img: string, version?: number) => {}
 }
 
@@ -24,14 +24,17 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
     const [history , setHistory] = useState<History>([]);
     const [currentVersion, setCurrentVersionStatus] = useState<number | null>(null);
 
-    function addHistory (generationType: string, updateInstruction: string, referenceImages: string[], code: string) {
+    function addHistory (generationType: string, updateInstruction: string, referenceImages: string[], initText: string, code: string) {
         if (generationType === "create") {
             setHistory([
               {
                 type: "ai_create",
                 parentIndex: null,
                 code,
-                inputs: { image_url: referenceImages[0] },
+                inputs: { 
+                  image_url: referenceImages[0],
+                  initText
+                },
               },
             ]);
             setCurrentVersionStatus(0);
@@ -61,13 +64,17 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
             });
         }
     }
-
-
-    function updateHistoryScreenshot(img: string, version?: number) {
-        const historyItem = history[version || currentVersion || 0];
-        historyItem.screenshot = img;
-        setHistory(history);
+    const updateHistoryScreenshot = (img: string, version?: number) => {
+        setHistory((prevState) => {
+          const newHistory = [...prevState];
+          const index = version || currentVersion || 0
+          if (index !== -1) {
+            newHistory[index].screenshot = img;
+          }
+          return newHistory;
+        });
     }
+   
 
     function setCurrentVersion(version: number | null) {
         setCurrentVersionStatus(version)

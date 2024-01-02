@@ -70,6 +70,9 @@ class SendBox extends Component<{ observed: OffsetObserver }> {
       uid, 
       message: this.sendMessage
     });
+    if (this.editor.get('designer').currentSelection) {
+      this.editor.get('designer').currentSelection.clear();
+    }
   }
 
   render() {

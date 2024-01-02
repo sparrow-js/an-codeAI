@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { DesignerView, Designer, AutoCodePluginManager, ILowCodePluginContext } from './designer';
 import { Editor, globalContext } from './editor-core';
 import { AppState } from "../components/types";
 import useThrottle from "../components/hooks/useThrottle";
 import {setHtmlCodeUid} from '../components/compiler';
 import html2canvas from "html2canvas";
+import {HistoryContext} from '../components/contexts/HistoryContext';
 
 const editor = new Editor();
 globalContext.register(editor, Editor);
@@ -37,27 +38,28 @@ interface Props {
     code: string;
     appState: AppState;
     sendMessageChange: (e: any) => void;
+    history: any
 }
 
-export default function PreviewBox({ code, appState, sendMessageChange }: Props) {
+export default function PreviewBox({ code, appState, sendMessageChange, history }: Props) {
     const throttledCode = useThrottle(code, 500);
+    const {updateHistoryScreenshot} = useContext(HistoryContext);
 
     const onIframeLoad = async () => {
-        setTimeout(async() => {
-            const img = await takeScreenshot()
-            console.log(img);
-        }, 2000)
+        const img = await takeScreenshot();
+        updateHistoryScreenshot(img);
     }
 
     useEffect(() => {
+       
         editor.on('editor.sendMessageChange', sendMessageChange);
-        designer.project.simulator?.emitter.on('onIframeLoad', onIframeLoad);
-
+        document.querySelector('.lc-simulator-content-frame')?.addEventListener('load', onIframeLoad);
         return () => {
             editor.removeListener('editor.sendMessageChange', sendMessageChange);
-            designer.project.simulator?.emitter.removeListener('onIframeLoad', onIframeLoad);
+            document.querySelector('.lc-simulator-content-frame')?.removeEventListener('load', onIframeLoad);
+
         }
-    }, []);
+    }, [history]);
 
     useEffect(() => {
         if (appState === AppState.CODE_READY) {
@@ -78,8 +80,6 @@ export default function PreviewBox({ code, appState, sendMessageChange }: Props)
             return png;
         }
     };
-    
-    
 
     return (
         <div className="border-[4px] border-black rounded-[20px] shadow-lg w-full h-full">

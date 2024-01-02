@@ -10,7 +10,8 @@ const STOP_MESSAGE = "Code generation stopped";
 
 export interface CodeGenerationParams {
   generationType: "create" | "update";
-  image: string;
+  image?: string;
+  text?: string;
   resultImage?: string;
   history?: string[];
   isChunk?: boolean;

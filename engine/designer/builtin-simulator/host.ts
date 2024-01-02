@@ -107,6 +107,7 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
     private _iframe?: HTMLIFrameElement;
     readonly scroller: Scroller;
     readonly emitter: EventEmitter = new EventEmitter();
+    executeCallback = () => {};
 
     readonly designer: Designer;
 
@@ -134,6 +135,10 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
 
     get contentDocument() {
       return this._contentDocument;
+    }
+
+    get iframe() {
+      return this._iframe;
     }
 
     @computed get designMode(): 'live' | 'design' | 'preview' {
@@ -221,6 +226,7 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
             this.setupEvents();
             this.viewport.setScrollTarget(this._contentWindow);
             this.emitter.emit('onIframeLoad', {})
+            this.executeCallback();
         });
     }
 
@@ -961,6 +967,11 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
           iframe.contentDocument.write(code);
           iframe.contentDocument.close();
       }
+    }
+
+
+    onLoadCallback (callback) {
+      this.executeCallback = callback;
     }
     
 }

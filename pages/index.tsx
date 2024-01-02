@@ -6,8 +6,6 @@ import {SettingContext} from '../components/contexts/SettingContext';
 import {UploadFileContext} from '../components/contexts/UploadFileContext'
 import { IS_RUNNING_ON_CLOUD } from "../components/config";
 import { useRouter } from 'next/navigation';
-import PromptPanel from '../components/components/PromptPanel';
-
 
 const baseStyle = {
     outline: "none",
@@ -32,7 +30,7 @@ const baseStyle = {
   
 
 export default function Dashboard() {
-    const { settings, setSettings } = useContext(SettingContext);
+    const { settings, setSettings, setInitCreate } = useContext(SettingContext);
     const { getRootProps, 
         isDragAccept,
         isFocused,
@@ -43,9 +41,10 @@ export default function Dashboard() {
     const [lockChat, setLockChat] = useState(false);
     const ref = useRef(null);
     async function sendMessage() {}
-    const router = useRouter()
+    const router = useRouter();
     useEffect(() => {
         setUploadComplete(() => {
+            setInitCreate(true);
             router.push('/home', { scroll: false })
         })
     }, []);
@@ -80,11 +79,6 @@ export default function Dashboard() {
                         />
                     </div>
                 </div>
-                <div className='mt-28 mx-auto max-w-7xl px-5 py-4 md:px-10 md:py-4 lg:py-4'>
-                    <h3>custom prompt</h3>
-                    <PromptPanel settings={settings} setSettings={setSettings} />
-                </div>
-
                             
                 { IS_RUNNING_ON_CLOUD &&
                     !(settings.openAiApiKey) && settings.init && (

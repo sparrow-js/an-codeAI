@@ -5,6 +5,7 @@ import { mockComletion } from './mock';
 export interface IGenerateCodeParams {
   generationType: string;
   image: string;
+  text: string;
   openAiApiKey: string;
   openAiBaseURL: string;
   screenshotOneApiKey: null;
@@ -35,6 +36,7 @@ export async function streamGenerateCode(
     if (params['resultImage']) {
       prompt_messages = assemblePrompt(
         params['image'],
+        params['text'],
         generated_code_config,
         params['promptCode'],
         params['resultImage'],
@@ -42,6 +44,7 @@ export async function streamGenerateCode(
     } else {
       prompt_messages = assemblePrompt(
         params['image'],
+        params['text'],
         generated_code_config,
         params['promptCode'],
       );

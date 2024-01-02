@@ -17,7 +17,7 @@ export default () => {
       <div className="flex items-center">
         <div className="flex-1">
           <ul className="hidden md:flex float-right text-lg text-slate-700 items-center">
-            <li className="mx-4">
+            <li className="mx-2">
                 <OutputSettingsSection
                   generatedCodeConfig={settings.generatedCodeConfig}
                   setGeneratedCodeConfig={(config: GeneratedCodeConfig) =>
@@ -28,12 +28,12 @@ export default () => {
                   }
                 />
             </li>
-            <li className="mx-4">
+            <li className="mx-2">
               <span>
                 <SettingsDialog settings={settings} setSettings={setSettings} />
               </span>
             </li>
-            <li className="mx-4">
+            <li className="mx-2">
                 <a
                   href="https://github.com/sparrow-js/ant-codeAI"
                   target="_blank"
@@ -42,7 +42,7 @@ export default () => {
                   <BsGithub className="text-xl" />
                 </a>
             </li>
-            <li className="mx-4">
+            <li className="mx-2">
             <a href="https://www.buymeacoffee.com/sparrowwhtl" target="_blank">
               <svg
                 width="27"

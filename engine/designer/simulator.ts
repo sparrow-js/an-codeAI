@@ -81,6 +81,7 @@ export interface ISimulatorHost<P = object> extends ISensor {
   readonly contentDocument?: Document;
   readonly renderer?: BuiltinSimulatorRenderer;
   readonly emitter: EventEmitter;
+  readonly iframe?: HTMLIFrameElement;
 
   // dependsAsset // like react jQuery lodash
   // themesAsset
@@ -165,6 +166,8 @@ export interface ISimulatorHost<P = object> extends ISensor {
   purge(): void;
 
   writeIframeDocument(code: string): void;
+
+  onLoadCallback(callback: () => void):void;
 }
 
 export function isSimulatorHost(obj: any): obj is ISimulatorHost {

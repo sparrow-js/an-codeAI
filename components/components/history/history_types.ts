@@ -19,6 +19,7 @@ export type HistoryItem =
 
 export type AiCreateInputs = {
   image_url: string;
+  initText: string;
 };
 
 export type AiEditInputs = {

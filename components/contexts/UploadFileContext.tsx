@@ -12,6 +12,7 @@ interface UploadFileContextType {
     isDragAccept: boolean;
     isDragReject: boolean;
     setUploadComplete: (callback: () => void) => void;
+    setDataUrls: (newSate: string[]) => void;
 }
 
 const initialValue = {
@@ -23,6 +24,7 @@ const initialValue = {
     isDragAccept: false,
     isDragReject: false,
     setUploadComplete: (callback: () => void) => {},
+    setDataUrls: (newSate: string[]) => {},
 }
 
 type FileWithPreview = {
@@ -38,7 +40,7 @@ export const UploadFileContext = createContext<UploadFileContextType>(initialVal
 
 export default function UploadFileProvider({ children }: { children: ReactNode }) {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
-  const [dataUrls, setDataUrls] = useState<string[]>([]);
+  const [dataUrls, setDataUrlsStatus] = useState<string[]>([]);
   const [uploadComplete, setUploadCompleteStatus] = useState(() => {
     return () => {}
   })
@@ -65,7 +67,7 @@ export default function UploadFileProvider({ children }: { children: ReactNode }
         // Convert images to data URLs and set the prompt images state
         Promise.all(acceptedFiles.map((file) => fileToDataURL(file)))
           .then((dataUrls: any) => {
-            setDataUrls(dataUrls)
+            setDataUrlsStatus(dataUrls)
             console.log(dataUrls);
             uploadComplete();
             // setReferenceImages(dataUrls.map((dataUrl) => dataUrl as string));
@@ -95,6 +97,10 @@ export default function UploadFileProvider({ children }: { children: ReactNode }
       });
     }
 
+    function setDataUrls(newState: string[]) {
+      setDataUrlsStatus(newState)
+    }
+
     return (
         <UploadFileContext.Provider
           value={{
@@ -105,7 +111,8 @@ export default function UploadFileProvider({ children }: { children: ReactNode }
             isFocused,
             isDragReject,
             setUploadComplete,
-            dataUrls
+            dataUrls,
+            setDataUrls
           }}
         >
           {children}

@@ -4,6 +4,10 @@ import {GeneratedCodeConfig, EditorTheme, Settings} from '../types'
 interface settingContextType {
     settings: Settings;
     setSettings: (newState: Settings) => void;
+    initCreate: boolean;
+    setInitCreate: (newState: boolean) => void;
+    initCreateText: string;
+    setInitCreateText: (newState: string) => void;
 }
 
 const initialValue = {
@@ -21,7 +25,11 @@ const initialValue = {
         promptCode: '',
         init: false,
     },
+    initCreate: false,
     setSettings: () => {},
+    setInitCreate: (newState: boolean) => {},
+        initCreateText: '',
+    setInitCreateText: (newState: string) => {},
 }
 
 export const SettingContext = createContext<settingContextType>(initialValue);
@@ -29,6 +37,8 @@ export const SettingContext = createContext<settingContextType>(initialValue);
 export default function SettingProvider({ children }: { children: ReactNode }) {
     const [settings, setSettingsStatus] = useState<Settings>(initialValue.settings);
     const [first, setFirst] = useState<boolean>(true);
+    const [initCreate, setInitCreateStatus] = useState<boolean>(false);
+    const [initCreateText, setInitCreateTextStatus] = useState<string>('');
 
     function setSettings(newState: Settings) {
         setSettingsStatus(newState);
@@ -51,11 +61,23 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
         first
     ]);
 
+    function setInitCreate (newState: boolean) {
+        setInitCreateStatus(newState)
+    }
+
+    function setInitCreateText(newState: string) {
+        setInitCreateTextStatus(newState);
+    }
+
     return (
         <SettingContext.Provider
           value={{
             settings,
-            setSettings
+            setSettings,
+            initCreate,
+            setInitCreate,
+            initCreateText,
+            setInitCreateText,
           }}
         >
           {children}

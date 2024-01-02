@@ -217,21 +217,21 @@ const REACT_ANTD_MOCK_CODE = `
         <!-- Repeat for each news item -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="flex flex-col items-center">
-                <img src="https://placehold.co/96x96" alt="Placeholder image for Planetaria project logo" class="mb-4">
+                <img src="/placeholder.svg" alt="Placeholder image for Planetaria project logo" class="mb-4">
                 <h2 class="text-xl font-semibold mb-2">Planetaria</h2>
                 <p class="text-center mb-4">Creating technology to empower civilians to explore space on their own terms.</p>
                 <a href="#" class="text-indigo-600 hover:text-indigo-800 transition-colors">planetaria.tech</a>
             </div>
             <!-- Repeat for each news item -->
             <div class="flex flex-col items-center">
-                <img src="https://placehold.co/96x96" alt="Placeholder image for Animaginary project logo" class="mb-4">
+                <img src="/placeholder.svg" alt="Placeholder image for Animaginary project logo" class="mb-4">
                 <h2 class="text-xl font-semibold mb-2">Animaginary</h2>
                 <p class="text-center mb-4">High performance web animation library, hand-written in optimized WASM.</p>
                 <a href="#" class="text-indigo-600 hover:text-indigo-800 transition-colors">github.com</a>
             </div>
             <!-- Repeat for each news item -->
             <div class="flex flex-col items-center">
-                <img src="https://placehold.co/96x96" alt="Placeholder image for HelioStream project logo" class="mb-4">
+                <img src="/placeholder.svg" alt="Placeholder image for HelioStream project logo" class="mb-4">
                 <h2 class="text-xl font-semibold mb-2">HelioStream</h2>
                 <p class="text-center mb-4">Real-time video streaming library, optimized for interstellar transmission.</p>
                 <a href="#" class="text-indigo-600 hover:text-indigo-800 transition-colors">github.com</a>

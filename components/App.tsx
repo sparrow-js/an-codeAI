@@ -1,10 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, useContext } from "react";
-import CodePreview from "./components/CodePreview";
-import Preview from "./components/Preview";
 import { CodeGenerationParams, generateCode } from "./generateCode";
 import Spinner from "./components/Spinner";
-import classNames from "classnames";
 import {
   FaCode,
   FaDesktop,
@@ -15,14 +12,9 @@ import {
 
 import { Switch } from "./components/ui/switch";
 import { Button } from "./components/ui/button";
-import { Textarea } from "./components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import { Settings, EditorTheme, AppState, GeneratedCodeConfig } from "./types";
-import { IS_RUNNING_ON_CLOUD } from "./config";
-import OnboardingNote from "./components/OnboardingNote";
-// import { UrlInputSection } from "./components/UrlInputSection";
 import html2canvas from "html2canvas";
-import { History } from "./components/history/history_types";
 import HistoryDisplay from "./components/history/HistoryDisplay";
 import { extractHistoryTree } from "./components/history/utils";
 import toast from "react-hot-toast";
@@ -33,20 +25,14 @@ import NativePreview from './components/NativeMobile';
 import UpdateChatInput from './components/chatInput/Update';
 import dynamic from "next/dynamic";
 import {getPartCodeUid} from './compiler';
-// import CodeTab from "./components/CodeTab";
+import { useDebounceFn } from 'ahooks';
+
 const CodeTab = dynamic(
   async () => (await import("./components/CodeTab")),
   {
     ssr: false,
   },
 )
-
-// const Whiteboard = dynamic(
-//   async () => (await import("./components/Whiteboard")),
-//   {
-//     ssr: false,
-//   },
-// )
 
 const PreviewBox = dynamic(
   async () => (await import("../engine")),
@@ -55,34 +41,46 @@ const PreviewBox = dynamic(
   },
 )
 
-const IS_OPENAI_DOWN = false;
-let firstRun = true;
-
 function App() {
   const [appState, setAppState] = useState<AppState>(AppState.INITIAL);
   const [generatedCode, setGeneratedCode] = useState<string>('');
 
   const [referenceImages, setReferenceImages] = useState<string[]>([]);
+  const [referenceText, setReferenceText] = useState<string>('');
   const [executionConsole, setExecutionConsole] = useState<string[]>([]);
   const [updateInstruction, setUpdateInstruction] = useState("");
   const {
-    dataUrls
+    dataUrls,
+    setDataUrls,
   } = useContext(UploadFileContext)
   
   // Settings
-  const {settings, setSettings} = useContext(SettingContext);
+  const {settings, setSettings, initCreate, setInitCreate, initCreateText, setInitCreateText} = useContext(SettingContext);
 
   const {history, addHistory,  currentVersion, setCurrentVersion,} = useContext(HistoryContext);
 
-
-  // App history
-  const [appHistory, setAppHistory] = useState<History>([]);
   // Tracks the currently shown version from app history
 
   const [shouldIncludeResultImage, setShouldIncludeResultImage] =
     useState<boolean>(false);
 
   const wsRef = useRef<AbortController>(null);
+  const initFn = useDebounceFn(() => {
+    if (dataUrls.length) {
+      doCreate(dataUrls, '');
+      setDataUrls([]);
+    }
+  }, {
+    wait: 300
+  });
+  const initTextFn = useDebounceFn(() => {
+    if (initCreateText) {
+      doCreate([], initCreateText);
+      setInitCreateText('');
+    }
+  }, {
+    wait: 300
+  });
 
   // When the user already has the settings in local storage, newly added keys
   // do not get added to the settings so if it's falsy, we populate it with the default
@@ -98,15 +96,19 @@ function App() {
   }, [settings.generatedCodeConfig, setSettings]);
 
   useEffect(() => {
-    if (dataUrls.length && firstRun) {
-      doCreate(dataUrls);
-      firstRun = false;
+    if (dataUrls.length && initCreate) {
+      initFn.run();
+      setInitCreate(false);
     }
-  }, []);
+    if (initCreateText && initCreate) {
+      initTextFn.run();
+      setInitCreate(false);
+    }
+  }, [initCreate]);
 
   const takeScreenshot = async (): Promise<string> => {
     const iframeElement = document.querySelector(
-      "#preview-desktop"
+      ".lc-simulator-content-frame"
     ) as HTMLIFrameElement;
     if (!iframeElement?.contentWindow?.document.body) {
       return "";
@@ -139,7 +141,6 @@ function App() {
     setGeneratedCode("");
     setReferenceImages([]);
     setExecutionConsole([]);
-    setAppHistory([]);
   };
 
   const stop = () => {
@@ -165,7 +166,7 @@ function App() {
       (token) => setGeneratedCode((prev) => prev + token),
       (code) => {
         setGeneratedCode(code);
-        addHistory(params.generationType, updateInstruction, referenceImages, code);
+        addHistory(params.generationType, updateInstruction, referenceImages, referenceText, code);
       },
       (line) => setExecutionConsole((prev) => [...prev, line]),
       () => {
@@ -175,16 +176,19 @@ function App() {
   }
 
   // Initial version creation
-  function doCreate(referenceImages: string[]) {
+  function doCreate(referenceImages: string[], text: string) {
     // Reset any existing state
     reset();
 
     setReferenceImages(referenceImages);
-    if (referenceImages.length > 0) {
+    setReferenceText(text);
+
+    if (referenceImages.length > 0 || text) {
       doGenerateCode(
         {
           generationType: "create",
           image: referenceImages[0],
+          text,
         },
         currentVersion
       );
@@ -211,6 +215,7 @@ function App() {
         {
           generationType: "update",
           image: referenceImages[0],
+          text: referenceText,
           resultImage: resultImage,
           history: updatedHistory,
         },
@@ -221,6 +226,7 @@ function App() {
         {
           generationType: "update",
           image: referenceImages[0],
+          text: referenceText,
           history: updatedHistory,
         },
         currentVersion
@@ -246,7 +252,7 @@ Re-enter the code.
   useEffect(() => {
     const errorUpdate = updateInstruction.includes('Fix the code error and re-output the code');
     const partUpdate = updateInstruction.includes('Re-enter the code.');
-    if (errorUpdate || partUpdate) {
+    if (errorUpdate || partUpdate || updateInstruction) {
       doUpdate();
     }
   }, [
@@ -268,36 +274,9 @@ ${error.stack}
 
   return (
     <div className="dark:bg-black dark:text-white h-full">
-      <div className="lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex grow flex-col gap-y-2 overflow-y-auto border-r border-gray-200 bg-white px-6 dark:bg-zinc-950 dark:text-white">
-          <div className="flex items-center justify-between mb-2 mt-2">
-            <div className="flex">
-            {appState === AppState.CODE_READY && (
-              <>
-                <span
-                    onClick={reset}
-                    className="hover:bg-slate-200 p-2 rounded-sm"                  >
-                    <FaUndo />
-                    {/* Reset */}
-                </span>
-                <span
-                  onClick={downloadCode}
-                  className="hover:bg-slate-200 p-2 rounded-sm"
-                >
-                  <FaDownload />
-                </span>
-              </>
-            )}
-            </div>
-          </div>
-
-          {IS_OPENAI_DOWN && (
-            <div className="bg-black text-white dark:bg-white dark:text-black p-3 rounded">
-              OpenAI API is currently down. Try back in 30 minutes or later. We
-              apologize for the inconvenience.
-            </div>
-          )}
-
+ 
+      <div className="lg:fixed lg:inset-y-0 lg:z-40 lg:flex w-[200px] lg:flex-col">
+        <div className="flex grow flex-col gap-y-2 overflow-y-auto border-r border-gray-200 bg-white px-4 py-4 dark:bg-zinc-950 dark:text-white">
           {(appState === AppState.CODING ||
             appState === AppState.CODE_READY) && (
             <>
@@ -319,50 +298,46 @@ ${error.stack}
                 </div>
               )}
 
-              {appState === AppState.CODE_READY && (
-                <div>
-                  <div className="grid w-full gap-2">
-                    <Textarea
-                      placeholder="Tell the AI what to change..."
-                      onChange={(e) => setUpdateInstruction(e.target.value)}
-                      value={updateInstruction}
-                    />
-                    <div className="flex justify-between items-center gap-x-2">
-                      <div className="font-500 text-xs text-slate-700 dark:text-white">
-                        Include screenshot of current version?
-                      </div>
-                      <Switch
-                        checked={shouldIncludeResultImage}
-                        onCheckedChange={setShouldIncludeResultImage}
-                        className="dark:bg-gray-700"
-                      />
+              <div>
+                <div className="grid w-full gap-2">
+                  {/* <Textarea
+                    placeholder="Tell the AI what to change..."
+                    onChange={(e) => setUpdateInstruction(e.target.value)}
+                    value={updateInstruction}
+                  /> */}
+                  <div className="flex justify-between items-center gap-x-2">
+                    <div className="font-500 text-xs text-slate-700 dark:text-white">
+                      Include screenshot of current version?
                     </div>
-                    <Button
-                      onClick={doUpdate}
-                      className="dark:text-white dark:bg-gray-700"
-                    >
-                      Update
-                    </Button>
+                    <Switch
+                      checked={shouldIncludeResultImage}
+                      onCheckedChange={setShouldIncludeResultImage}
+                      className="dark:bg-gray-700"
+                    />
                   </div>
                 </div>
-              )}
+              </div>
 
               {/* Reference image display */}
-              <div className="flex gap-x-2 mt-2">
+              <div className="flex flex-col mt-2">
                 <div className="flex flex-col">
-                  <div
-                    className={classNames({
-                      "scanning relative": appState === AppState.CODING,
-                    })}
-                  >
-                    <img
-                      className="w-[340px] border border-gray-200 rounded-md"
-                      src={referenceImages[0]}
-                      alt="Reference"
-                    />
+                  <div>
+                    {referenceText ? (
+                      <div className="border p-1 border-slate-200 w-full rounded bg-[#ebebeb]">
+                        <p className="text-sm">
+                          {referenceText}
+                        </p>
+                      </div>
+                    ) : (
+                        <img
+                          className="w-[340px] border border-gray-200 rounded-md"
+                          src={referenceImages[0]}
+                          alt="Reference"
+                        />
+                    )}
                   </div>
                   <div className="text-gray-400 uppercase text-sm text-center mt-1">
-                    Original Screenshot
+                    Original Info
                   </div>
                 </div>
                 <div className="bg-gray-400 px-4 py-2 rounded text-sm hidden">
@@ -383,25 +358,37 @@ ${error.stack}
           )}
           {
             <HistoryDisplay
-              history={appHistory}
+              history={history}
               currentVersion={currentVersion}
               revertToVersion={(index) => {
                 if (
                   index < 0 ||
-                  index >= appHistory.length ||
-                  !appHistory[index]
+                  index >= history.length ||
+                  !history[index]
                 )
                   return;
                 setCurrentVersion(index);
-                setGeneratedCode(appHistory[index].code);
+                setGeneratedCode(history[index].code);
               }}
               shouldDisableReverts={appState === AppState.CODING}
             />
           }
         </div>
       </div>
-      <main className="pl-64 relative h-full flex flex-col pb-10">
-          <div className="ml-4 w-[80%] ml-[10%] flex-1">
+      <main className="pl-[200px] relative h-full flex flex-col pb-10">
+          <div className="ml-4 w-[80%] ml-[10%] flex-1 mt-4">
+            <div className="flex absolute">
+            {appState === AppState.CODE_READY && (
+              <>
+                <span
+                  onClick={downloadCode}
+                  className="hover:bg-slate-200 p-2 rounded-sm"
+                >
+                  <FaDownload />
+                </span>
+              </>
+            )}
+            </div>
             <Tabs className="h-full flex flex-col" defaultValue={settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop'}>
               <div className="flex justify-end mr-8 mb-4">
                 <TabsList>
@@ -414,9 +401,6 @@ ${error.stack}
                       <>
                         <TabsTrigger value="desktop" className="flex gap-x-2">
                           <FaDesktop /> Desktop
-                        </TabsTrigger>
-                        <TabsTrigger value="mobile" className="flex gap-x-2">
-                          <FaMobile /> Mobile
                         </TabsTrigger>
                       </>
                     )
@@ -441,11 +425,9 @@ ${error.stack}
                         sendMessageChange={(data) => {
                           doPartUpdate(data);
                         }}
+                        history={history}
                       />
                       {/* <Preview code={generatedCode} device="desktop" appState={appState} fixBug={fixBug}/> */}
-                    </TabsContent>
-                    <TabsContent value="mobile">
-                      <Preview code={generatedCode} device="mobile" appState={appState} fixBug={fixBug}/>
                     </TabsContent>
                   </>
                 )
@@ -461,7 +443,9 @@ ${error.stack}
           </div>
           <div className="flex justify-center mt-10">
             <div className="w-[520px] rounded-md shadow-sm ">
-              <UpdateChatInput />
+              <UpdateChatInput updateSendMessage={(message: string) => {
+                setUpdateInstruction(message)
+              }}/>
             </div>
           </div>
       </main>

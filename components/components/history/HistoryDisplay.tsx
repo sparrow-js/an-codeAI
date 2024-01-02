@@ -36,24 +36,17 @@ export default function HistoryDisplay({
 }: Props) {
   return history && history.length === 0 ? null : (
     <div className="flex flex-col h-screen">
-      <h1 className="font-bold mb-2">Versions</h1>
-      <ul className="space-y-0 flex flex-col-reverse">
+      <h1 className="font-bold mb-2">History</h1>
+      <ul className="space-y-2 flex flex-col">
         {history && history.map((item, index) => (
-          <li key={index}>
-            <div className="bg-cover bg-center w-full h-[120px]" style={
-              {
-                backgroundImage: 'url(https://placehold.co/600x400/png)'
-              }
-            }></div>
+          <li className="bg-white rounded-lg hover:border-slate-900 border border-slate-300 bor overflow-hidden" key={index}>
             <HoverCard>
               <HoverCardTrigger
                 className={classNames(
-                  "flex items-center justify-between space-x-2 p-2",
+                  "rounded-lg flex items-center justify-between space-x-2 flex-col",
                   "border-b cursor-pointer",
                   {
-                    " hover:bg-black hover:text-white":
-                      index !== currentVersion,
-                    "bg-slate-500 text-white": index === currentVersion,
+                   'text-block border-2 border-solid border-blue-500': index === currentVersion,
                   }
                 )}
                 onClick={() =>
@@ -65,10 +58,13 @@ export default function HistoryDisplay({
                 }
               >
                 {" "}
+                <div className="bg-[length:160px_100px] bg-no-repeat bg-center w-full h-[80px]" 
+                  style={
+                    {
+                      backgroundImage: `url(${item.screenshot || 'https://placehold.co/600x400/png'})`
+                    }
+                  }></div>
                 <div className="flex gap-x-1 truncate">
-                  <h2 className="text-sm truncate">
-                    {item.type === "ai_edit" ? item.inputs.prompt : "Create"}
-                  </h2>
                   {/* <h2 className="text-sm">{displayHistoryItemType(item.type)}</h2> */}
                   {item.parentIndex !== null &&
                   item.parentIndex !== index - 1 ? (
@@ -76,14 +72,13 @@ export default function HistoryDisplay({
                       (parent: v{(item.parentIndex || 0) + 1})
                     </h2>
                   ) : null}
+                  <h2 className="text-sm">v{index + 1}</h2>
                 </div>
-                <h2 className="text-sm">v{index + 1}</h2>
               </HoverCardTrigger>
               <HoverCardContent>
                 <div>
                   {item.type === "ai_edit" ? item.inputs.prompt : "Create"}
                 </div>
-                <Badge>{displayHistoryItemType(item.type)}</Badge>
               </HoverCardContent>
             </HoverCard>
           </li>

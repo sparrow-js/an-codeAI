@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import ImageUpload from "./components/ImageUpload";
+import { useEffect, useRef, useState, useContext } from "react";
 import CodePreview from "./components/CodePreview";
 import Preview from "./components/Preview";
 import { CodeGenerationParams, generateCode } from "./generateCode";
@@ -12,76 +11,73 @@ import {
   FaDownload,
   FaMobile,
   FaUndo,
-  FaCloudUploadAlt,
 } from "react-icons/fa";
 
 import { Switch } from "./components/ui/switch";
 import { Button } from "./components/ui/button";
 import { Textarea } from "./components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
-import SettingsDialog from "./components/SettingsDialog";
 import { Settings, EditorTheme, AppState, GeneratedCodeConfig } from "./types";
 import { IS_RUNNING_ON_CLOUD } from "./config";
 import OnboardingNote from "./components/OnboardingNote";
-import { usePersistedState } from "./hooks/usePersistedState";
 // import { UrlInputSection } from "./components/UrlInputSection";
 import html2canvas from "html2canvas";
-import { USER_CLOSE_WEB_SOCKET_CODE } from "./constants";
-import CodeTab from "./components/CodeTab";
-import OutputSettingsSection from "./components/OutputSettingsSection";
 import { History } from "./components/history/history_types";
 import HistoryDisplay from "./components/history/HistoryDisplay";
 import { extractHistoryTree } from "./components/history/utils";
 import toast from "react-hot-toast";
-import PromptPanel from './components/PromptPanel';
-
+import {UploadFileContext} from './contexts/UploadFileContext';
+import {SettingContext} from './contexts/SettingContext';
+import {HistoryContext} from './contexts/HistoryContext';
 import NativePreview from './components/NativeMobile';
-import Header from "./components/Header";
-
+import UpdateChatInput from './components/chatInput/Update';
 import dynamic from "next/dynamic";
+import {getPartCodeUid} from './compiler';
+// import CodeTab from "./components/CodeTab";
+const CodeTab = dynamic(
+  async () => (await import("./components/CodeTab")),
+  {
+    ssr: false,
+  },
+)
 
-const Whiteboard = dynamic(
-  async () => (await import("./components/Whiteboard")),
+// const Whiteboard = dynamic(
+//   async () => (await import("./components/Whiteboard")),
+//   {
+//     ssr: false,
+//   },
+// )
+
+const PreviewBox = dynamic(
+  async () => (await import("../engine")),
   {
     ssr: false,
   },
 )
 
 const IS_OPENAI_DOWN = false;
+let firstRun = true;
 
 function App() {
   const [appState, setAppState] = useState<AppState>(AppState.INITIAL);
-  const [generatedCode, setGeneratedCode] = useState<string>("");
+  const [generatedCode, setGeneratedCode] = useState<string>('');
 
   const [referenceImages, setReferenceImages] = useState<string[]>([]);
   const [executionConsole, setExecutionConsole] = useState<string[]>([]);
   const [updateInstruction, setUpdateInstruction] = useState("");
-  const [showImageUpload, setShowImageUpload] = useState<boolean>(true);
-  const [showPreview, setShowPreview] = useState<boolean>(true);
-
+  const {
+    dataUrls
+  } = useContext(UploadFileContext)
+  
   // Settings
-  const [settings, setSettings] = usePersistedState<Settings>(
-    {
-      openAiApiKey: null,
-      openAiBaseURL: null,
-      screenshotOneApiKey: null,
-      isImageGenerationEnabled: true,
-      editorTheme: EditorTheme.COBALT,
-      generatedCodeConfig: GeneratedCodeConfig.HTML_TAILWIND,
-      // Only relevant for hosted version
-      isTermOfServiceAccepted: false,
-      accessCode: null,
-      mockAiResponse: false,
-      promptCode: '',
-      init: false,
-    },
-    "setting"
-  );
+  const {settings, setSettings} = useContext(SettingContext);
+
+  const {history, addHistory,  currentVersion, setCurrentVersion,} = useContext(HistoryContext);
+
 
   // App history
   const [appHistory, setAppHistory] = useState<History>([]);
   // Tracks the currently shown version from app history
-  const [currentVersion, setCurrentVersion] = useState<number | null>(null);
 
   const [shouldIncludeResultImage, setShouldIncludeResultImage] =
     useState<boolean>(false);
@@ -93,13 +89,20 @@ function App() {
   // value
   useEffect(() => {
     if (!settings.generatedCodeConfig) {
-      setSettings((prev) => ({
-        ...prev,
+      setSettings({
+        ...settings,
         generatedCodeConfig: GeneratedCodeConfig.HTML_TAILWIND,
-      }));
+      });
     }
     
   }, [settings.generatedCodeConfig, setSettings]);
+
+  useEffect(() => {
+    if (dataUrls.length && firstRun) {
+      doCreate(dataUrls);
+      firstRun = false;
+    }
+  }, []);
 
   const takeScreenshot = async (): Promise<string> => {
     const iframeElement = document.querySelector(
@@ -162,41 +165,7 @@ function App() {
       (token) => setGeneratedCode((prev) => prev + token),
       (code) => {
         setGeneratedCode(code);
-        if (params.generationType === "create") {
-          setAppHistory([
-            {
-              type: "ai_create",
-              parentIndex: null,
-              code,
-              inputs: { image_url: referenceImages[0] },
-            },
-          ]);
-          setCurrentVersion(0);
-        } else {
-          setAppHistory((prev) => {
-            // Validate parent version
-            if (parentVersion === null) {
-              toast.error(
-                "No parent version set. Contact support or open a Github issue."
-              );
-              return prev;
-            }
-
-            const newHistory: History = [
-              ...prev,
-              {
-                type: "ai_edit",
-                parentIndex: parentVersion,
-                code,
-                inputs: {
-                  prompt: updateInstruction,
-                },
-              },
-            ];
-            setCurrentVersion(newHistory.length - 1);
-            return newHistory;
-          });
-        }
+        addHistory(params.generationType, updateInstruction, referenceImages, code);
       },
       (line) => setExecutionConsole((prev) => [...prev, line]),
       () => {
@@ -223,7 +192,7 @@ function App() {
   }
 
   // Subsequent updates
-  async function doUpdate() {
+  async function doUpdate(partData?: any) {
     if (currentVersion === null) {
       toast.error(
         "No current version set. Contact support or open a Github issue."
@@ -232,7 +201,7 @@ function App() {
     }
 
     const updatedHistory = [
-      ...extractHistoryTree(appHistory, currentVersion),
+      ...extractHistoryTree(history, currentVersion),
       updateInstruction,
     ];
 
@@ -261,9 +230,23 @@ function App() {
     setGeneratedCode("");
     setUpdateInstruction("");
   }
+
+  async function doPartUpdate(partData?: any) {
+    const {uid, message} = partData;
+    const code = getPartCodeUid(uid);
+    const updatePrompt = `
+Change ${code} as follows:
+${message}
+Re-enter the code.
+    `;
+    setUpdateInstruction(updatePrompt);
+  }
+
   
   useEffect(() => {
-    if (updateInstruction.includes('Fix the code error and re-output the code')) {
+    const errorUpdate = updateInstruction.includes('Fix the code error and re-output the code');
+    const partUpdate = updateInstruction.includes('Re-enter the code.');
+    if (errorUpdate || partUpdate) {
       doUpdate();
     }
   }, [
@@ -285,25 +268,9 @@ ${error.stack}
 
   return (
     <div className="dark:bg-black dark:text-white h-full">
-      <div className="lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-96 lg:flex-col">
+      <div className="lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-64 lg:flex-col">
         <div className="flex grow flex-col gap-y-2 overflow-y-auto border-r border-gray-200 bg-white px-6 dark:bg-zinc-950 dark:text-white">
-          <div className="bg-white flex justify-between p-2 pl-4 border-b-[1px] border-r-[1px] fixed left-0 lg:w-96 z-[49]">
-            <h1 className="text-2xl ">Ant CodeAI</h1>
-            <Header />
-          </div>
-          <div className="flex items-center justify-between mb-2 mt-16">
-            <OutputSettingsSection
-              generatedCodeConfig={settings.generatedCodeConfig}
-              setGeneratedCodeConfig={(config: GeneratedCodeConfig) =>
-                setSettings((prev) => ({
-                  ...prev,
-                  generatedCodeConfig: config,
-                }))
-              }
-              shouldDisableUpdates={
-                appState === AppState.CODING || appState === AppState.CODE_READY
-              }
-            />
+          <div className="flex items-center justify-between mb-2 mt-2">
             <div className="flex">
             {appState === AppState.CODE_READY && (
               <>
@@ -320,9 +287,7 @@ ${error.stack}
                   <FaDownload />
                 </span>
               </>
-          
             )}
-              <SettingsDialog settings={settings} setSettings={setSettings} />
             </div>
           </div>
 
@@ -416,7 +381,6 @@ ${error.stack}
               </div>
             </>
           )}
-          <PromptPanel settings={settings} setSettings={setSettings} />
           {
             <HistoryDisplay
               history={appHistory}
@@ -436,59 +400,9 @@ ${error.stack}
           }
         </div>
       </div>
-      {/* {classNames(
-            "absolute left-[50%] -ml-[300px] z-[4] flex flex-col justify-center items-center gap-y-10 w-[600px] top-32",
-            {"hidden": !showImageUpload}
-          )} */}
-      <main className="lg:ml-96 relative h-full">
-      
-          <div className={
-            classNames(
-              "h-full",
-              {"hidden": !(appState === AppState.INITIAL)}
-            )
-          }
-          onClick={() => {
-            setShowImageUpload(false);
-          }}>
-            <Whiteboard doCreate={doCreate}/>
-          </div>
-      
-        {
-          appState === AppState.INITIAL && (
-            <div className="absolute top-20 right-10 z-[10]">
-              <div  
-                onClick={() => setShowImageUpload(!showImageUpload)}
-                className="flex justify-center items-center w-12 h-12 rounded-full ring-2 ring-gray-900 hover:bg-slate-200 text-gray-800 size-2 mb-2"
-              >
-                <FaCloudUploadAlt />
-              </div>
-            </div>
-          )
-        }
-        {appState === AppState.INITIAL && (
-          <div className={classNames(
-            "absolute left-[50%] -ml-[300px] z-[4] flex flex-col justify-center items-center gap-y-10 w-[600px] top-32",
-            {"hidden": !showImageUpload}
-          )}>
-            <ImageUpload setReferenceImages={doCreate} />
-            {/* <UrlInputSection
-              doCreate={doCreate}
-              screenshotOneApiKey={settings.screenshotOneApiKey}
-            /> */}
-          </div>
-        )}
-
-        {(appState === AppState.CODING || appState === AppState.CODE_READY) && showPreview && (
-          <div className="ml-4 absolute top-5 z-[10] w-[80%] ml-[10%]">
-            {
-              appState === AppState.CODING && (
-                <div className="w-[160px] absolute top-20 z-[1] left-[50%] -ml-[80px]">
-                  <CodePreview code={generatedCode} />
-                </div>
-              )
-            }
-            <Tabs defaultValue={settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop'}>
+      <main className="pl-64 relative h-full flex flex-col pb-10">
+          <div className="ml-4 w-[80%] ml-[10%] flex-1">
+            <Tabs className="h-full flex flex-col" defaultValue={settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop'}>
               <div className="flex justify-end mr-8 mb-4">
                 <TabsList>
                   {
@@ -521,7 +435,14 @@ ${error.stack}
                 ) : (
                   <>
                     <TabsContent value="desktop">
-                      <Preview code={generatedCode} device="desktop" appState={appState} fixBug={fixBug}/>
+                      <PreviewBox  
+                        code={generatedCode}
+                        appState={appState}
+                        sendMessageChange={(data) => {
+                          doPartUpdate(data);
+                        }}
+                      />
+                      {/* <Preview code={generatedCode} device="desktop" appState={appState} fixBug={fixBug}/> */}
                     </TabsContent>
                     <TabsContent value="mobile">
                       <Preview code={generatedCode} device="mobile" appState={appState} fixBug={fixBug}/>
@@ -538,17 +459,13 @@ ${error.stack}
               </TabsContent>
             </Tabs>
           </div>
-        )}
-      </main>
-      {
-        IS_RUNNING_ON_CLOUD &&
-        !(settings.openAiApiKey) && settings.init && (
-          <div className="fixed left-[20px] bottom-[20px] z-[49]">
-            <OnboardingNote />
+          <div className="flex justify-center mt-10">
+            <div className="w-[520px] rounded-md shadow-sm ">
+              <UpdateChatInput />
+            </div>
           </div>
-        )
-      }
-     
+      </main>
+   
     </div>
   );
 }

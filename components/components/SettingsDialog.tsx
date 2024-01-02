@@ -16,7 +16,7 @@ import { Input } from "./ui/input";
 
 interface Props {
   settings: Settings;
-  setSettings: React.Dispatch<React.SetStateAction<Settings>>;
+  setSettings: (newState: Settings) => void;
 }
 
 function SettingsDialog({ settings, setSettings }: Props) {
@@ -29,7 +29,7 @@ function SettingsDialog({ settings, setSettings }: Props) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="mb-4 ">Settings</DialogTitle>
+          <DialogTitle className="mb-4">Settings</DialogTitle>
         </DialogHeader>
 
         {/* <div className="flex items-center space-x-2">
@@ -64,10 +64,10 @@ function SettingsDialog({ settings, setSettings }: Props) {
             placeholder="OpenAI API key"
             value={settings?.openAiApiKey || ""}
             onChange={(e) =>
-              setSettings((s) => ({
-                ...s,
+              setSettings({
+                ...settings,
                 openAiApiKey: e.target.value,
-              }))
+              })
             }
           />
 
@@ -85,10 +85,10 @@ function SettingsDialog({ settings, setSettings }: Props) {
                 placeholder="OpenAI Base URL"
                 value={settings?.openAiBaseURL || ""}
                 onChange={(e) =>
-                  setSettings((s) => ({
-                    ...s,
+                  setSettings({
+                    ...settings,
                     openAiBaseURL: e.target.value,
-                  }))
+                  })
                 }
               />
             </>
@@ -106,10 +106,10 @@ function SettingsDialog({ settings, setSettings }: Props) {
             id="image-generation"
             checked={settings?.mockAiResponse}
             onCheckedChange={() =>
-              setSettings((s) => ({
-                ...s,
-                mockAiResponse: !s.mockAiResponse,
-              }))
+              setSettings({
+                ...settings,
+                mockAiResponse: !settings.mockAiResponse,
+              })
             }
           />
         </div>

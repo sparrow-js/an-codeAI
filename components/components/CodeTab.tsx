@@ -4,7 +4,11 @@ import { Settings } from "../types";
 import copy from "copy-to-clipboard";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
+import * as monaco from 'monaco-editor';
 import Editor from '@monaco-editor/react';
+import { loader } from '@monaco-editor/react';
+
+loader.config({ monaco });
 
 interface Props {
   code: string;
@@ -79,7 +83,7 @@ function CodeTab({ code, setCode, settings }: Props) {
       <Editor
         height="70vh" 
         defaultLanguage="html" 
-        defaultValue="// some comment" 
+        defaultValue="" 
         value={code}
         onChange={(value) => {
           setCode(value as string)

@@ -23,8 +23,7 @@ import { toast } from "react-hot-toast";
 
 interface Props {
     settings: Settings;
-    setSettings: React.Dispatch<React.SetStateAction<Settings>>;
-}
+    setSettings: (newState: Settings) => void;}
 
 function PromptPanel({settings, setSettings}: Props) {
     const [selectedId, setSelectedId] = useState<string>('');
@@ -54,27 +53,27 @@ function PromptPanel({settings, setSettings}: Props) {
     useEffect(() => {
         if (selectedId) {
             const prompt = getPromptById(selectedId);
-            setSettings((prev) => ({
-                ...prev,
+            setSettings({
+                ...settings,
                 promptCode: prompt ? prompt.prompt : '',
-            }));
+            });
         } else  {
-            setSettings((prev) => ({
-                ...prev,
+            setSettings({
+                ...settings,
                 promptCode: '',
-            }));
+            });
         }
     }, [selectedId]);
 
     useEffect(() => {
-        setSettings((prev) => ({
-            ...prev,
+        setSettings({
+            ...settings,
             promptCode: '',
-        }));
+        });
 
         setSelectedId('');
         
-    }, [settings?.generatedCodeConfig, setSettings]);
+    }, [settings?.generatedCodeConfig]);
 
     const updatePromptHandler = (e: any, id: string) => {
         e.stopPropagation();
@@ -84,9 +83,8 @@ function PromptPanel({settings, setSettings}: Props) {
     }
     
     return (
-        <div className="relative">
-            <div className="grid grid-cols-2 gap-4">
-                <div className="border-dashed border-2 border-gray-300 p-6 rounded-lg flex justify-center items-center hover:shadow-lg">
+        <div className="mb-8 gap-5 py-4 [column-count:1] md:mb-12 md:[column-count:2] lg:mb-16 lg:[column-count:3]">
+            <div className="h-[230px] border-dashed border-2 border-gray-300 p-6 rounded-lg flex justify-center items-center hover:shadow-lg">
                 <Dialog open={showDialog} onOpenChange={setShowDialog}>
                     <DialogTrigger
                         className="w-full h-full"
@@ -171,51 +169,50 @@ function PromptPanel({settings, setSettings}: Props) {
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>          
-                </div>
-                {
-                    promptList.map((prompt) => {
-                        if (prompt.type === (settings && settings.generatedCodeConfig)) {
-                            return (
-                                <div 
-                                    key={prompt.id} 
-                                    onClick={async () => {
-                                        if (selectedId === prompt.id) {
-                                            setSelectedId('');
-                                        } else {
-                                            setSelectedId(prompt.id)
-                                        }            
-                                    }}
-                                    className={
-                                        classNames(
-                                            "bg-white rounded-lg hover:shadow-lg shadow overflow-hidden h-[230px]",
-                                            selectedId === prompt.id ? 'border-2 border-solid border-emerald-500' : ''
-                                        )
-                                    }>
-                                    <img className="w-full h-[106px]" src={prompt.imgUrl} alt="Placeholder image with various geometric shapes and ANT DESIGN logo" />
-                                    <div className="p-2 border-t border-gray-200 h-[80px]">
-                                        <p className="font-bold">{prompt.name}</p>
-                                        <p className="text-gray-700 text-sm line-clamp-2">{prompt.des}</p>
-                                    </div>
-                                    <div className="flex p-3">
-                                        <span className="mr-2" onClick={(e) => {
-                                            updatePromptHandler(e, prompt.id)
-                                        }}>
-                                            <FaHammer className="hover:text-emerald-500"/>
-                                        </span>
-                                        <span onClick={() => {
-                                            removePrompt(prompt.id);
-                                        }}>
-                                            <FaTrashAlt className="hover:text-red-500"/>
-                                        </span>
-                                    </div>
-                                </div>
-                            )
-                        } else {
-                            return null;
-                        }
-                    })
-                }
             </div>
+            {
+                promptList.map((prompt) => {
+                    if (prompt.type === (settings && settings.generatedCodeConfig)) {
+                        return (
+                            <div 
+                                key={prompt.id} 
+                                onClick={async () => {
+                                    if (selectedId === prompt.id) {
+                                        setSelectedId('');
+                                    } else {
+                                        setSelectedId(prompt.id)
+                                    }            
+                                }}
+                                className={
+                                    classNames(
+                                        "bg-white rounded-lg hover:shadow-lg shadow overflow-hidden h-[230px]",
+                                        selectedId === prompt.id ? 'border-2 border-solid border-emerald-500' : ''
+                                    )
+                                }>
+                                <img className="w-full h-[106px]" src={prompt.imgUrl} alt="Placeholder image with various geometric shapes and ANT DESIGN logo" />
+                                <div className="p-2 border-t border-gray-200 h-[80px]">
+                                    <p className="font-bold">{prompt.name}</p>
+                                    <p className="text-gray-700 text-sm line-clamp-2">{prompt.des}</p>
+                                </div>
+                                <div className="flex p-3">
+                                    <span className="mr-2" onClick={(e) => {
+                                        updatePromptHandler(e, prompt.id)
+                                    }}>
+                                        <FaHammer className="hover:text-emerald-500"/>
+                                    </span>
+                                    <span onClick={() => {
+                                        removePrompt(prompt.id);
+                                    }}>
+                                        <FaTrashAlt className="hover:text-red-500"/>
+                                    </span>
+                                </div>
+                            </div>
+                        )
+                    } else {
+                        return null;
+                    }
+                })
+            }
         </div>
     )
 }

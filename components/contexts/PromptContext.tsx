@@ -13,7 +13,7 @@ export type PromptType = {
     type: GeneratedCodeConfig
 }
 
-interface locationContextType {
+interface promptContextType {
     promptList: Array<PromptType>,
     save: () => void;
     addPrompt: (prompt: PromptType) => void;
@@ -40,7 +40,7 @@ export interface PromptState{
     promptList: Array<PromptType>
 }
 
-export const promptContext = createContext<locationContextType>(initialValue);
+export const promptContext = createContext<promptContextType>(initialValue);
 export default function PromptProvider({ children }: { children: ReactNode }) {
 
     const [promptList, setPromptList] = useState<PromptType[]>([]);

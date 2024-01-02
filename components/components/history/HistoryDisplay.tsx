@@ -40,6 +40,11 @@ export default function HistoryDisplay({
       <ul className="space-y-0 flex flex-col-reverse">
         {history && history.map((item, index) => (
           <li key={index}>
+            <div className="bg-cover bg-center w-full h-[120px]" style={
+              {
+                backgroundImage: 'url(https://placehold.co/600x400/png)'
+              }
+            }></div>
             <HoverCard>
               <HoverCardTrigger
                 className={classNames(

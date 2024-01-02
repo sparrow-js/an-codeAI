@@ -196,93 +196,48 @@ export const NO_IMAGES_NYTIMES_MOCK_CODE = `
 `;
 
 const REACT_ANTD_MOCK_CODE = `
-<html>
+<html lang="en">
 <head>
-  <title>Registration Form</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Projects</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
-<body>
-  <div id="root"></div>
-
-  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
-  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
-  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
-  <script src="https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js"></script>
-  <script src="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.js"></script>
-  
-  <script type="text/babel">
-    const { Form, Input, Cascader, Checkbox, Button,  Select} = antd;
-
-    const residenceOptions = [
-      {
-        value: 'zhejiang',
-        label: 'Zhejiang',
-        children: [
-          {
-            value: 'hangzhou',
-            label: 'Hangzhou',
-            children: [
-              {
-                value: 'westlake',
-                label: 'West Lake',
-              },
-            ],
-          },
-        ],
-      },
-      // ...other province options
-    ];
-
-    function RegistrationForm() {
-      return (
-        <Form
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          layout="horizontal"
-        >
-          <Form.Item label="Nickname" required tooltip="This is a required field">
-            <Input placeholder="" />
-          </Form.Item>
-          <Form.Item label="Habitual Residence" required>
-            <Cascader
-              options={residenceOptions}
-              defaultValue={['zhejiang', 'hangzhou', 'westlake']}
-              placeholder="Please select your habitual residence"
-            />
-          </Form.Item>
-          <Form.Item label="Phone Number" required>
-            <Input addonBefore={<Select defaultValue="+86" style={{ width: 70 }}>
-              {/* Add other country codes as needed */}
-            </Select>} style={{ width: '100%' }} />
-          </Form.Item>
-          <Form.Item label="Donation" required>
-            <Input placeholder="" />
-          </Form.Item>
-          <Form.Item label="Website" required>
-            <Input placeholder="website" />
-          </Form.Item>
-          <Form.Item label="Intro" required>
-            <Input.TextArea showCount maxLength={100} />
-          </Form.Item>
-          <Form.Item label="Gender" required>
-            <Select placeholder="select your gender">
-              {/* Add gender options as needed */}
-            </Select>
-          </Form.Item>
-          <Form.Item label="Captcha" extra="We must make sure that your are a human.">
-            <Input />
-          </Form.Item>
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Checkbox>I have read the agreement</Checkbox>
-          </Form.Item>
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary">Register</Button>
-          </Form.Item>
-        </Form>
-      );
-    }
-
-    ReactDOM.render(<RegistrationForm />, document.getElementById('root'));
-  </script>
+<body class="bg-white text-gray-900">
+    <div class="container mx-auto px-4 py-12">
+        <h1 class="text-5xl font-bold mb-4">Things I've made trying to put my dent in the universe.</h1>
+        <p class="text-lg mb-12">I've worked on tons of little projects over the years but these are the ones that I'm most proud of. Many of them are open-source, so if you see something that piques your interest, check out the code and contribute if you have ideas for how it can be improved.</p>
+        <!-- Repeat for each news item -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="flex flex-col items-center">
+                <img src="https://placehold.co/96x96" alt="Placeholder image for Planetaria project logo" class="mb-4">
+                <h2 class="text-xl font-semibold mb-2">Planetaria</h2>
+                <p class="text-center mb-4">Creating technology to empower civilians to explore space on their own terms.</p>
+                <a href="#" class="text-indigo-600 hover:text-indigo-800 transition-colors">planetaria.tech</a>
+            </div>
+            <!-- Repeat for each news item -->
+            <div class="flex flex-col items-center">
+                <img src="https://placehold.co/96x96" alt="Placeholder image for Animaginary project logo" class="mb-4">
+                <h2 class="text-xl font-semibold mb-2">Animaginary</h2>
+                <p class="text-center mb-4">High performance web animation library, hand-written in optimized WASM.</p>
+                <a href="#" class="text-indigo-600 hover:text-indigo-800 transition-colors">github.com</a>
+            </div>
+            <!-- Repeat for each news item -->
+            <div class="flex flex-col items-center">
+                <img src="https://placehold.co/96x96" alt="Placeholder image for HelioStream project logo" class="mb-4">
+                <h2 class="text-xl font-semibold mb-2">HelioStream</h2>
+                <p class="text-center mb-4">Real-time video streaming library, optimized for interstellar transmission.</p>
+                <a href="#" class="text-indigo-600 hover:text-indigo-800 transition-colors">github.com</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 `;

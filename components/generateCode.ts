@@ -14,6 +14,8 @@ export interface CodeGenerationParams {
   resultImage?: string;
   history?: string[];
   isChunk?: boolean;
+  partData?: any;
+
   // isImageGenerationEnabled: boolean; // TODO: Merge with Settings type in types.ts
 }
 

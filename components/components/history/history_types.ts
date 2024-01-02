@@ -3,6 +3,8 @@ export type HistoryItemType = "ai_create" | "ai_edit";
 type CommonHistoryItem = {
   parentIndex: null | number;
   code: string;
+  originPrompt?: string;
+  screenshot?: string;
 };
 
 export type HistoryItem =

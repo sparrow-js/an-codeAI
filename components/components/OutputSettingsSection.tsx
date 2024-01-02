@@ -86,7 +86,7 @@ function OutputSettingsSection({
 }: Props) {
   return (
     <div className="flex flex-col gap-y-2 justify-between text-sm">
-      <div className="grid grid-cols-3 items-center gap-4">
+      <div className="w-[180px]">
         <Select
           value={generatedCodeConfig}
           onValueChange={(value: string) =>

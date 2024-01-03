@@ -5,8 +5,7 @@ import copy from "copy-to-clipboard";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
 import * as monaco from 'monaco-editor';
-import Editor from '@monaco-editor/react';
-import { loader } from '@monaco-editor/react';
+import Editor, { loader } from '@monaco-editor/react';
 
 loader.config({ monaco });
 

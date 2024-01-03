@@ -6,6 +6,17 @@ import {SettingContext} from '../components/contexts/SettingContext';
 import {UploadFileContext} from '../components/contexts/UploadFileContext'
 import { IS_RUNNING_ON_CLOUD } from "../components/config";
 import { useRouter } from 'next/navigation';
+import classNames from 'classnames';
+
+import dynamic from "next/dynamic";
+const Whiteboard = dynamic(
+    async () => (await import("../components//components/Whiteboard")),
+    {
+      ssr: false,
+    },
+  )
+  
+// Whiteboard
 
 const baseStyle = {
     outline: "none",
@@ -37,8 +48,7 @@ export default function Dashboard() {
         isDragReject, 
         setUploadComplete,
     } = useContext(UploadFileContext);
-    const [chatValue, setChatValue] = useState('');
-    const [lockChat, setLockChat] = useState(false);
+    const [openWhiteboard, setOpenWhiteboard] = useState(false);
     const ref = useRef(null);
     async function sendMessage() {}
     const router = useRouter();
@@ -71,15 +81,12 @@ export default function Dashboard() {
                 <div className="w-full bg-white dark:bg-gray-800 border-t dark:border-t-gray-600 flex-col flex items-center justify-between p-3">
                     <div className="relative mt-72 w-[520px] rounded-md shadow-sm">
                         <ChatInput
-                            chatValue={chatValue}
-                            lockChat={lockChat}
-                            sendMessage={sendMessage}
-                            setChatValue={setChatValue}
-                            inputRef={ref}
+                            openWhiteboard={() => {
+                                setOpenWhiteboard(true);
+                            }}
                         />
                     </div>
-                </div>
-                            
+                </div>                    
                 { IS_RUNNING_ON_CLOUD &&
                     !(settings.openAiApiKey) && settings.init && (
                     <div className="fixed left-[20px] bottom-[20px] z-[49]">
@@ -88,6 +95,22 @@ export default function Dashboard() {
                     )
                 }
             </main>
+            <div 
+                className={classNames(
+                    "fixed w-full h-full top-0 left-0 z-50",
+                    {
+                     'hidden': !openWhiteboard,
+                    }
+                )}
+            >
+                <Whiteboard 
+                    doCreate={() => {
+                    }}
+                    closeWhiteboard={() => {
+                        setOpenWhiteboard(false);
+                    }}
+                />
+            </div>
         </div>
     );
 }

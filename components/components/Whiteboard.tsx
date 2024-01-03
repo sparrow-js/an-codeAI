@@ -3,9 +3,11 @@
 import React, {useState, useEffect, ReactElement} from "react";
 import { FaHourglass } from "react-icons/fa";
 import {Excalidraw, useHandleLibrary, exportToCanvas} from "@excalidraw/excalidraw";
+import { Cross2Icon } from "@radix-ui/react-icons";
 
 interface Props {
     doCreate: (urls: string[]) => void;
+    closeWhiteboard: () => void;
 }
 
 const initialData = {
@@ -13,7 +15,7 @@ const initialData = {
 };
 
 
-function Whiteboard({doCreate}: Props) {
+function Whiteboard({doCreate, closeWhiteboard}: Props) {
   const [excalidrawAPI, setExcalidrawAPI] = useState<any>(null);
   useHandleLibrary({ excalidrawAPI });
 
@@ -48,15 +50,20 @@ function Whiteboard({doCreate}: Props) {
             // @ts-ignore
             <Excalidraw   
               renderTopRightUI={() => (
-                  <>
-
-                    <span className="hover:bg-slate-200 p-2 rounded-sm top-6 flex justify-center items-center">
-                      <FaHourglass  
-                          onClick={exportImg}
-                      />
-                    </span>
-                  </>
-              )}
+                <>
+                  <FaHourglass  
+                      className="mt-[10px]"
+                      onClick={exportImg}
+                  />
+                  <span 
+                      onClick={() => {
+                        closeWhiteboard();
+                      }}
+                      className="hover:bg-slate-200 p-2 absolute right-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                    <Cross2Icon />
+                  </span>
+                </>
+            )}
               // @ts-ignore
               excalidrawAPI={(api) => setExcalidrawAPI(api)}
             >

@@ -18,6 +18,8 @@ export interface IGenerateCodeParams {
   promptCode: string;
   history: any[];
   mockAiResponse?: boolean;
+  llm: string;
+  geminiApiKey: string;
 }
 
 const encoder = new TextEncoder();
@@ -96,6 +98,8 @@ export async function streamGenerateCode(
         {
           openAiApiKey: params.openAiApiKey,
           openAiBaseURL: params.openAiBaseURL,
+          llm: params.llm || 'Gemini',
+          geminiApiKey: params.geminiApiKey || 'AIzaSyBHpr3hWhy3vLvRsfHcgzK8Ff_KkigMd7o',
         },
       );
     } catch (e) {

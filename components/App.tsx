@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState, useContext } from "react";
+import { useEffect, useRef, useState, useContext, useCallback } from "react";
 import { CodeGenerationParams, generateCode } from "./generateCode";
 import Spinner from "./components/Spinner";
 import {
@@ -8,6 +8,7 @@ import {
   FaDownload,
   FaMobile,
   FaUndo,
+  FaCopy,
 } from "react-icons/fa";
 
 import { Switch } from "./components/ui/switch";
@@ -26,6 +27,9 @@ import UpdateChatInput from './components/chatInput/Update';
 import dynamic from "next/dynamic";
 import {getPartCodeUid} from './compiler';
 import { useDebounceFn } from 'ahooks';
+import { useRouter } from 'next/navigation';
+import copy from "copy-to-clipboard";
+
 
 const CodeTab = dynamic(
   async () => (await import("./components/CodeTab")),
@@ -58,11 +62,14 @@ function App() {
   const {settings, setSettings, initCreate, setInitCreate, initCreateText, setInitCreateText} = useContext(SettingContext);
 
   const {history, addHistory,  currentVersion, setCurrentVersion,} = useContext(HistoryContext);
+  const tabValue = useRef<string>(settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop');
 
   // Tracks the currently shown version from app history
 
   const [shouldIncludeResultImage, setShouldIncludeResultImage] =
     useState<boolean>(false);
+
+  const router = useRouter();
 
   const wsRef = useRef<AbortController>(null);
   const initFn = useDebounceFn(() => {
@@ -272,6 +279,49 @@ ${error.stack}
     setUpdateInstruction(errorPrompt);
   }
 
+  const copyCode = useCallback(() => {
+    copy(generatedCode);
+    toast.success("Copied to clipboard");
+  }, [generatedCode]);
+
+
+  
+  const doOpenInCodepenio = useCallback(async () => {
+    // TODO: Update CSS and JS external links depending on the framework being used
+    const data = {
+      html: generatedCode,
+      editors: "100", // 1: Open HTML, 0: Close CSS, 0: Close JS
+      layout: "left",
+      css_external:
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" +
+        (generatedCode.includes("<ion-")
+          ? ",https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css"
+          : ""),
+      js_external:
+        "https://cdn.tailwindcss.com " +
+        (generatedCode.includes("<ion-")
+          ? ",https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js,https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"
+          : ""),
+    };
+
+    // Create a hidden form and submit it to open the code in CodePen
+    // Can't use fetch API directly because we want to open the URL in a new tab
+    const input = document.createElement("input");
+    input.setAttribute("type", "hidden");
+    input.setAttribute("name", "data");
+    input.setAttribute("value", JSON.stringify(data));
+
+    const form = document.createElement("form");
+    form.setAttribute("method", "POST");
+    form.setAttribute("action", "https://codepen.io/pen/define");
+    form.setAttribute("target", "_blank");
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    form.submit();
+  }, [generatedCode]);
+
+
   return (
     <div className="dark:bg-black dark:text-white h-full">
  
@@ -283,10 +333,6 @@ ${error.stack}
               {/* Show code preview only when coding */}
               {appState === AppState.CODING && (
                 <div className="flex flex-col">
-                  <div className="flex items-center gap-x-1">
-                    <Spinner />
-                    {executionConsole.slice(-1)[0]}
-                  </div>
                   <div className="flex mt-4 w-full">
                     <Button
                       onClick={stop}
@@ -377,19 +423,52 @@ ${error.stack}
       </div>
       <main className="pl-[200px] relative h-full flex flex-col pb-10">
           <div className="ml-4 w-[80%] ml-[10%] flex-1 mt-4">
-            <div className="flex absolute">
-            {appState === AppState.CODE_READY && (
-              <>
-                <span
-                  onClick={downloadCode}
-                  className="hover:bg-slate-200 p-2 rounded-sm"
+            <div className="flex absolute gap-2">
+              <Button 
+                onClick={() => {
+                  router.push('/', { scroll: false })
+                }}
+              >New Generation</Button>
+              {appState === AppState.CODE_READY && (
+                <>
+                <Button
+                  title="Copy Code"
+                  onClick={copyCode}
                 >
-                  <FaDownload />
-                </span>
-              </>
-            )}
+                  Copy Code <FaCopy className="ml-2" />
+                </Button>
+                <Button
+                  onClick={doOpenInCodepenio}
+                  className="bg-gray-100 text-black ml-2 py-2 px-4 border border-black rounded-md hover:bg-gray-400 focus:outline-none"
+                >
+                  Open in{" "}
+                  <img
+                    src="https://assets.codepen.io/t-1/codepen-logo.svg"
+                    alt="codepen.io"
+                    className="h-4 ml-1"
+                  />
+                </Button>
+                  <span
+                    onClick={downloadCode}
+                    className="hover:bg-slate-200 p-2 rounded-sm"
+                  >
+                    <FaDownload />
+                  </span>
+                </>
+              )}
+
+              {appState === AppState.CODING && (
+                <>
+                  <span className="flex items-center gap-x-1">
+                    <Spinner />
+                    {executionConsole.slice(-1)[0]}
+                  </span>
+                </>
+              )}
             </div>
-            <Tabs className="h-full flex flex-col" defaultValue={settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop'}>
+            <Tabs onValueChange={(e) => {
+              tabValue.current = e;
+            }} className="h-full flex flex-col" defaultValue={settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop'}>
               <div className="flex justify-end mr-8 mb-4">
                 <TabsList>
                   {
@@ -449,7 +528,6 @@ ${error.stack}
             </div>
           </div>
       </main>
-   
     </div>
   );
 }

@@ -39,13 +39,22 @@ export default function ChatInput({openWhiteboard}: props) {
         className="absolute bottom-0 z-10 flex flex-col w-full"
       >
         <div className='w-full flex items-center justify-center p-6 gap-6'>
-            <div className='before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-pink-500 relative inline-block px-2'>
+            <div
+              onClick={open}
+              className='before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-pink-500 relative inline-block px-2'>
               <span className='relative text-white'>screenshot</span>
             </div>
-            <div className='before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-green-500 relative inline-block px-2'>
+            <div
+              onClick={openWhiteboard}
+              className='before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-green-500 relative inline-block px-2'>
               <span className='relative text-white'>whiteboard</span>
             </div>
-            <div className='before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-cyan-500 relative inline-block px-8'>
+            <div 
+              onClick={() => {
+                inputRef.current.focus();
+              }}
+              className='before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-cyan-500 relative inline-block px-8'
+            >
               <span className='relative text-white'>text</span>
             </div>
         </div>

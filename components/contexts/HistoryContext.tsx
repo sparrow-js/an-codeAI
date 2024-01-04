@@ -6,7 +6,14 @@ interface historyContextType {
     history: History;
     currentVersion: number | null;
     setCurrentVersion: (version: number | null) => void;
-    addHistory: (generationType: string, updateInstruction: string, referenceImages: string[], initText: string, code: string) => void;
+    addHistory: (
+      generationType: string, 
+      updateInstruction: string, 
+      referenceImages: string[], 
+      initText: string, 
+      code: string,
+      originMessage: string,
+    ) => void;
     updateHistoryScreenshot: (img: string, version?: number) => void;
     resetHistory: () => void;
 }
@@ -26,7 +33,7 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
     const [history , setHistory] = useState<History>([]);
     let [currentVersion, setCurrentVersionStatus] = useState<number | null>(null);
 
-    function addHistory (generationType: string, updateInstruction: string, referenceImages: string[], initText: string, code: string) {
+    function addHistory (generationType: string, updateInstruction: string, referenceImages: string[], initText: string, code: string, originMessage: string) {
         if (generationType === "create") {
             setHistory([
               {
@@ -35,7 +42,8 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
                 code,
                 inputs: { 
                   image_url: referenceImages[0],
-                  initText
+                  initText,
+                  originMessage
                 },
               },
             ]);
@@ -58,6 +66,7 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
                   code,
                   inputs: {
                     prompt: updateInstruction,
+                    originMessage,
                   },
                 },
               ];

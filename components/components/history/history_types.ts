@@ -20,10 +20,12 @@ export type HistoryItem =
 export type AiCreateInputs = {
   image_url: string;
   initText: string;
+  originMessage: string;
 };
 
 export type AiEditInputs = {
   prompt: string;
+  originMessage: string;
 };
 
 export type History = HistoryItem[];

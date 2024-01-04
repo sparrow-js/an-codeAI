@@ -77,7 +77,7 @@ export default function HistoryDisplay({
               </HoverCardTrigger>
               <HoverCardContent>
                 <div>
-                  {item.type === "ai_edit" ? item.inputs.prompt : "Create"}
+                  {item.type === "ai_edit" ? item.inputs.originMessage || item.inputs.prompt : "Create"}
                 </div>
               </HoverCardContent>
             </HoverCard>

@@ -54,6 +54,11 @@ function App() {
   const [referenceText, setReferenceText] = useState<string>('');
   const [executionConsole, setExecutionConsole] = useState<string[]>([]);
   const [updateInstruction, setUpdateInstruction] = useState("");
+  const [partValue, setPartValue] = useState<{
+    uid: string;
+    message: string
+  }>({uid: '', message: ''});
+  
   const {
     dataUrls,
     setDataUrls,
@@ -175,7 +180,7 @@ function App() {
       (token) => setGeneratedCode((prev) => prev + token),
       (code) => {
         setGeneratedCode(code);
-        addHistory(params.generationType, updateInstruction, referenceImages, referenceText, code);
+        addHistory(params.generationType, updateInstruction, referenceImages, referenceText, code, partValue.message);
       },
       (line) => setExecutionConsole((prev) => [...prev, line]),
       () => {
@@ -254,6 +259,7 @@ Change ${code} as follows:
 ${message}
 Re-enter the code.
     `;
+    setPartValue(partData);
     setUpdateInstruction(updatePrompt);
   }
 
@@ -348,11 +354,6 @@ ${error.stack}
 
               <div>
                 <div className="grid w-full gap-2">
-                  {/* <Textarea
-                    placeholder="Tell the AI what to change..."
-                    onChange={(e) => setUpdateInstruction(e.target.value)}
-                    value={updateInstruction}
-                  /> */}
                   <div className="flex justify-between items-center gap-x-2">
                     <div className="font-500 text-xs text-slate-700 dark:text-white">
                       Include screenshot of current version?
@@ -528,7 +529,11 @@ ${error.stack}
           <div className="flex justify-center mt-10">
             <div className="w-[520px] rounded-md shadow-sm ">
               <UpdateChatInput updateSendMessage={(message: string) => {
-                setUpdateInstruction(message)
+                setUpdateInstruction(message);
+                setPartValue({
+                  uid: '',
+                  message: ''
+                });
               }}/>
             </div>
           </div>

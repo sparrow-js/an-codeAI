@@ -63,12 +63,12 @@ export default function PreviewBox({ code, appState, sendMessageChange, history 
 
     useEffect(() => {
         if (appState === AppState.CODE_READY) {
-            const codeUid = setHtmlCodeUid(throttledCode);
+            const codeUid = setHtmlCodeUid(code);
             designer.project.simulator?.writeIframeDocument(codeUid);
         } else {
             // designer.project.simulator?.writeIframeDocument(throttledCode);
         }
-    }, [throttledCode]);
+    }, [code, appState]);
 
     const takeScreenshot = async (): Promise<string> => {
         const body = designer.project.simulator?.contentWindow?.document.body;

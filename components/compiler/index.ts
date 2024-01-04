@@ -211,6 +211,7 @@ export default function setCodeUid (code: string, path: string = '/mock.tsx') {
 
 export function setHtmlCodeUid(code: string, path: string = '/mock.tsx') {
   var patternBody = /<body[^>]*>((.|[\n\r])*)<\/body>/im; //匹配header
+  if (!code) return code;
   const headMatch = code.match(patternBody);
   if (headMatch) {
     const htmlCode = `

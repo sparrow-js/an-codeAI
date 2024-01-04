@@ -22,7 +22,7 @@ export const HistoryContext = createContext<historyContextType>(initialValue);
 
 export default function SettingProvider({ children }: { children: ReactNode }) {
     const [history , setHistory] = useState<History>([]);
-    const [currentVersion, setCurrentVersionStatus] = useState<number | null>(null);
+    let [currentVersion, setCurrentVersionStatus] = useState<number | null>(null);
 
     function addHistory (generationType: string, updateInstruction: string, referenceImages: string[], initText: string, code: string) {
         if (generationType === "create") {
@@ -65,10 +65,12 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
         }
     }
     const updateHistoryScreenshot = (img: string, version?: number) => {
-        setHistory((prevState) => {
+      console.log('*************2333', currentVersion);  
+      setHistory((prevState) => {
           const newHistory = [...prevState];
-          const index = version || currentVersion || 0
-          if (index !== -1) {
+          const index = version || currentVersion || 0;
+          console.log('*************22', currentVersion);
+          if (index !== -1 && newHistory) {
             newHistory[index].screenshot = img;
           }
           return newHistory;
@@ -77,6 +79,7 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
    
 
     function setCurrentVersion(version: number | null) {
+        currentVersion = version;
         setCurrentVersionStatus(version)
     }
 

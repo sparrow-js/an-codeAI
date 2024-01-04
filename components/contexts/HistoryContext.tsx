@@ -8,6 +8,7 @@ interface historyContextType {
     setCurrentVersion: (version: number | null) => void;
     addHistory: (generationType: string, updateInstruction: string, referenceImages: string[], initText: string, code: string) => void;
     updateHistoryScreenshot: (img: string, version?: number) => void;
+    resetHistory: () => void;
 }
 
 const initialValue = {
@@ -15,7 +16,8 @@ const initialValue = {
     currentVersion: null,
     setCurrentVersion: (version: number | null) => {},
     addHistory: (generationType: string, updateInstruction: string, referenceImages: string[], initText: string, code: string) => {},
-    updateHistoryScreenshot: (img: string, version?: number) => {}
+    updateHistoryScreenshot: (img: string, version?: number) => {},
+    resetHistory: () => {}
 }
 
 export const HistoryContext = createContext<historyContextType>(initialValue);
@@ -65,11 +67,9 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
         }
     }
     const updateHistoryScreenshot = (img: string, version?: number) => {
-      console.log('*************2333', currentVersion);  
       setHistory((prevState) => {
           const newHistory = [...prevState];
           const index = version || currentVersion || 0;
-          console.log('*************22', currentVersion);
           if (index !== -1 && newHistory) {
             newHistory[index].screenshot = img;
           }
@@ -83,6 +83,11 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
         setCurrentVersionStatus(version)
     }
 
+    function resetHistory() {
+      setHistory([]);
+      setCurrentVersionStatus(0);
+    }
+
     return (
         <HistoryContext.Provider
           value={{
@@ -90,7 +95,8 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
             currentVersion,
             setCurrentVersion,
             addHistory,
-            updateHistoryScreenshot
+            updateHistoryScreenshot,
+            resetHistory
           }}
         >
           {children}

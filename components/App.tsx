@@ -9,6 +9,7 @@ import {
   FaMobile,
   FaUndo,
   FaCopy,
+  FaChevronLeft,
 } from "react-icons/fa";
 
 import { Switch } from "./components/ui/switch";
@@ -61,7 +62,7 @@ function App() {
   // Settings
   const {settings, setSettings, initCreate, setInitCreate, initCreateText, setInitCreateText} = useContext(SettingContext);
 
-  const {history, addHistory,  currentVersion, setCurrentVersion,} = useContext(HistoryContext);
+  const {history, addHistory,  currentVersion, setCurrentVersion, resetHistory} = useContext(HistoryContext);
   const tabValue = useRef<string>(settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop');
 
   // Tracks the currently shown version from app history
@@ -148,6 +149,7 @@ function App() {
     setGeneratedCode("");
     setReferenceImages([]);
     setExecutionConsole([]);
+    resetHistory();
   };
 
   const stop = () => {
@@ -426,22 +428,25 @@ ${error.stack}
             <div className="flex absolute gap-2">
               <Button 
                 onClick={() => {
+                  reset();
                   router.push('/', { scroll: false })
                 }}
-              >New Generation</Button>
+              >
+                <FaChevronLeft />
+                New</Button>
               {appState === AppState.CODE_READY && (
                 <>
                 <Button
                   title="Copy Code"
                   onClick={copyCode}
                 >
-                  Copy Code <FaCopy className="ml-2" />
+                  <FaCopy className="mr-2"/>
+                  Copy 
                 </Button>
                 <Button
                   onClick={doOpenInCodepenio}
                   className="bg-gray-100 text-black ml-2 py-2 px-4 border border-black rounded-md hover:bg-gray-400 focus:outline-none"
                 >
-                  Open in{" "}
                   <img
                     src="https://assets.codepen.io/t-1/codepen-logo.svg"
                     alt="codepen.io"

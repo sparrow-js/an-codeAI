@@ -90,6 +90,7 @@ async function useGeminiResponse([messages, callback, params]: Parameters<
   };
 
   const contents = transformData(messages);
+  console.log('************', contents);
   const result = await model.generateContentStream({
     contents: contents,
     generationConfig,

@@ -51,10 +51,13 @@ function Whiteboard({doCreate, closeWhiteboard}: Props) {
             <Excalidraw   
               renderTopRightUI={() => (
                 <>
-                  <FaHourglass  
-                      className="mt-[10px]"
-                      onClick={exportImg}
-                  />
+                  <span
+                     className="hover:bg-slate-200 mt-[10px]"
+                     onClick={exportImg}
+                  >
+                  <FaHourglass />
+                  </span>
+
                   <span 
                       onClick={() => {
                         closeWhiteboard();

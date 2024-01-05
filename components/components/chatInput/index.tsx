@@ -4,6 +4,20 @@ import { SettingContext } from '../../contexts/SettingContext';
 import { useRouter } from 'next/navigation';
 import { LiaPencilRulerSolid } from "react-icons/lia";
 import classNames from "classnames";
+import { GoArrowUpRight } from "react-icons/go";
+
+const shortcutIdeas = [
+  {
+    id: 'Contactform',
+    label: 'Contact form',
+    value: 'A contact form with first name, last name, email, and message fields. Put the form in a card with a submit button.'
+  },
+  {
+    id: 'Ecommercedashboard',
+    label: 'Ecommerce dashboard',
+    value: 'An ecommerce dashboard with a sidebar navigation and a table of recent orders.'
+  }
+]
 
 interface props {
   openWhiteboard: () => void
@@ -43,12 +57,12 @@ export default function ChatInput({openWhiteboard}: props) {
         <div className='w-full flex items-center justify-center p-6 gap-6'>
             <div
               onClick={open}
-              className='before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-pink-500 relative inline-block px-2'>
+              className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-pink-500 relative inline-block px-2'>
               <span className='relative text-white'>screenshot</span>
             </div>
             <div
               onClick={openWhiteboard}
-              className='before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-green-500 relative inline-block px-2'>
+              className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-green-500 relative inline-block px-2'>
               <span className='relative text-white'>whiteboard</span>
             </div>
             <div 
@@ -59,7 +73,7 @@ export default function ChatInput({openWhiteboard}: props) {
                   setShowAnim(false);
                 }, 800)
               }}
-              className='before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-cyan-500 relative inline-block px-8'
+              className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-cyan-500 relative inline-block px-8'
             >
               <span className='relative text-white'>ideas</span>
             </div>
@@ -126,6 +140,24 @@ export default function ChatInput({openWhiteboard}: props) {
                 </button>
               </div>
             </div>
+        </div>
+        <div className='flex w-full mt-4 item-center justify-center gap-2'>
+            {
+              shortcutIdeas.map((shortcut) => {
+                return (
+                <button 
+                  className='rounded-full border border-zinc-200 px-2 py-0.5 inline-flex gap-1 items-center whitespace-nowrap select-none hover:border-zinc-800 transition-colors'
+                  onClick={() => {
+                    setInitCreateText(shortcut.value);
+                  }}
+                >
+                  {shortcut.label}
+                  <GoArrowUpRight/>
+                </button>)
+              })
+            }
+           
+
         </div>
       </div>
     </div>

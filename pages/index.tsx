@@ -80,7 +80,7 @@ export default function Dashboard() {
             </div>
             <main>
                 <div className="w-full bg-white dark:bg-gray-800 border-t dark:border-t-gray-600 flex-col flex items-center justify-between p-3">
-                    <div className="relative mt-72 w-[520px] rounded-md shadow-sm">
+                    <div className="relative mt-96 w-[520px] rounded-md shadow-sm">
                         <ChatInput
                             openWhiteboard={() => {
                                 setOpenWhiteboard(true);

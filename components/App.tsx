@@ -30,6 +30,7 @@ import {getPartCodeUid} from './compiler';
 import { useDebounceFn } from 'ahooks';
 import { useRouter } from 'next/navigation';
 import copy from "copy-to-clipboard";
+import CodePreview from './components/CodePreview';
 
 
 const CodeTab = dynamic(
@@ -338,10 +339,13 @@ ${error.stack}
           {(appState === AppState.CODING ||
             appState === AppState.CODE_READY) && (
             <>
+              {appState === AppState.CODING && (
+                <CodePreview code={generatedCode}/>
+              )}
               {/* Show code preview only when coding */}
               {appState === AppState.CODING && (
                 <div className="flex flex-col">
-                  <div className="flex mt-4 w-full">
+                  <div className="flex w-full">
                     <Button
                       onClick={stop}
                       className="w-full dark:text-white dark:bg-gray-700"

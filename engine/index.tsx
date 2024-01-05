@@ -50,7 +50,7 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
         const img = await takeScreenshot();
         setTimeout(() => {
             updateHistoryScreenshot(img);
-        }, 2000)
+        }, 1000)
     }
 
     useEffect(() => {

@@ -81,7 +81,6 @@ async function useGeminiResponse([messages, callback, params]: Parameters<
   let genAI = new GoogleGenerativeAI(
     params.geminiApiKey || process.env["GEMINI_API_KEY"]
   );
-  const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
   const generationConfig = {
     temperature: 0,
     topK: 32,
@@ -90,7 +89,14 @@ async function useGeminiResponse([messages, callback, params]: Parameters<
   };
 
   const contents = transformData(messages);
-  console.log('************', contents);
+  const parts = contents[0].parts;
+  let modelType = 'gemini-pro'
+  if (parts && parts[1] && parts[1].inlineData) {
+    modelType = "gemini-pro-vision"
+  }
+
+  const model = genAI.getGenerativeModel({ model:  modelType});
+
   const result = await model.generateContentStream({
     contents: contents,
     generationConfig,

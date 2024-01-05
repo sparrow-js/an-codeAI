@@ -60,7 +60,6 @@ function SettingsDialog({ settings, setSettings }: Props) {
                 ...settings,
                 llm: data,
               })
-              console.log(data)
             }} className="flex item-center" color="indigo" defaultValue={settings.llm}>
               <Label className="flex item-center" htmlFor="openai-llm">
                 <span className="mr-2">openai</span> 

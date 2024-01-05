@@ -10,6 +10,8 @@ import TS, {
 
 import Hash from 'object-hash';
 import { generateConsistentUID } from './uid-utils';
+import { GeneratedCodeConfig } from "../types";
+
 
 let jsxContainerList: any[] = [];
 let alreadyExistingUIDs: Map<string, any> = new Map();
@@ -209,27 +211,52 @@ export default function setCodeUid (code: string, path: string = '/mock.tsx') {
     return codeUid;
 }
 
-export function setHtmlCodeUid(code: string, path: string = '/mock.tsx') {
-  var patternBody = /<body[^>]*>((.|[\n\r])*)<\/body>/im; //匹配header
+export function setHtmlCodeUid(generatedCodeConfig: GeneratedCodeConfig, code: string, path: string = '/mock.tsx') {
   if (!code) return code;
-  const headMatch = code.match(patternBody);
-  if (headMatch) {
-    const htmlCode = `
-    function htmlRender () {
-      return (
-  ${headMatch[0].replaceAll(/<!--((.)*)-->/img, '')}
-      )
+  if (generatedCodeConfig === GeneratedCodeConfig.HTML_TAILWIND) {
+    var patternBody = /<body[^>]*>((.|[\n\r])*)<\/body>/im; //匹配header
+    const headMatch = code.match(patternBody);
+    if (headMatch) {
+      const htmlCode = `
+      function htmlRender () {
+        return (
+    ${headMatch[0].replaceAll(/<!--((.)*)-->/img, '')}
+        )
+      }
+      `;
+      const codeJsx = setCodeUid(htmlCode, path);
+      const body = codeJsx.match(patternBody);
+      if (body) {
+        return code.replace(patternBody,  body[0]);
+      }
+      return code
+    } else {
+      return code;
     }
-    `;
-    const codeJsx = setCodeUid(htmlCode, path);
-    const body = codeJsx.match(patternBody);
-    if (body) {
-      return code.replace(patternBody,  body[0]);
+  } else if (generatedCodeConfig === GeneratedCodeConfig.REACT_TAILWIND) {
+    var patternScript = /<script type="text\/babel"[^>]*>((.|[\n\r])*)<\/script>/im; //匹配script
+    const scriptMatch = code.match(patternScript);
+    if (scriptMatch) {
+      const codeJsx = setCodeUid(scriptMatch[1], path);
+      if (codeJsx) {
+        let codeScript = `
+<script type="text/babel">
+${codeJsx}
+</script>
+        `;
+        // todo: 这里$100.00 匹配有问题，后面研究
+        const temp = code.replace(patternScript, `
+<script type="text/babel">
+</script>
+        `);
+        return temp.replace(patternScript, codeScript);
+
+      }
+      return code;
     }
-    return code
-  } else {
     return code;
   }
+  return code;
 }
 
 export function getPartCodeUid(uid: string, path: string = '/mock.tsx') {
@@ -264,24 +291,161 @@ function htmlRender () {
 // function test () {
 //   const codeHtml = `
 
-// <body class="bg-white text-gray-900">
-//     <div class="container mx-auto px-4 py-12">
-//         <h1 class="text-5xl font-bold mb-4">Things I've made trying to put my dent in the universe.</h1>
-//         <p class="text-lg mb-12">I've worked on tons of little projects over the years but these are the ones that I'm most proud of. Many of them are open-source, so if you see something that piques your interest, check out the code and contribute if you have ideas for how it can be improved.</p>
-//         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-//             <div class="flex flex-col items-center">
-//                 <img src="https://placehold.co/96x96" alt="Placeholder image for Planetaria project logo" class="mb-4">
-//                 <h2 class="text-xl font-semibold mb-2">Planetaria</h2>
-//                 <p class="text-center mb-4">Creating technology to empower civilians to explore space on their own terms.</p>
-//                 <a href="#" class="text-indigo-600 hover:text-indigo-800 transition-colors">planetaria.tech</a>
+
+//   <html>
+//   <head>
+//     <title>E-commerce Dashboard</title>
+//     <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+//     <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+//     <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+//     <script src="https://cdn.tailwindcss.com"></script>
+//     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+//     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+//   </head>
+//   <body>
+//     <div id="app"></div>
+
+//     <script type="text/babel">
+//       const Dashboard = () => {
+//         return (
+//           <div className="flex h-screen bg-gray-100">
+//             <div className="flex flex-col w-64 bg-white shadow-lg">
+//               <div className="flex items-center justify-center h-20 shadow-md">
+//                 <h1 className="text-3xl uppercase text-indigo-500">Logo</h1>
+//               </div>
+//               <ul className="flex flex-col py-4">
+//                 <li>
+//                   <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
+//                     <i className="fas fa-tachometer-alt pr-2"></i>
+//                     Dashboard
+//                   </a>
+//                 </li>
+//                 <li>
+//                   <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
+//                     <i className="fas fa-box pr-2"></i>
+//                     Products
+//                   </a>
+//                 </li>
+//                 <li>
+//                   <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
+//                     <i className="fas fa-users pr-2"></i>
+//                     Customers
+//                   </a>
+//                 </li>
+//                 <li>
+//                   <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
+//                     <i className="fas fa-file-invoice-dollar pr-2"></i>
+//                     Orders
+//                   </a>
+//                 </li>
+//                 <li>
+//                   <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
+//                     <i className="fas fa-chart-line pr-2"></i>
+//                     Reports
+//                   </a>
+//                 </li>
+//                 <li>
+//                   <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
+//                     <i className="fas fa-cog pr-2"></i>
+//                     Settings
+//                   </a>
+//                 </li>
+//               </ul>
 //             </div>
-//         </div>
-//     </div>
-// </body>
+//             <div className="flex-1 flex flex-col overflow-hidden">
+//               <header className="flex justify-between items-center p-6 bg-white border-b-2 border-gray-200">
+//                 <div className="flex items-center space-x-4">
+//                   <i className="fas fa-bars text-gray-600 text-2xl"></i>
+//                   <h1 className="text-2xl text-gray-700 font-semibold">Dashboard</h1>
+//                 </div>
+//                 <div className="flex items-center space-x-4">
+//                   <i className="fas fa-bell text-gray-600 text-2xl"></i>
+//                   <i className="fas fa-user-circle text-gray-600 text-2xl"></i>
+//                 </div>
+//               </header>
+//               <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+//                 <div className="container mx-auto px-6 py-8">
+//                   <h3 className="text-gray-700 text-3xl font-medium">Recent Orders</h3>
+//                   <div className="mt-8">
+//                     <div className="flex flex-col">
+//                       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+//                         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+//                           <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+//                             <table className="min-w-full divide-y divide-gray-200">
+//                               <thead className="bg-gray-50">
+//                                 <tr>
+//                                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+//                                     Order ID
+//                                   </th>
+//                                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+//                                     Product
+//                                   </th>
+//                                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+//                                     Customer
+//                                   </th>
+//                                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+//                                     Status
+//                                   </th>
+//                                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+//                                     Total
+//                                   </th>
+//                                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+//                                     Date
+//                                   </th>
+//                                   <th scope="col" className="relative px-6 py-3">
+//                                     <span className="sr-only">Edit</span>
+//                                   </th>
+//                                 </tr>
+//                               </thead>
+//                               <tbody className="bg-white divide-y divide-gray-200">
+//                                 <tr>
+//                                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+//                                     #001
+//                                   </td>
+//                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+//                                     Product Name 1
+//                                   </td>
+//                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+//                                     Customer Name 1
+//                                   </td>
+//                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-green-500">
+//                                     Completed
+//                                   </td>
+//                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+//                                     $100.00
+//                                   </td>
+//                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+//                                     01/01/2021
+//                                   </td>
+//                                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+//                                     <a href="#" className="text-indigo-600 hover:text-indigo-900">Edit</a>
+//                                   </td>
+//                                 </tr>
+//                                 {/* Repeat for each order */}
+//                                 {/* ... other orders ... */}
+//                               </tbody>
+//                             </table>
+//                           </div>
+//                         </div>
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </main>
+//             </div>
+//           </div>
+//         );
+//       };
+
+//       ReactDOM.render(<Dashboard />, document.getElementById('app'));
+//     </script>
+//   </body>
+// </html>
+
 //   `;
 
   
-//   const code = setHtmlCodeUid(codeHtml.replaceAll(/<!--((.)*)-->/img, ''));
+//   const code = setHtmlCodeUid(GeneratedCodeConfig.REACT_TAILWIND, codeHtml.replaceAll(/<!--((.)*)-->/img, ''));
 //   console.log('*******', code);
 // }
 

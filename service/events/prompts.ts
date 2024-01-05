@@ -542,6 +542,13 @@ const SYSTEM_MAP = {
   vue_element: VUE_ELEMENT_SYSTEM_PROMPT,
   react_native: REACT_NATIVE_SYSTEM_PROMPT,
   html_tailwind_text: TAILWIND_SYSTEM_PROMPT_TEXT,
+  react_tailwind_text: REACT_TAILWIND_SYSTEM_PROMPT_TEXT,
+  bootstrap_text: BOOTSTRAP_SYSTEM_PROMPT_TEXT,
+  system_content_text: IONIC_TAILWIND_SYSTEM_PROMPT_TEXT,
+  react_antd_text: REACT_ANTD_SYSTEM_PROMPT_TEXT,
+  vue_tailwind_text: VUE_TAILWIND_SYSTEM_PROMPT_TEXT,
+  vue_element_text: VUE_ELEMENT_SYSTEM_PROMPT_TEXT,
+  react_native_text: REACT_NATIVE_SYSTEM_PROMPT_TEXT,
 };
 
 export function assemblePrompt(

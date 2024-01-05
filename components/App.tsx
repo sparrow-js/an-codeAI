@@ -510,6 +510,7 @@ ${error.stack}
                         sendMessageChange={(data) => {
                           doPartUpdate(data);
                         }}
+                        generatedCodeConfig={settings.generatedCodeConfig}
                         history={history}
                       />
                       {/* <Preview code={generatedCode} device="desktop" appState={appState} fixBug={fixBug}/> */}

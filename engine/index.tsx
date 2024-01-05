@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { DesignerView, Designer, AutoCodePluginManager, ILowCodePluginContext } from './designer';
 import { Editor, globalContext } from './editor-core';
-import { AppState } from "../components/types";
+import { AppState, GeneratedCodeConfig } from "../components/types";
 import useThrottle from "../components/hooks/useThrottle";
 import {setHtmlCodeUid} from '../components/compiler';
 import html2canvas from "html2canvas";
@@ -38,10 +38,11 @@ interface Props {
     code: string;
     appState: AppState;
     sendMessageChange: (e: any) => void;
-    history: any
+    history: any;
+    generatedCodeConfig: GeneratedCodeConfig
 }
 
-export default function PreviewBox({ code, appState, sendMessageChange, history }: Props) {
+export default function PreviewBox({ code, appState, sendMessageChange, history, generatedCodeConfig }: Props) {
     const throttledCode = useThrottle(code, 500);
     const {updateHistoryScreenshot} = useContext(HistoryContext);
 
@@ -51,7 +52,6 @@ export default function PreviewBox({ code, appState, sendMessageChange, history 
     }
 
     useEffect(() => {
-       
         editor.on('editor.sendMessageChange', sendMessageChange);
         document.querySelector('.lc-simulator-content-frame')?.addEventListener('load', onIframeLoad);
         return () => {
@@ -63,7 +63,7 @@ export default function PreviewBox({ code, appState, sendMessageChange, history 
 
     useEffect(() => {
         if (appState === AppState.CODE_READY) {
-            const codeUid = setHtmlCodeUid(code);
+            const codeUid = setHtmlCodeUid(generatedCodeConfig, code);
             designer.project.simulator?.writeIframeDocument(codeUid);
         } else {
             // designer.project.simulator?.writeIframeDocument(throttledCode);

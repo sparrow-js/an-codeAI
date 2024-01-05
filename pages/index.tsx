@@ -48,15 +48,16 @@ export default function Dashboard() {
         isDragReject, 
         setUploadComplete,
         setDataUrls,
+        open,
     } = useContext(UploadFileContext);
     const [openWhiteboard, setOpenWhiteboard] = useState(false);
+    const [showAnim, setShowAnim] = useState<boolean>(false);
     const ref = useRef(null);
-    async function sendMessage() {}
     const router = useRouter();
     useEffect(() => {
         setUploadComplete(() => {
             setInitCreate(true);
-            router.push('/home', { scroll: false })
+            router.push('/editor', { scroll: false })
         })
     }, []);
 
@@ -79,12 +80,39 @@ export default function Dashboard() {
                 <Header />
             </div>
             <main>
+                <div className='fixed right-0 top-20 w-[100px] flex flex-col items-center  justify-center py-6 gap-12'>
+                    <div
+                        onClick={open}
+                        className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-pink-500 relative inline-block px-2'>
+                        <span className='relative text-white'>screenshot</span>
+                    </div>
+                    <div
+                        onClick={() => {
+                            setOpenWhiteboard(true);
+                        }}
+                        className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-green-500 relative inline-block px-2'>
+                        <span className='relative text-white'>whiteboard</span>
+                    </div>
+                    <div 
+                        onClick={() => {
+                            setShowAnim(true);
+                            setTimeout(() => {
+                                setShowAnim(false);
+                            }, 800)
+                        }}
+                        className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-cyan-500 relative inline-block px-8'
+                        >
+                        <span className='relative text-white'>ideas</span>
+                    </div>
+                </div>
+
                 <div className="w-full bg-white dark:bg-gray-800 border-t dark:border-t-gray-600 flex-col flex items-center justify-between p-3">
                     <div className="relative mt-96 w-[520px] rounded-md shadow-sm">
                         <ChatInput
                             openWhiteboard={() => {
                                 setOpenWhiteboard(true);
                             }}
+                            showAnim={showAnim}
                         />
                     </div>
                 </div>                    
@@ -109,7 +137,7 @@ export default function Dashboard() {
                         setOpenWhiteboard(false);
                         setDataUrls(urls);
                         setInitCreate(true);
-                        router.push('/home', { scroll: false })
+                        router.push('/editor', { scroll: false })
                     }}
                     closeWhiteboard={() => {
                         setOpenWhiteboard(false);

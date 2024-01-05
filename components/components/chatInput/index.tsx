@@ -20,10 +20,11 @@ const shortcutIdeas = [
 ]
 
 interface props {
-  openWhiteboard: () => void
+  openWhiteboard: () => void;
+  showAnim: boolean;
 }
 
-export default function ChatInput({openWhiteboard}: props) {
+export default function ChatInput({openWhiteboard, showAnim}: props) {
   const inputRef = useRef<any>(null);
   const router = useRouter();
   const {
@@ -31,7 +32,9 @@ export default function ChatInput({openWhiteboard}: props) {
     open,
   } = useContext(UploadFileContext);
   const { initCreateText, setInitCreateText, setInitCreate } = useContext(SettingContext);
-  const [showAnim, setShowAnim] = useState<boolean>(false);
+  useEffect(() => {
+    inputRef.current.focus();
+  }, [showAnim])
   
   useEffect(() => {
     if (inputRef.current) {
@@ -43,7 +46,7 @@ export default function ChatInput({openWhiteboard}: props) {
   const clickHandler = () => {
     if (initCreateText) {
       setInitCreate(true);
-      router.push('/home', { scroll: false })
+      router.push('/editor', { scroll: false })
     }
   }
 
@@ -54,7 +57,7 @@ export default function ChatInput({openWhiteboard}: props) {
       <div 
         className="absolute bottom-0 z-10 flex flex-col w-full"
       >
-        <div className='w-full flex items-center justify-center p-6 gap-6'>
+        {/* <div className='w-full flex items-center justify-center p-6 gap-6'>
             <div
               onClick={open}
               className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-pink-500 relative inline-block px-2'>
@@ -77,7 +80,7 @@ export default function ChatInput({openWhiteboard}: props) {
             >
               <span className='relative text-white'>ideas</span>
             </div>
-        </div>
+        </div> */}
         {/* animate-wiggle */}
         <div 
           className={classNames(

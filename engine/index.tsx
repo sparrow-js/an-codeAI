@@ -48,7 +48,9 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
 
     const onIframeLoad = async () => {
         const img = await takeScreenshot();
-        updateHistoryScreenshot(img);
+        setTimeout(() => {
+            updateHistoryScreenshot(img);
+        }, 2000)
     }
 
     useEffect(() => {

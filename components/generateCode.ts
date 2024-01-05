@@ -29,6 +29,7 @@ export function generateCode(
   onComplete: () => void
 ) {
 
+  
   wsRef.current = new AbortController();
 
   async function handleMessage(event: { data: string }) {

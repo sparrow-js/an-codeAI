@@ -98,8 +98,8 @@ export async function streamGenerateCode(
         {
           openAiApiKey: params.openAiApiKey,
           openAiBaseURL: params.openAiBaseURL,
-          llm: params.llm || 'Gemini',
-          geminiApiKey: params.geminiApiKey || 'AIzaSyBHpr3hWhy3vLvRsfHcgzK8Ff_KkigMd7o',
+          llm: params.llm, // 'Gemini'
+          geminiApiKey: params.geminiApiKey,
         },
       );
     } catch (e) {

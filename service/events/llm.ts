@@ -129,9 +129,7 @@ export async function streamingOpenAIResponses(
   }
 ) {
 
-
-  if (params.llm === "Gemini") {
-
+  if (params.llm === "gemini") {
     const full_response = await useGeminiResponse([messages, callback, params]);
     return full_response;
   }

@@ -43,7 +43,8 @@ export default function UploadFileProvider({ children }: { children: ReactNode }
   const [dataUrls, setDataUrlsStatus] = useState<string[]>([]);
   const [uploadComplete, setUploadCompleteStatus] = useState(() => {
     return () => {}
-  })
+  });
+
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject, open } =
     useDropzone({
       maxFiles: 1,
@@ -68,7 +69,6 @@ export default function UploadFileProvider({ children }: { children: ReactNode }
         Promise.all(acceptedFiles.map((file) => fileToDataURL(file)))
           .then((dataUrls: any) => {
             setDataUrlsStatus(dataUrls)
-            console.log(dataUrls);
             uploadComplete();
             // setReferenceImages(dataUrls.map((dataUrl) => dataUrl as string));
           })

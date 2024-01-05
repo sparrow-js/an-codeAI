@@ -3,6 +3,7 @@ import {UploadFileContext} from '../../contexts/UploadFileContext'
 import { SettingContext } from '../../contexts/SettingContext';
 import { useRouter } from 'next/navigation';
 import { LiaPencilRulerSolid } from "react-icons/lia";
+import classNames from "classnames";
 
 interface props {
   openWhiteboard: () => void
@@ -16,6 +17,7 @@ export default function ChatInput({openWhiteboard}: props) {
     open,
   } = useContext(UploadFileContext);
   const { initCreateText, setInitCreateText, setInitCreate } = useContext(SettingContext);
+  const [showAnim, setShowAnim] = useState<boolean>(false);
   
   useEffect(() => {
     if (inputRef.current) {
@@ -52,13 +54,25 @@ export default function ChatInput({openWhiteboard}: props) {
             <div 
               onClick={() => {
                 inputRef.current.focus();
+                setShowAnim(true);
+                setTimeout(() => {
+                  setShowAnim(false);
+                }, 800)
               }}
               className='before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-cyan-500 relative inline-block px-8'
             >
-              <span className='relative text-white'>text</span>
+              <span className='relative text-white'>ideas</span>
             </div>
         </div>
-        <div className="sm:max-w-lg m-auto shadow-lg divide-zinc-600 min-h-12 bg-gray-900 shadow-black/40 rounded-[24px] overflow-hidden max-w-[90%] flex items-center flex-1 min-w-0 px-3 md:pl-4 bg-gray-900 relative z-10">
+        {/* animate-wiggle */}
+        <div 
+          className={classNames(
+            "sm:max-w-lg m-auto shadow-lg divide-zinc-600 min-h-12 bg-gray-900 shadow-black/40 rounded-[24px] overflow-hidden max-w-[90%] flex items-center flex-1 min-w-0 px-3 md:pl-4 bg-gray-900 relative z-10",
+            {
+              "animate-wiggle": showAnim,
+            }
+          )}
+        >
             <div
               className="relative w-full flex items-center transition-all duration-300 min-h-full h-fit" >
               <label htmlFor="textarea-input" className="sr-only">Prompt</label>

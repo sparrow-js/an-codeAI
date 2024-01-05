@@ -47,6 +47,7 @@ export default function Dashboard() {
         isFocused,
         isDragReject, 
         setUploadComplete,
+        setDataUrls,
     } = useContext(UploadFileContext);
     const [openWhiteboard, setOpenWhiteboard] = useState(false);
     const ref = useRef(null);
@@ -104,7 +105,11 @@ export default function Dashboard() {
                 )}
             >
                 <Whiteboard 
-                    doCreate={() => {
+                    doCreate={(urls: string[]) => {
+                        setOpenWhiteboard(false);
+                        setDataUrls(urls);
+                        setInitCreate(true);
+                        router.push('/home', { scroll: false })
                     }}
                     closeWhiteboard={() => {
                         setOpenWhiteboard(false);

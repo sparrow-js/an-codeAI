@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   Dialog,
   DialogClose,
@@ -13,6 +13,7 @@ import { Settings } from "../types";
 import { Switch } from "./ui/switch";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import {RadioGroup, RadioGroupItem} from './ui/radio-group';
 
 interface Props {
   settings: Settings;
@@ -21,6 +22,7 @@ interface Props {
 
 function SettingsDialog({ settings, setSettings }: Props) {
 
+  const [llm, setLlm] = useState<string>('openai')
 
   return (
     <Dialog>
@@ -51,28 +53,48 @@ function SettingsDialog({ settings, setSettings }: Props) {
           />
         </div> */}
         <div className="flex flex-col space-y-4">
-          <Label htmlFor="openai-api-key">
-            <div>OpenAI API key</div>
-            <div className="font-light mt-2 leading-relaxed">
-              Only stored in your browser. Never stored on servers. Overrides
-              your .env config.
-            </div>
-          </Label>
-
-          <Input
-            id="openai-api-key"
-            placeholder="OpenAI API key"
-            value={settings?.openAiApiKey || ""}
-            onChange={(e) =>
+          <div className="border-b-2 border-black pb-4">
+            <RadioGroup onValueChange={(data) => {
+              setLlm(data);
               setSettings({
                 ...settings,
-                openAiApiKey: e.target.value,
+                llm: data,
               })
-            }
-          />
+              console.log(data)
+            }} className="flex item-center" color="indigo" defaultValue={settings.llm}>
+              <Label className="flex item-center" htmlFor="openai-llm">
+                <span className="mr-2">openai</span> 
+                <RadioGroupItem value="openai" id="openai-llm"/>
+              </Label>
+              <Label className="flex item-center" htmlFor="gemini-llm">
+                <span className="mr-2">gemini</span>
+                <RadioGroupItem  value="gemini" id="gemini-llm"/>
+              </Label>
+            </RadioGroup>
+          </div>
+          {
+            settings.llm === 'openai' ? (
+              <>
+              <Label htmlFor="openai-api-key">
+                <div>OpenAI API key</div>
+                <div className="font-light mt-2 leading-relaxed">
+                  Only stored in your browser. Never stored on servers. Overrides
+                  your .env config.
+                </div>
+              </Label>
 
-          {(
-            <>
+              <Input
+                id="openai-api-key"
+                placeholder="OpenAI API key"
+                value={settings?.openAiApiKey || ""}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    openAiApiKey: e.target.value,
+                  })
+                }
+              />
+
               <Label htmlFor="openai-api-key">
                 <div>OpenAI Base URL (optional)</div>
                 <div className="font-light mt-2 leading-relaxed">
@@ -91,8 +113,33 @@ function SettingsDialog({ settings, setSettings }: Props) {
                   })
                 }
               />
-            </>
-          )}
+              </>
+
+            ) : (
+              <>
+                <Label htmlFor="openai-api-key">
+                  <div>Gemini API key</div>
+                  <div className="font-light mt-2 leading-relaxed">
+                    Only stored in your browser. Never stored on servers. Overrides
+                    your .env config.
+                  </div>
+                </Label>
+
+                <Input
+                  id="Gemini-api-key"
+                  placeholder="Gemini API key"
+                  value={settings?.geminiApiKey || ""}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      geminiApiKey: e.target.value,
+                    })
+                  }
+                />
+              </>
+            )
+          }
+          
         </div>
 
         <div className="flex items-center space-x-2">

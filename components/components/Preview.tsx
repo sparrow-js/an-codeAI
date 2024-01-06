@@ -37,7 +37,7 @@ function Preview({ code, device, appState, fixBug }: Props) {
 </script>  
           `;
       let content = '';
-    if (appState === AppState.CODE_READY) {
+    if (appState === AppState.CODE_READY && throttledCode) {
       var patternHead = /<title[^>]*>((.|[\n\r])*)<\/title>/im; //匹配header
       const headMatch = throttledCode.match(patternHead);
       if (headMatch) {
@@ -53,7 +53,7 @@ function Preview({ code, device, appState, fixBug }: Props) {
     }
  
     
-  }, [throttledCode]);
+  }, [throttledCode, AppState]);
 
   useEffect(() => {
     const messageHandler = (e: any) => {

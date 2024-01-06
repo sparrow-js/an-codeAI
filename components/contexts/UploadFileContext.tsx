@@ -44,6 +44,24 @@ export default function UploadFileProvider({ children }: { children: ReactNode }
   const [uploadComplete, setUploadCompleteStatus] = useState(() => {
     return () => {}
   });
+  const [first, setFirst] = useState<boolean>(true);
+
+
+  useEffect(() => {
+    if (first) {
+        const value = window.localStorage.getItem('dataUrls');
+        if (value) {
+            const valueObj = JSON.parse(value)
+            setDataUrlsStatus(valueObj);
+        }
+        setFirst(false);
+    } else {
+        window.localStorage.setItem('dataUrls', JSON.stringify(dataUrls));
+
+    }
+}, [
+  dataUrls
+]);
 
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject, open } =
     useDropzone({

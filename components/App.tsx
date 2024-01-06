@@ -119,7 +119,7 @@ function App() {
       initTextFn.run();
       setInitCreate(false);
     }
-  }, [initCreate]);
+  }, [initCreate, dataUrls, initCreateText]);
 
   const takeScreenshot = async (): Promise<string> => {
     const iframeElement = document.querySelector(

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { LiaPencilRulerSolid } from "react-icons/lia";
 import classNames from "classnames";
 import { GoArrowUpRight } from "react-icons/go";
+import Spinner from '../Spinner';
 
 const shortcutIdeas = [
   {
@@ -41,6 +42,9 @@ export default function ChatInput({openWhiteboard, showAnim}: props) {
     getInputProps,
     open,
   } = useContext(UploadFileContext);
+
+  const [loading, setLoading] = useState<boolean>(false);
+
   const { initCreateText, setInitCreateText, setInitCreate } = useContext(SettingContext);
   useEffect(() => {
     inputRef.current.focus();
@@ -55,8 +59,10 @@ export default function ChatInput({openWhiteboard, showAnim}: props) {
 
   const clickHandler = () => {
     if (initCreateText) {
+      setLoading(true);
       setInitCreate(true);
-      router.push('/editor', { scroll: false })
+      router.push('/editor', { scroll: false });
+      setLoading(false);
     }
   }
 
@@ -67,30 +73,6 @@ export default function ChatInput({openWhiteboard, showAnim}: props) {
       <div 
         className="absolute bottom-0 z-10 flex flex-col w-full"
       >
-        {/* <div className='w-full flex items-center justify-center p-6 gap-6'>
-            <div
-              onClick={open}
-              className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-pink-500 relative inline-block px-2'>
-              <span className='relative text-white'>screenshot</span>
-            </div>
-            <div
-              onClick={openWhiteboard}
-              className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-green-500 relative inline-block px-2'>
-              <span className='relative text-white'>whiteboard</span>
-            </div>
-            <div 
-              onClick={() => {
-                inputRef.current.focus();
-                setShowAnim(true);
-                setTimeout(() => {
-                  setShowAnim(false);
-                }, 800)
-              }}
-              className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-cyan-500 relative inline-block px-8'
-            >
-              <span className='relative text-white'>ideas</span>
-            </div>
-        </div> */}
         {/* animate-wiggle */}
         <div 
           className={classNames(
@@ -141,16 +123,22 @@ export default function ChatInput({openWhiteboard, showAnim}: props) {
                   <svg onClick={open} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4"><g clipPath="url(#a)"><path fill="currentColor" fillRule="evenodd" d="M14.5 2.5h-13v6.69l1.47-1.47.22-.22h3.75l.03-.03 3.5-3.5h1.06l2.97 2.97V2.5ZM8 8.56l1.53 1.53.53.53L9 11.68l-.53-.53L6.32 9H3.81l-2.28 2.28-.03.03v1.19a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V9.06L11 5.56 8.03 8.53 8 8.56Zm-8 2.25v1.69A2.5 2.5 0 0 0 2.5 15h11a2.5 2.5 0 0 0 2.5-2.5V9.56l.56-.56-.53-.53-.03-.03V1H0v9.69l-.06.06.06.06Z" clipRule="evenodd"></path></g><defs><clipPath id="a"><path fill="currentColor" d="M0 0h16v16H0z"></path></clipPath></defs></svg>
                   <span className="sr-only">Upload image</span>
                 </label>
-                <button 
-                  className="shrink-0 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-transparent text-white hover:bg-gray-800 flex items-center justify-center focus-visible:ring-0 focus-visible:bg-gray-800 rounded-full w-[28px] h-[28px]" 
-                  id="send-button"
-                  onClick={clickHandler}
-                >
-                  <span className="sr-only">Send</span>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M13.5 3V2.25H15V3V10C15 10.5523 14.5522 11 14 11H3.56062L5.53029 12.9697L6.06062 13.5L4.99996 14.5607L4.46963 14.0303L1.39641 10.9571C1.00588 10.5666 1.00588 9.93342 1.39641 9.54289L4.46963 6.46967L4.99996 5.93934L6.06062 7L5.53029 7.53033L3.56062 9.5H13.5V3Z" fill="currentColor"></path>
-                  </svg>
-                </button>
+                {loading ? (
+                  <button className='w-[28px] h-[28px] scale-75'>
+                    <Spinner />
+                  </button>
+                ) : (
+                  <button 
+                    className="shrink-0 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-transparent text-white hover:bg-gray-800 flex items-center justify-center focus-visible:ring-0 focus-visible:bg-gray-800 rounded-full w-[28px] h-[28px]" 
+                    id="send-button"
+                    onClick={clickHandler}
+                  >
+                    <span className="sr-only">Send</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M13.5 3V2.25H15V3V10C15 10.5523 14.5522 11 14 11H3.56062L5.53029 12.9697L6.06062 13.5L4.99996 14.5607L4.46963 14.0303L1.39641 10.9571C1.00588 10.5666 1.00588 9.93342 1.39641 9.54289L4.46963 6.46967L4.99996 5.93934L6.06062 7L5.53029 7.53033L3.56062 9.5H13.5V3Z" fill="currentColor"></path>
+                    </svg>
+                  </button>
+                )}
               </div>
             </div>
         </div>
@@ -160,7 +148,7 @@ export default function ChatInput({openWhiteboard, showAnim}: props) {
                 return (
                 <button
                   key={shortcut.id}
-                  className='rounded-full border border-zinc-200 px-2 py-0.5 inline-flex gap-1 items-center whitespace-nowrap select-none hover:border-zinc-800 transition-colors'
+                  className='text-slate-400 text-sm rounded-full border border-zinc-200 px-2 py-0.5 inline-flex gap-1 items-center whitespace-nowrap select-none hover:border-zinc-800 transition-colors'
                   onClick={() => {
                     setInitCreateText(shortcut.value);
                   }}

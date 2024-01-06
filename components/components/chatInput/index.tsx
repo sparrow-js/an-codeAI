@@ -62,7 +62,7 @@ export default function ChatInput({openWhiteboard, showAnim}: props) {
       setLoading(true);
       setInitCreate(true);
       router.push('/editor', { scroll: false });
-      setLoading(false);
+      // setLoading(false);
     }
   }
 

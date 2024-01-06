@@ -62,7 +62,7 @@ function SettingsDialog({ settings, setSettings }: Props) {
               })
             }} className="flex item-center" color="indigo" defaultValue={settings.llm}>
               <Label className="flex item-center" htmlFor="openai-llm">
-                <span className="mr-2">openai</span> 
+                <span className="mr-2">openai</span>
                 <RadioGroupItem value="openai" id="openai-llm"/>
               </Label>
               <Label className="flex item-center" htmlFor="gemini-llm">
@@ -116,6 +116,7 @@ function SettingsDialog({ settings, setSettings }: Props) {
 
             ) : (
               <>
+                <p className="text-rose-500">The output effect is not good</p>
                 <Label htmlFor="openai-api-key">
                   <div>Gemini API key</div>
                   <div className="font-light mt-2 leading-relaxed">

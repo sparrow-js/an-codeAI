@@ -111,13 +111,11 @@ function App() {
 
   useEffect(() => {
     console.log('***********', dataUrls.length, initCreate, initCreateText)
-    if (dataUrls.length && initCreate) {
+    if (dataUrls.length) {
       initFn.run();
-      setInitCreate(false);
     }
-    if (initCreateText && initCreate) {
+    if (initCreateText) {
       initTextFn.run();
-      setInitCreate(false);
     }
   }, [initCreate, dataUrls, initCreateText]);
 

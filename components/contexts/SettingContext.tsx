@@ -49,18 +49,32 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         if (first) {
             const value = window.localStorage.getItem('setting');
+            const initCreateTextValue = window.localStorage.getItem('initCreateText');
             if (value) {
                 const valueObj = JSON.parse(value)
                 valueObj.init = true;
                 setSettingsStatus(valueObj);
             }
+
+            if (initCreateTextValue) {
+                const valueObj = JSON.parse(initCreateTextValue);
+                if (valueObj && valueObj.initCreateText) {
+                    setInitCreateTextStatus(valueObj.initCreateText);
+                }
+            }
+
             setFirst(false);
         } else {
             window.localStorage.setItem('setting', JSON.stringify(settings));
+            window.localStorage.setItem('initCreateText', JSON.stringify({
+                initCreateText,
+            }));
+
         }
     }, [
         settings,
-        first
+        first,
+        initCreateText,
     ]);
 
     function setInitCreate (newState: boolean) {

@@ -45,7 +45,7 @@ export default function ChatInput({openWhiteboard, showAnim}: props) {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { initCreateText, setInitCreateText, setInitCreate } = useContext(SettingContext);
+  const { initCreateText, setInitCreateText, setInitCreate, initCreate } = useContext(SettingContext);
   useEffect(() => {
     inputRef.current.focus();
   }, [showAnim])
@@ -61,12 +61,16 @@ export default function ChatInput({openWhiteboard, showAnim}: props) {
     if (initCreateText) {
       setLoading(true);
       setInitCreate(true);
-      setTimeout(() => {
-        router.push('/editor', { scroll: false });
-      }, 1000)
       // setLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (initCreate) {
+      console.log('*************88000');
+      router.push('/editor', { scroll: false });
+    }
+  }, [initCreate])
 
   return (
     <div 

@@ -67,7 +67,7 @@ export default function ChatInput({openWhiteboard, showAnim}: props) {
 
   useEffect(() => {
     if (initCreate) {
-      console.log('*************88000');
+      console.log('***********88000');
       router.push('/editor', { scroll: false });
     }
   }, [initCreate])

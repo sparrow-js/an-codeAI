@@ -110,7 +110,6 @@ function App() {
   }, [settings.generatedCodeConfig, setSettings]);
 
   useEffect(() => {
-    console.log('***********', dataUrls.length, initCreate, initCreateText)
     if (dataUrls.length) {
       initFn.run();
     }

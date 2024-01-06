@@ -18,11 +18,11 @@ const shortcutIdeas = [
     label: 'Hero section',
     value: 'A landing page hero section with a heading, leading text and an opt-in form.',
   },
-  {
-    id: 'Contactform',
-    label: 'Contact form',
-    value: 'A contact form with first name, last name, email, and message fields. Put the form in a card with a submit button.'
-  },
+  // {
+  //   id: 'Contactform',
+  //   label: 'Contact form',
+  //   value: 'A contact form with first name, last name, email, and message fields. Put the form in a card with a submit button.'
+  // },
   {
     id: 'Ecommercedashboard',
     label: 'Ecommerce dashboard',

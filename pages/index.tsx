@@ -5,7 +5,7 @@ import OnboardingNote from "../components/components/OnboardingNote";
 import {SettingContext} from '../components/contexts/SettingContext';
 import {UploadFileContext} from '../components/contexts/UploadFileContext'
 import { IS_RUNNING_ON_CLOUD } from "../components/config";
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import classNames from 'classnames';
 
 import dynamic from "next/dynamic";
@@ -57,7 +57,7 @@ export default function Dashboard() {
     useEffect(() => {
         setUploadComplete(() => {
             setInitCreate(true);
-            router.push('/editor', { scroll: false })
+            router.push('/editor')
         })
     }, []);
 
@@ -70,6 +70,12 @@ export default function Dashboard() {
         }),
         [isFocused, isDragAccept, isDragReject]
     );
+
+    useEffect(() => {
+        // Prefetch the dashboard page
+        router.prefetch('/editor')
+      }, [router])
+    
 
     return (
         <div 
@@ -137,7 +143,7 @@ export default function Dashboard() {
                         setOpenWhiteboard(false);
                         setDataUrls(urls);
                         setInitCreate(true);
-                        router.push('/editor', { scroll: false })
+                        router.push('/editor')
                     }}
                     closeWhiteboard={() => {
                         setOpenWhiteboard(false);

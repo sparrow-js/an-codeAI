@@ -79,7 +79,7 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
       setHistory((prevState) => {
           const newHistory = [...prevState];
           const index = version || currentVersion || 0;
-          if (index !== -1 && newHistory) {
+          if (index !== -1 && newHistory && newHistory[index]) {
             newHistory[index].screenshot = img;
           }
           return newHistory;

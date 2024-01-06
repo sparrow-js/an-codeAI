@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState, useMemo } from 'react';
 import {UploadFileContext} from '../../contexts/UploadFileContext'
 import { SettingContext } from '../../contexts/SettingContext';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { LiaPencilRulerSolid } from "react-icons/lia";
 import classNames from "classnames";
 import { GoArrowUpRight } from "react-icons/go";
@@ -42,6 +42,8 @@ export default function ChatInput({openWhiteboard, showAnim}: props) {
     getInputProps,
     open,
   } = useContext(UploadFileContext);
+  
+
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -61,11 +63,11 @@ export default function ChatInput({openWhiteboard, showAnim}: props) {
     if (initCreateText) {
       setLoading(true);
       setInitCreate(true);
-      router.push('/editor', { scroll: false });
+      router.push('/editor');
       // setLoading(false);
     }
   }
-
+  
   return (
     <div 
       className="relative"

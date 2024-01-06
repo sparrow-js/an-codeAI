@@ -196,154 +196,114 @@ export const NO_IMAGES_NYTIMES_MOCK_CODE = `
 `;
 
 const REACT_ANTD_MOCK_CODE = `
-<html>
-  <head>
-    <title>E-commerce Dashboard</title>
-    <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
-    <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
-    <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
-  </head>
-  <body>
-    <div id="app"></div>
 
-    <script type="text/babel">
-      const Dashboard = () => {
-        return (
-          <div className="flex h-screen bg-gray-100">
-            <div className="flex flex-col w-64 bg-white shadow-lg">
-              <div className="flex items-center justify-center h-20 shadow-md">
-                <h1 className="text-3xl uppercase text-indigo-500">Logo</h1>
-              </div>
-              <ul className="flex flex-col py-4">
-                <li>
-                  <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
-                    <i className="fas fa-tachometer-alt pr-2"></i>
-                    Dashboard
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
-                    <i className="fas fa-box pr-2"></i>
-                    Products
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
-                    <i className="fas fa-users pr-2"></i>
-                    Customers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
-                    <i className="fas fa-file-invoice-dollar pr-2"></i>
-                    Orders
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
-                    <i className="fas fa-chart-line pr-2"></i>
-                    Reports
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
-                    <i className="fas fa-cog pr-2"></i>
-                    Settings
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div className="flex-1 flex flex-col overflow-hidden">
-              <header className="flex justify-between items-center p-6 bg-white border-b-2 border-gray-200">
-                <div className="flex items-center space-x-4">
-                  <i className="fas fa-bars text-gray-600 text-2xl"></i>
-                  <h1 className="text-2xl text-gray-700 font-semibold">Dashboard</h1>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <i className="fas fa-bell text-gray-600 text-2xl"></i>
-                  <i className="fas fa-user-circle text-gray-600 text-2xl"></i>
-                </div>
-              </header>
-              <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
-                <div className="container mx-auto px-6 py-8">
-                  <h3 className="text-gray-700 text-3xl font-medium">Recent Orders</h3>
-                  <div className="mt-8">
-                    <div className="flex flex-col">
-                      <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                        <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                          <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <table className="min-w-full divide-y divide-gray-200">
-                              <thead className="bg-gray-50">
-                                <tr>
-                                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Order ID
-                                  </th>
-                                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Product
-                                  </th>
-                                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Customer
-                                  </th>
-                                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Status
-                                  </th>
-                                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Total
-                                  </th>
-                                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Date
-                                  </th>
-                                  <th scope="col" className="relative px-6 py-3">
-                                    <span className="sr-only">Edit</span>
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody className="bg-white divide-y divide-gray-200">
-                                <tr>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    #001
-                                  </td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    Product Name 1
-                                  </td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    Customer Name 1
-                                  </td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-green-500">
-                                    Completed
-                                  </td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    $100.00
-                                  </td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    01/01/2021
-                                  </td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <a href="#" className="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                  </td>
-                                </tr>
-                                {/* Repeat for each order */}
-                                {/* ... other orders ... */}
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </main>
-            </div>
-          </div>
-        );
-      };
+<!DOCTYPE html>
+<html lang="en">
 
-      ReactDOM.render(<Dashboard />, document.getElementById('app'));
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <title>Product Categories</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <style>
+    body {
+      font-family: 'Helvetica', 'Arial', sans-serif;
+    }
+
+    .banner {
+      background-image: url("/placeholder.svg");
+      background-size: cover;
+      background-position: center;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .banner h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .category-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .category-item {
+      background-color: #fff;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .category-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .category-item h3 {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .category-item p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container mx-auto px-4">
+    <div class="banner">
+      <h1>Product Categories</h1>
+    </div>
+
+    <h1 class="text-3xl font-bold text-center my-10">Product Categories</h1>
+
+    <div class="category-list">
+      <div class="category-item">
+        <img src="/placeholder.svg" alt="Image of a laptop computer" />
+        <h3>Laptops</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+      </div>
+      <div class="category-item">
+        <img src="/placeholder.svg" alt="Image of a desktop computer" />
+        <h3>Desktops</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+      </div>
+      <div class="category-item">
+        <img src="/placeholder.svg" alt="Image of a tablet computer" />
+        <h3>Tablets</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+      </div>
+      <div class="category-item">
+        <img src="/placeholder.svg" alt="Image of a smartphone" />
+        <h3>Smartphones</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+      </div>
+      <div class="category-item">
+        <img src="/placeholder.svg" alt="Image of a smartwatch" />
+        <h3>Smartwatches</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+      </div>
+      <div class="category-item">
+        <img src="/placeholder.svg" alt="Image of a pair of headphones" />
+        <h3>Headphones</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+      </div>
+    </div>
+  </div>
+</body>
+
 </html>
 `;
 

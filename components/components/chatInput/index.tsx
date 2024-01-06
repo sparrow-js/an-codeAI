@@ -8,6 +8,16 @@ import { GoArrowUpRight } from "react-icons/go";
 
 const shortcutIdeas = [
   {
+    id: 'Productcategories',
+    label: 'Product categories',
+    value: 'A list of product categories with image, name and description.',
+  },
+  {
+    id: 'HeroSection',
+    label: 'Hero section',
+    value: 'A landing page hero section with a heading, leading text and an opt-in form.',
+  },
+  {
     id: 'Contactform',
     label: 'Contact form',
     value: 'A contact form with first name, last name, email, and message fields. Put the form in a card with a submit button.'
@@ -148,7 +158,8 @@ export default function ChatInput({openWhiteboard, showAnim}: props) {
             {
               shortcutIdeas.map((shortcut) => {
                 return (
-                <button 
+                <button
+                  key={shortcut.id}
                   className='rounded-full border border-zinc-200 px-2 py-0.5 inline-flex gap-1 items-center whitespace-nowrap select-none hover:border-zinc-800 transition-colors'
                   onClick={() => {
                     setInitCreateText(shortcut.value);
@@ -159,8 +170,6 @@ export default function ChatInput({openWhiteboard, showAnim}: props) {
                 </button>)
               })
             }
-           
-
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@
 https://github.com/sparrow-js/ant-codeAI/assets/59440091/e53fae82-d797-4a52-a1a7-a327bc3917a4
 
 编辑支持（HTML + Tailwind，react + Tailwind）
-<img width="1206" alt="截屏2024-01-07 下午12 55 53" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/9e1be3c2-5fff-40e9-bba0-ddbdad68a586">
+<img width="1206" alt="Editing support (HTML+Tailwind, react+Tailwind)" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/9e1be3c2-5fff-40e9-bba0-ddbdad68a586">
 
 
 

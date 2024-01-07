@@ -78,24 +78,27 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
     useEffect(() => {
         if (appState === AppState.CODE_READY) {
             const codeUid = setHtmlCodeUid(generatedCodeConfig, code);
-            const errorIframe = `
-            <script>
-              window.addEventListener('error', (event) => {
-                  window.parent.postMessage({
-                    message: event.message,
-                    error: event.error
-                  }, '*')
-              })
-            </script>  
-                      `;
-            let content = '';
-            var patternHead = /<title[^>]*>((.|[\n\r])*)<\/title>/im; //匹配header
-            const headMatch = codeUid.match(patternHead);
-            if (headMatch) {
-              const headContent = headMatch[0] + errorIframe;
-              content = codeUid.replace(patternHead, headContent);
+            if (codeUid) {
+              const errorIframe = `
+              <script>
+                window.addEventListener('error', (event) => {
+                    window.parent.postMessage({
+                      message: event.message,
+                      error: event.error
+                    }, '*')
+                })
+              </script>  
+                        `;
+              let content = '';
+              var patternHead = /<title[^>]*>((.|[\n\r])*)<\/title>/im; //匹配header
+              const headMatch = codeUid.match(patternHead);
+              if (headMatch) {
+                const headContent = headMatch[0] + errorIframe;
+                content = codeUid.replace(patternHead, headContent);
+              }
+              designer.project.simulator?.writeIframeDocument(content || codeUid);
             }
-            designer.project.simulator?.writeIframeDocument(content || codeUid);
+           
         } else {
             // designer.project.simulator?.writeIframeDocument(throttledCode);
         }

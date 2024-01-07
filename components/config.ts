@@ -1,5 +1,5 @@
 // Default to false if set to anything other than "true" or unset
-export const IS_RUNNING_ON_CLOUD = false;
+export const IS_RUNNING_ON_CLOUD = true;
 
 export const WS_BACKEND_URL = "ws://localhost:9000";
 

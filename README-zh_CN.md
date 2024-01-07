@@ -1,15 +1,13 @@
 # ant-codeAI
 中文 · [English](./README.md)
 
-通过使用AI技术生成高可用代码，web（React，Vue，Tailwind CSS），native（react native）等代码，使用GPT-4 Vision生成，通过截图转化到代码，可以自定义prompt生成可控代码。提供白板功能可以绘制草稿生成代码。
-
-web 支持（React，Vue，Tailwind CSS）
+通过使用OpenAI、Gemini技术生成高可用代码，支持 web（React，Vue，Tailwind CSS），native（react native）等代码，使用GPT-4 Vision生成，通过截图、绘制草稿、输入创意生成代码。
 
 https://github.com/sparrow-js/ant-codeAI/assets/59440091/b66c80fa-b121-442e-b482-f4d3a0cd2d88
 
-app 支持（react native）
+编辑支持（HTML + Tailwind，react + Tailwind）
+<img width="1206" alt="截屏2024-01-07 下午12 55 53" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/9e1be3c2-5fff-40e9-bba0-ddbdad68a586">
 
-https://github.com/sparrow-js/ant-codeAI/assets/59440091/1f60f5a6-3bbd-4cca-8a9a-7e9a211de8ff
 
 
 ## 🚀 试用
@@ -22,12 +20,18 @@ https://github.com/sparrow-js/ant-codeAI/assets/59440091/1f60f5a6-3bbd-4cca-8a9a
 ```bash
 npm run dev
 ```
-## 🛠 设置
-<img width="558" alt="Pasted Graphic 1" src="https://github.com/sparrow-js/firefly/assets/59440091/2daf0da1-dc53-4c2a-b450-2667abcf940b">
 
+## 🛠 设置
+<img width="563" alt="setting" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/7f464a2c-edef-4b00-8cbe-fe46cfabf19e">
+支持OpenAI、Gemini（免费），Gemini输出的效果不太好
+
+OpenAI：
 - OpenAI API Key
 - OpenAI Base URL(代理地址，默认：https://api.openai.com/v1)
 - Mock AI Response(mock AI返回的数据，不直接请求AI)，直接请求OpenAI 接口会消耗费用
+
+Gemini（免费）：
+- Gemini API key
 
 
 ## 生成对比

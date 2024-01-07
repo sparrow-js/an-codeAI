@@ -61,7 +61,7 @@ export default function HistoryDisplay({
                 <div className="bg-[length:160px_100px] bg-no-repeat bg-center w-full h-[80px]" 
                   style={
                     {
-                      backgroundImage: `url(${item.screenshot || 'https://placehold.co/600x400/png'})`
+                      backgroundImage: `url(${item.screenshot || 'https://www.ancodeai.com/placeholder.svg'})`
                     }
                   }></div>
                 <div className="flex gap-x-1 truncate">

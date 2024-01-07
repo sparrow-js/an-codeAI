@@ -62,11 +62,11 @@ function SettingsDialog({ settings, setSettings }: Props) {
               })
             }} className="flex item-center" color="indigo" defaultValue={settings.llm}>
               <Label className="flex item-center" htmlFor="openai-llm">
-                <span className="mr-2">openai</span>
+                <span className="mr-2">OpenAI</span>
                 <RadioGroupItem value="openai" id="openai-llm"/>
               </Label>
               <Label className="flex item-center" htmlFor="gemini-llm">
-                <span className="mr-2">gemini</span>
+                <span className="mr-2">Gemini</span>
                 <RadioGroupItem  value="gemini" id="gemini-llm"/>
               </Label>
             </RadioGroup>

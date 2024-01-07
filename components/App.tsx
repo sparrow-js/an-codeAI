@@ -26,7 +26,7 @@ import {HistoryContext} from './contexts/HistoryContext';
 import NativePreview from './components/NativeMobile';
 import UpdateChatInput from './components/chatInput/Update';
 import dynamic from "next/dynamic";
-import {getPartCodeUid} from './compiler';
+import {getPartCodeUid, setUidAnchorPoint} from './compiler';
 import { useDebounceFn } from 'ahooks';
 import { useRouter } from 'next/navigation';
 import copy from "copy-to-clipboard";
@@ -68,7 +68,7 @@ function App() {
   // Settings
   const {settings, setSettings, initCreate, setInitCreate, initCreateText, setInitCreateText} = useContext(SettingContext);
 
-  const {history, addHistory,  currentVersion, setCurrentVersion, resetHistory} = useContext(HistoryContext);
+  const {history, addHistory,  currentVersion, setCurrentVersion, resetHistory, updateHistoryCode} = useContext(HistoryContext);
   const tabValue = useRef<string>(settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop');
 
   // Tracks the currently shown version from app history
@@ -253,8 +253,15 @@ function App() {
   async function doPartUpdate(partData?: any) {
     const {uid, message} = partData;
     const code = getPartCodeUid(uid);
+    const codeHtml = setUidAnchorPoint(uid, generatedCode, settings.generatedCodeConfig);
+    updateHistoryCode(codeHtml)
+//     const updatePrompt = `
+// Change ${code} as follows:
+// ${message}
+// Re-enter the code.
+//     `;
     const updatePrompt = `
-Change ${code} as follows:
+Find the element with attribute data-uid="${uid}" and change it as described below:
 ${message}
 Re-enter the code.
     `;

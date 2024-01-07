@@ -22,7 +22,7 @@ npm run dev
 ## 🛠 设置
 支持OpenAI、Gemini（免费），Gemini输出的效果不好
 
-<img width="539" alt="setting" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/9656430e-935d-4120-a671-f76452fbc47a">
+<img width="536" alt="setting" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/f92b0363-a0ce-4b51-887c-bb79b347c2d7">
 
 OpenAI：
 - OpenAI API Key

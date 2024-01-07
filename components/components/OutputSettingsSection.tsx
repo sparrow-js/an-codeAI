@@ -13,7 +13,7 @@ function generateDisplayComponent(config: GeneratedCodeConfig) {
       return (
         <div>
           <span className="font-semibold">HTML</span> +{" "}
-          <span className="font-semibold">Tailwind</span>
+          <span className="font-semibold">Tailwind 🔥</span>
         </div>
       );
     case GeneratedCodeConfig.REACT_NATIVE:
@@ -27,7 +27,7 @@ function generateDisplayComponent(config: GeneratedCodeConfig) {
       return (
         <div>
           <span className="font-semibold">React</span> +{" "}
-          <span className="font-semibold">Tailwind</span>
+          <span className="font-semibold">Tailwind 🔥</span>
         </div>
       );
     case GeneratedCodeConfig.BOOTSTRAP:

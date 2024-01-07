@@ -6,6 +6,9 @@ import useThrottle from "../components/hooks/useThrottle";
 import {setHtmlCodeUid} from '../components/compiler';
 import html2canvas from "html2canvas";
 import {HistoryContext} from '../components/contexts/HistoryContext';
+import {
+    FaBug
+  } from "react-icons/fa";
 
 const editor = new Editor();
 globalContext.register(editor, Editor);
@@ -39,12 +42,21 @@ interface Props {
     appState: AppState;
     sendMessageChange: (e: any) => void;
     history: any;
-    generatedCodeConfig: GeneratedCodeConfig
+    generatedCodeConfig: GeneratedCodeConfig,
+    fixBug: (error: {
+        message: string;
+        stack: string;
+    }) => void;
 }
 
-export default function PreviewBox({ code, appState, sendMessageChange, history, generatedCodeConfig }: Props) {
+export default function PreviewBox({ code, appState, sendMessageChange, history, generatedCodeConfig, fixBug }: Props) {
     const throttledCode = useThrottle(code, 500);
     const {updateHistoryScreenshot} = useContext(HistoryContext);
+    const [showDebug, setShowDebug] = useState<boolean>(false);
+    const [errorObj, setErrorObj] = useState({
+      message: '',
+      stack: ''
+    });
 
     const onIframeLoad = async () => {
         const img = await takeScreenshot();
@@ -66,11 +78,44 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
     useEffect(() => {
         if (appState === AppState.CODE_READY) {
             const codeUid = setHtmlCodeUid(generatedCodeConfig, code);
-            designer.project.simulator?.writeIframeDocument(codeUid);
+            const errorIframe = `
+            <script>
+              window.addEventListener('error', (event) => {
+                  window.parent.postMessage({
+                    message: event.message,
+                    error: event.error
+                  }, '*')
+              })
+            </script>  
+                      `;
+            let content = '';
+            var patternHead = /<title[^>]*>((.|[\n\r])*)<\/title>/im; //匹配header
+            const headMatch = codeUid.match(patternHead);
+            if (headMatch) {
+              const headContent = headMatch[0] + errorIframe;
+              content = codeUid.replace(patternHead, headContent);
+            }
+            designer.project.simulator?.writeIframeDocument(content || codeUid);
         } else {
             // designer.project.simulator?.writeIframeDocument(throttledCode);
         }
     }, [code, appState]);
+
+    useEffect(() => {
+        const messageHandler = (e: any) => {
+          if (e.data && e.data.error) {
+            setErrorObj({
+              message: e.data.error.message,
+              stack: e.data.error.stack
+            });
+            setShowDebug(true);
+          }
+        }
+        window.addEventListener('message', messageHandler);
+        return () => {
+          window.removeEventListener('message', messageHandler);
+        }
+      }, [])
 
     const takeScreenshot = async (): Promise<string> => {
         const body = designer.project.simulator?.contentWindow?.document.body;
@@ -85,6 +130,17 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
 
     return (
         <div className="border-[4px] border-black rounded-[20px] shadow-lg w-full h-full">
+            {
+                showDebug && (
+                <span
+                    onClick={() => {
+                        fixBug(errorObj);
+                    }}
+                    className='text-red-600 absolute right-14 top-16 z-[50] hover:bg-slate-200 rounded-sm p-2'>
+                    <FaBug />
+                </span>
+                )
+            }
             <DesignerView 
                 editor={editor}
                 designer={editor.get('designer')}

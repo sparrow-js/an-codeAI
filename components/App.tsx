@@ -514,6 +514,7 @@ ${error.stack}
                         }}
                         generatedCodeConfig={settings.generatedCodeConfig}
                         history={history}
+                        fixBug={fixBug}
                       />
                       {/* <Preview code={generatedCode} device="desktop" appState={appState} fixBug={fixBug}/> */}
                     </TabsContent>

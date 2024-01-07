@@ -29,6 +29,8 @@ export interface Settings {
   mockAiResponse: boolean;
   promptCode: string;
   init: boolean;
+  llm: string;
+  geminiApiKey: string;
 }
 
 export enum AppState {

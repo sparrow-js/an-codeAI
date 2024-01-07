@@ -10,10 +10,13 @@ const STOP_MESSAGE = "Code generation stopped";
 
 export interface CodeGenerationParams {
   generationType: "create" | "update";
-  image: string;
+  image?: string;
+  text?: string;
   resultImage?: string;
   history?: string[];
   isChunk?: boolean;
+  partData?: any;
+
   // isImageGenerationEnabled: boolean; // TODO: Merge with Settings type in types.ts
 }
 
@@ -26,6 +29,7 @@ export function generateCode(
   onComplete: () => void
 ) {
 
+  
   wsRef.current = new AbortController();
 
   async function handleMessage(event: { data: string }) {

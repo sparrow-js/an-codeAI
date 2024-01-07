@@ -5,6 +5,7 @@ import { mockComletion } from './mock';
 export interface IGenerateCodeParams {
   generationType: string;
   image: string;
+  text: string;
   openAiApiKey: string;
   openAiBaseURL: string;
   screenshotOneApiKey: null;
@@ -17,6 +18,8 @@ export interface IGenerateCodeParams {
   promptCode: string;
   history: any[];
   mockAiResponse?: boolean;
+  llm: string;
+  geminiApiKey: string;
 }
 
 const encoder = new TextEncoder();
@@ -35,6 +38,7 @@ export async function streamGenerateCode(
     if (params['resultImage']) {
       prompt_messages = assemblePrompt(
         params['image'],
+        params['text'],
         generated_code_config,
         params['promptCode'],
         params['resultImage'],
@@ -42,6 +46,7 @@ export async function streamGenerateCode(
     } else {
       prompt_messages = assemblePrompt(
         params['image'],
+        params['text'],
         generated_code_config,
         params['promptCode'],
       );
@@ -93,6 +98,8 @@ export async function streamGenerateCode(
         {
           openAiApiKey: params.openAiApiKey,
           openAiBaseURL: params.openAiBaseURL,
+          llm: params.llm, // 'Gemini'
+          geminiApiKey: params.geminiApiKey,
         },
       );
     } catch (e) {

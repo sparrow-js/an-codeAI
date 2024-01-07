@@ -196,94 +196,114 @@ export const NO_IMAGES_NYTIMES_MOCK_CODE = `
 `;
 
 const REACT_ANTD_MOCK_CODE = `
-<html>
+
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-  <title>Registration Form</title>
-</head>
-<body>
-  <div id="root"></div>
-
-  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
-  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
-  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
-  <script src="https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js"></script>
-  <script src="https://registry.npmmirror.com/antd/5.12.2/files/dist/antd.js"></script>
-  
-  <script type="text/babel">
-    const { Form, Input, Cascader, Checkbox, Button,  Select} = antd;
-
-    const residenceOptions = [
-      {
-        value: 'zhejiang',
-        label: 'Zhejiang',
-        children: [
-          {
-            value: 'hangzhou',
-            label: 'Hangzhou',
-            children: [
-              {
-                value: 'westlake',
-                label: 'West Lake',
-              },
-            ],
-          },
-        ],
-      },
-      // ...other province options
-    ];
-
-    function RegistrationForm() {
-      return (
-        <Form
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          layout="horizontal"
-        >
-          <Form.Item label="Nickname" required tooltip="This is a required field">
-            <Input placeholder="" />
-          </Form.Item>
-          <Form.Item label="Habitual Residence" required>
-            <Cascader
-              options={residenceOptions}
-              defaultValue={['zhejiang', 'hangzhou', 'westlake']}
-              placeholder="Please select your habitual residence"
-            />
-          </Form.Item>
-          <Form.Item label="Phone Number" required>
-            <Input addonBefore={<Select defaultValue="+86" style={{ width: 70 }}>
-              {/* Add other country codes as needed */}
-            </Select>} style={{ width: '100%' }} />
-          </Form.Item>
-          <Form.Item label="Donation" required>
-            <Input placeholder="" />
-          </Form.Item>
-          <Form.Item label="Website" required>
-            <Input placeholder="website" />
-          </Form.Item>
-          <Form.Item label="Intro" required>
-            <Input.TextArea showCount maxLength={100} />
-          </Form.Item>
-          <Form.Item label="Gender" required>
-            <Select placeholder="select your gender">
-              {/* Add gender options as needed */}
-            </Select>
-          </Form.Item>
-          <Form.Item label="Captcha" extra="We must make sure that your are a human.">
-            <Input />
-          </Form.Item>
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Checkbox>I have read the agreement</Checkbox>
-          </Form.Item>
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary">Register</Button>
-          </Form.Item>
-        </Form>
-      );
+  <meta charset="UTF-8" />
+  <title>Product Categories</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <style>
+    body {
+      font-family: 'Helvetica', 'Arial', sans-serif;
     }
 
-    ReactDOM.render(<RegistrationForm />, document.getElementById('root'));
-  </script>
+    .banner {
+      background-image: url("/placeholder.svg");
+      background-size: cover;
+      background-position: center;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .banner h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .category-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .category-item {
+      background-color: #fff;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .category-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .category-item h3 {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .category-item p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container mx-auto px-4">
+    <div class="banner">
+      <h1>Product Categories</h1>
+    </div>
+
+    <h1 class="text-3xl font-bold text-center my-10">Product Categories</h1>
+
+    <div class="category-list">
+      <div class="category-item">
+        <img src="/placeholder.svg" alt="Image of a laptop computer" />
+        <h3>Laptops</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+      </div>
+      <div class="category-item">
+        <img src="/placeholder.svg" alt="Image of a desktop computer" />
+        <h3>Desktops</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+      </div>
+      <div class="category-item">
+        <img src="/placeholder.svg" alt="Image of a tablet computer" />
+        <h3>Tablets</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+      </div>
+      <div class="category-item">
+        <img src="/placeholder.svg" alt="Image of a smartphone" />
+        <h3>Smartphones</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+      </div>
+      <div class="category-item">
+        <img src="/placeholder.svg" alt="Image of a smartwatch" />
+        <h3>Smartwatches</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+      </div>
+      <div class="category-item">
+        <img src="/placeholder.svg" alt="Image of a pair of headphones" />
+        <h3>Headphones</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+      </div>
+    </div>
+  </div>
 </body>
+
 </html>
 `;
 

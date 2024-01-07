@@ -72,7 +72,7 @@ function Preview({ code, device, appState, fixBug }: Props) {
   }, [])
 
   return (
-    <div className="flex justify-center mx-2">
+    <div className="flex justify-center mx-2 h-full">
       {
         showDebug && (
           <span
@@ -89,12 +89,8 @@ function Preview({ code, device, appState, fixBug }: Props) {
         ref={iframeRef}
         title="Preview"
         className={classNames(
-          "border-[4px] border-black rounded-[20px] shadow-lg",
+          "border-[4px] border-black rounded-[20px] shadow-lg w-full",
           "transform scale-[0.9] origin-top",
-          {
-            "w-full h-[700px]": device === "desktop",
-            "w-[400px] h-[700px]": device === "mobile",
-          }
         )}
       ></iframe>
     </div>

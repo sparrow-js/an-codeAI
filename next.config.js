@@ -29,16 +29,15 @@ const nextConfig = {
     //   - https://nextjs.org/docs/messages/css-npm
     //   - https://github.com/vercel/next.js/discussions/27953
     patchWebpackConfig(config, options);
-
+    
     config.module.rules.push({ test: /\.ttf$/, type: "asset/resource" });
-
     // when `isServer` is `true`, building (`next build`) fails with the following error:
     // "Conflict: Multiple assets emit different content to the same filename ../main.js.nft.json"
     if (!options.isServer) {
       config.plugins.push(
         new MonacoWebpackPlugin({
-          languages: ["javascript", "typescript"],
-          filename: "static/[name].worker.js",
+          languages: ["javascript", "typescript", "html"],
+          filename: 'static/[name].worker.js',
         })
       );
     }

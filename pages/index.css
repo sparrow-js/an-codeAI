@@ -141,3 +141,56 @@ body{
 #__next{
   height: 100%;
 }
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+
+  --color-brand: rgba(0, 108, 255, 1);
+  --color-brand-light: rgba(25, 122, 255, 1);
+  --color-brand-dark: rgba(0, 96, 229, 1);
+
+  --color-canvas-background: rgba(31, 56, 88, 0.06);
+
+  --color-icon-normal: rgba(31, 56, 88, 0.4);
+  --color-icon-hover: rgba(31, 56, 88, 0.3);
+  --color-icon-active: rgba(0, 108, 255, 1);
+  --color-icon-reverse: rgb(255, 255, 255); 
+
+  --color-line-normal: rgba(255, 255, 255, 0.1);
+  --color-line-darken: darken(rgba(255, 255, 255, 0.1), 10%);
+
+  --color-title:rgba(0, 0, 0, 0.8);
+  --color-text: rgba(0, 0, 0, 0.6);
+  --color-text-dark: darken(@rgba(0, 0, 0, 0.6), 10%);
+  --color-text-light: lighten(rgba(0, 0, 0, 0.6), 10%);
+  --color-text-reverse: rgba(255, 255, 255, 0.8);
+  --color-text-regular: rgba(31, 56, 88, 0.8);
+
+  --color-field-label: rgba(0, 0, 0, 0.4);;
+  --color-field-text: rgba(0, 0, 0, 0.6);
+  --color-field-placeholder: rgba(31, 56, 88, 0.3);
+  --color-field-border: rgba(31, 56, 88, 0.3);
+  --color-field-border-hover: rgba(31, 56, 88, 0.4);
+  --color-field-border-active: rgba(31, 56, 88, 0.6);
+  --color-field-background: rgb(255, 255, 255);
+
+  --color-function-success:rgb(102, 188, 92);
+  --color-function-warning: rgb(250, 189, 14);
+  --color-function-information: #2e76a6;
+  --color-function-error: rgb(240, 70, 49);
+
+  --color-pane-background: rgb(255, 255, 255);
+  --color-block-background-normal: rgb(255, 255, 255);
+  --color-block-background-light: rgba(31, 56, 88, 0.04);
+  --color-block-background-shallow: rgba(31, 56, 88, 0.06);
+  --color-block-background-dark: rgba(31, 56, 88, 0.1);
+  --color-block-background-disabled: rgba(31, 56, 88, 0.2);
+  --color-block-background-deep-dark: #bac3cc;
+  --color-layer-mask-background: rgba(0, 0, 0, 0.1);
+  --color-layer-tooltip-background: rgba(44,47,51,0.8);
+
+  --pane-title-bg-color: rgba(31,56,88,.04);
+
+}

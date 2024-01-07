@@ -47,6 +47,3 @@ Gemini（免费）：
 10元/20次预计生成,不退款(初次使用体验不要超过10元),感觉对自己有用在继续使用。每天20:00前发送至邮箱，如有openAI API key自行设置使用即可。
 - 备注一定要添加自己邮箱地址.
 <img width="260" alt="付款二维码" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/950bad51-bddd-42c6-b29e-815052c8ff82">
-
-
-[reference material screenshot-to-code](https://github.com/abi/screenshot-to-code)

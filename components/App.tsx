@@ -338,7 +338,9 @@ ${error.stack}
             appState === AppState.CODE_READY) && (
             <>
               {appState === AppState.CODING && (
-                <CodePreview code={generatedCode}/>
+                <div>
+                   <CodePreview code={generatedCode}/>
+                 </div>
               )}
               {/* Show code preview only when coding */}
               {appState === AppState.CODING && (

@@ -252,7 +252,7 @@ function App() {
 
   async function doPartUpdate(partData?: any) {
     const {uid, message} = partData;
-    const code = getPartCodeUid(uid);
+    // const code = getPartCodeUid(uid);
     const codeHtml = setUidAnchorPoint(uid, generatedCode, settings.generatedCodeConfig);
     updateHistoryCode(codeHtml)
 //     const updatePrompt = `
@@ -263,7 +263,7 @@ function App() {
     const updatePrompt = `
 Find the element with attribute data-uid="${uid}" and change it as described below:
 ${message}
-Re-enter the code.
+Re-output the code and do not need to output the data-uid attribute.
     `;
     setPartValue(partData);
     setUpdateInstruction(updatePrompt);

@@ -15,6 +15,7 @@ interface historyContextType {
       originMessage: string,
     ) => void;
     updateHistoryScreenshot: (img: string, version?: number) => void;
+    updateHistoryCode: (img: string, version?: number) => void;
     resetHistory: () => void;
 }
 
@@ -24,6 +25,7 @@ const initialValue = {
     setCurrentVersion: (version: number | null) => {},
     addHistory: (generationType: string, updateInstruction: string, referenceImages: string[], initText: string, code: string) => {},
     updateHistoryScreenshot: (img: string, version?: number) => {},
+    updateHistoryCode: (img: string, version?: number) => {},
     resetHistory: () => {}
 }
 
@@ -85,6 +87,17 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
           return newHistory;
         });
     }
+
+    const updateHistoryCode = (code: string, version?: number) => {
+      setHistory((prevState) => {
+          const newHistory = [...prevState];
+          const index = version || currentVersion || 0;
+          if (index !== -1 && newHistory && newHistory[index]) {
+            newHistory[index].code = code;
+          }
+          return newHistory;
+        });
+    }
    
 
     function setCurrentVersion(version: number | null) {
@@ -105,7 +118,8 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
             setCurrentVersion,
             addHistory,
             updateHistoryScreenshot,
-            resetHistory
+            resetHistory,
+            updateHistoryCode
           }}
         >
           {children}

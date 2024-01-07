@@ -129,8 +129,9 @@ function findJsxNode(node: Node) {
   }  
   
 
-  function setJsxElementUid(nodeList: Node[], sourceFile: TS.SourceFile) {
+  function setJsxElementUid(nodeList: Node[], sourceFile: TS.SourceFile, anchorUid: string) {
     const cacheJsxList: any[] = [];
+    const hasAnchorUid = !!anchorUid;
     if (cacheJsxMap.has(sourceFile.fileName)) {
       cacheJsxMap.delete(sourceFile.fileName);
     }
@@ -154,9 +155,16 @@ function findJsxNode(node: Node) {
         leaf['linkNode'] = node;
         alreadyExistingUIDsFile.add(uid);
         cacheJsx[uid] = leaf;
-        if (leaf['tagName']) {
-          appendUidAttribute(uid, (node as any).openingElement.attributes);
+        if (hasAnchorUid) {
+          if (anchorUid === uid && leaf['tagName']) {
+            appendUidAttribute(uid, (node as any).openingElement.attributes);
+          }
+        } else {
+          if (leaf['tagName']) {
+            appendUidAttribute(uid, (node as any).openingElement.attributes);
+          }
         }
+       
       } else if (node.kind === TS.SyntaxKind.JsxSelfClosingElement) {
         const props = getAttributes((node as any).attributes, sourceFile);
         const hash = Hash({
@@ -172,8 +180,14 @@ function findJsxNode(node: Node) {
         leaf['linkNode'] = node;
         alreadyExistingUIDsFile.add(uid);
         cacheJsx[uid] = leaf;
-        if (leaf['tagName']) {
-          appendUidAttribute(uid, (node as any).attributes);
+        if (hasAnchorUid) {
+          if (anchorUid === uid && leaf['tagName']) {
+            appendUidAttribute(uid, (node as any).attributes);
+          }
+        } else {
+          if (leaf['tagName']) {
+            appendUidAttribute(uid, (node as any).attributes);
+          }
         }
       } else {
         return null;
@@ -199,19 +213,19 @@ function findJsxNode(node: Node) {
     return cacheJsxList;
 }  
 
-export default function setCodeUid (code: string, path: string = '/mock.tsx') {
+export default function setCodeUid (code: string, anchorUid: string = '', path: string = '/mock.tsx') {
     alreadyExistingUIDs.set(path, new Set());
     const sourceFile = TS.createSourceFile(path, code, TS.ScriptTarget.ESNext);
     const nodeObject = sourceFile.getChildren()[0];
     findJsxNode(nodeObject);
-    const cacheJsx = setJsxElementUid(jsxContainerList, sourceFile);
+    const cacheJsx = setJsxElementUid(jsxContainerList,sourceFile, anchorUid);
 
     const printer = TS.createPrinter();
     const codeUid = printer.printNode(TS.EmitHint.Unspecified, sourceFile, sourceFile);
     return codeUid;
 }
 
-export function setHtmlCodeUid(generatedCodeConfig: GeneratedCodeConfig, code: string, path: string = '/mock.tsx') {
+export function setHtmlCodeUid(generatedCodeConfig: GeneratedCodeConfig, code: string, anchorUid: string = '', path: string = '/mock.tsx') {
   if (!code) return code;
   if (generatedCodeConfig === GeneratedCodeConfig.HTML_TAILWIND) {
     var patternBody = /<body[^>]*>((.|[\n\r])*)<\/body>/im; //匹配header
@@ -224,7 +238,7 @@ export function setHtmlCodeUid(generatedCodeConfig: GeneratedCodeConfig, code: s
         )
       }
       `;
-      const codeJsx = setCodeUid(htmlCode, path);
+      const codeJsx = setCodeUid(htmlCode, anchorUid, path);
       const body = codeJsx.match(patternBody);
       if (body) {
         return code.replace(patternBody,  body[0]);
@@ -237,7 +251,7 @@ export function setHtmlCodeUid(generatedCodeConfig: GeneratedCodeConfig, code: s
     var patternScript = /<script type="text\/babel"[^>]*>((.|[\n\r])*)<\/script>/im; //匹配script
     const scriptMatch = code.match(patternScript);
     if (scriptMatch) {
-      const codeJsx = setCodeUid(scriptMatch[1], path);
+      const codeJsx = setCodeUid(scriptMatch[1], anchorUid, path);
       if (codeJsx) {
         let codeScript = `
 <script type="text/babel">
@@ -288,10 +302,14 @@ function htmlRender () {
   return null;
 }
 
+export function setUidAnchorPoint(uid: string, code: string, generatedCodeConfig: GeneratedCodeConfig) {
+  const codeHtml = setHtmlCodeUid(generatedCodeConfig, code, uid);
+  return codeHtml;
+}
+
+
 // function test () {
 //   const codeHtml = `
-
-
 //   <html>
 //   <head>
 //     <title>E-commerce Dashboard</title>
@@ -445,7 +463,7 @@ function htmlRender () {
 //   `;
 
   
-//   const code = setHtmlCodeUid(GeneratedCodeConfig.REACT_TAILWIND, codeHtml.replaceAll(/<!--((.)*)-->/img, ''));
+//   const code = setHtmlCodeUid(GeneratedCodeConfig.REACT_TAILWIND, codeHtml, '');
 //   console.log('*******', code);
 // }
 

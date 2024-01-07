@@ -13,8 +13,6 @@ https://github.com/sparrow-js/ant-codeAI/assets/59440091/b66c80fa-b121-442e-b482
 ## 🚀 试用
 > [线上地址](https://www.ancodeai.com/)
 
-> [线上临时腾讯云地址，图片最大可上传1MB](https://service-1fiqz1da-1253530766.gz.tencentapigw.com/release/)
-
 
 可以下载下来本地运行.
 ```bash
@@ -22,8 +20,9 @@ npm run dev
 ```
 
 ## 🛠 设置
+支持OpenAI、Gemini（免费），Gemini输出的效果不好
+
 <img width="563" alt="setting" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/7f464a2c-edef-4b00-8cbe-fe46cfabf19e">
-支持OpenAI、Gemini（免费），Gemini输出的效果不太好
 
 OpenAI：
 - OpenAI API Key

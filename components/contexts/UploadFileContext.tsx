@@ -66,7 +66,7 @@ export default function UploadFileProvider({ children }: { children: ReactNode }
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject, open } =
     useDropzone({
       maxFiles: 1,
-      maxSize: 1024 * 1024 * 1, // 1 MB
+      maxSize: 1024 * 1024 * 3, // 1 MB
       noClick: true,
       accept: {
         "image/png": [".png"],

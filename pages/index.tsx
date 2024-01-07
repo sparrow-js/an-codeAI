@@ -86,17 +86,17 @@ export default function Dashboard() {
                 <Header />
             </div>
             <main>
-                <div className='fixed right-0 top-20 w-[100px] flex flex-col items-center  justify-center py-6 gap-12'>
+                <div className='fixed right-0 top-20 w-[115px] flex flex-col items-center  justify-center py-6 gap-12'>
                     <div
                         onClick={open}
                         className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-pink-500 relative inline-block px-2'>
-                        <span className='relative text-white'>screenshot</span>
+                        <span className='relative text-white'>🔥screenshot</span>
                     </div>
                     <div
                         onClick={() => {
                             setOpenWhiteboard(true);
                         }}
-                        className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-green-500 relative inline-block px-2'>
+                        className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-green-500 relative inline-block px-4'>
                         <span className='relative text-white'>whiteboard</span>
                     </div>
                     <div 
@@ -106,7 +106,7 @@ export default function Dashboard() {
                                 setShowAnim(false);
                             }, 800)
                         }}
-                        className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-cyan-500 relative inline-block px-8'
+                        className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-cyan-500 relative inline-block px-9'
                         >
                         <span className='relative text-white'>ideas</span>
                     </div>

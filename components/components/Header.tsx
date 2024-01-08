@@ -14,7 +14,7 @@ export default () => {
   return (
     <header className="flex items-center p-4 justify-between">
       <div>
-        <h1 className="text-2xl ">Ant CodeAI</h1>
+        <img className="w-[160px]" src="/logo.png" />
       </div>
       <div className="flex items-center">
         <div className="flex-1">
@@ -35,7 +35,7 @@ export default () => {
                 <SettingsDialog settings={settings} setSettings={setSettings} />
               </span>
             </li>
-            <li className="mr-2 hover:bg-slate-200 rounded-sm p-2">
+            {/* <li className="mr-2 hover:bg-slate-200 rounded-sm p-2">
                 <a
                   href="https://github.com/sparrow-js/ant-codeAI/blob/main/README.md"
                   target="_blank"
@@ -72,7 +72,7 @@ export default () => {
                   ></path>
                 </svg>
               </a>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

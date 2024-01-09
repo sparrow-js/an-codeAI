@@ -130,6 +130,9 @@ export default function Dashboard() {
                     )
                 }
             </main>
+            <div className="absolute bottom-[10px] w-[100%] p-2">
+                <p className='text-[#636262] text-center'>© Copyright <a className='text-sky-400 hover:text-sky-600' href="https://www.ancodeai.com/">ancodeAI</a> All rights reserved.</p>
+            </div>
             <div 
                 className={classNames(
                     "fixed w-full h-full top-0 left-0 z-50",

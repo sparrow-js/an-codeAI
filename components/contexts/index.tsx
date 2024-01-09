@@ -3,6 +3,7 @@ import PromptProvider from './PromptContext';
 import SettingProvider from './SettingContext';
 import UploadFileProvider from './UploadFileContext';
 import HistoryProvider from './HistoryContext';
+import EditorProvider from './EditorContext';
 
 export default function ContextWrapper({ children }: { children: ReactNode }) {
     return (
@@ -11,7 +12,9 @@ export default function ContextWrapper({ children }: { children: ReactNode }) {
           <PromptProvider>
             <UploadFileProvider>
               <HistoryProvider>
-                {children}
+                <EditorProvider>
+                  {children}
+                </EditorProvider>
               </HistoryProvider>
             </UploadFileProvider>
           </PromptProvider>

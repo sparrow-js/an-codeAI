@@ -12,9 +12,9 @@ export default () => {
   const { settings, setSettings } = useContext(SettingContext);
 
   return (
-    <header className="flex items-center p-4 justify-between">
+    <header className="flex items-center p-4 justify-between relative">
       <div>
-        <h1 className="text-2xl ">Ant CodeAI</h1>
+        <img className="w-[80px] h-[80px] absolute -top-[12px] left-5" src="/logo.jpg" />
       </div>
       <div className="flex items-center">
         <div className="flex-1">

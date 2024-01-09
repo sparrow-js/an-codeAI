@@ -176,8 +176,11 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
         return this._props[key];
     }
 
-    set(key: string, value: any): void {
-        throw new Error('Method not implemented.');
+    set(key: string, value: any) {
+      this._props = {
+        ...this._props,
+        [key]: value,
+      };
     }
 
       /**

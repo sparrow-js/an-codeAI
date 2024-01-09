@@ -472,14 +472,14 @@ ${error.stack}
                   >
                     <FaDownload />
                   </span>
-                  <span
+                  {/* <span
                     className="hover:bg-slate-200 p-2 rounded-sm"
                     onClick={() => {
                       
                     }}
                   >
                     <PiCursorClickFill className="w-[18px] h-[18px] text-amber-500"/>
-                  </span>
+                  </span> */}
                 </>
               )}
 

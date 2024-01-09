@@ -31,6 +31,7 @@ import { useDebounceFn } from 'ahooks';
 import { useRouter } from 'next/navigation';
 import copy from "copy-to-clipboard";
 import CodePreview from './components/CodePreview';
+import { PiCursorClickFill } from "react-icons/pi";
 
 
 const CodeTab = dynamic(
@@ -448,29 +449,37 @@ ${error.stack}
                 New</Button>
               {appState === AppState.CODE_READY && (
                 <>
-                <Button
-                  title="Copy Code"
-                  onClick={copyCode}
-                >
-                  <FaCopy className="mr-2"/>
-                  Copy 
-                </Button>
-                <Button
-                  onClick={doOpenInCodepenio}
-                  className="bg-gray-100 text-black ml-2 py-2 px-4 border border-black rounded-md hover:bg-gray-400 focus:outline-none"
-                >
-                  <img
-                    src="https://assets.codepen.io/t-1/codepen-logo.svg"
-                    alt="codepen.io"
-                    className="h-4 ml-1"
-                  />
-                </Button>
+                  <Button
+                    title="Copy Code"
+                    onClick={copyCode}
+                  >
+                    <FaCopy className="mr-2"/>
+                    Copy 
+                  </Button>
+                  <Button
+                    onClick={doOpenInCodepenio}
+                    className="bg-gray-100 text-black ml-2 py-2 px-4 border border-black rounded-md hover:bg-gray-400 focus:outline-none"
+                  >
+                    <img
+                      src="https://assets.codepen.io/t-1/codepen-logo.svg"
+                      alt="codepen.io"
+                      className="h-4 ml-1"
+                    />
+                  </Button>
                   <span
                     onClick={downloadCode}
                     className="hover:bg-slate-200 p-2 rounded-sm"
                   >
                     <FaDownload />
                   </span>
+                  {/* <span
+                    className="hover:bg-slate-200 p-2 rounded-sm"
+                    onClick={() => {
+                      
+                    }}
+                  >
+                    <PiCursorClickFill className="w-[18px] h-[18px] text-amber-500"/>
+                  </span> */}
                 </>
               )}
 

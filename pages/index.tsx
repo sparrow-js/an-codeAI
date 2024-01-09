@@ -111,9 +111,8 @@ export default function Dashboard() {
                         <span className='relative text-white'>ideas</span>
                     </div>
                 </div>
-
                 <div className="w-full bg-white dark:bg-gray-800 border-t dark:border-t-gray-600 flex-col flex items-center justify-between p-3">
-                    <div className="relative mt-96 w-[520px] rounded-md shadow-sm">
+                    <div className="relative mt-80 w-[520px] rounded-md shadow-sm">
                         <ChatInput
                             openWhiteboard={() => {
                                 setOpenWhiteboard(true);
@@ -121,6 +120,7 @@ export default function Dashboard() {
                             showAnim={showAnim}
                         />
                     </div>
+                    <p className='mt-8'>Support Drag & drop a screenshot</p>
                 </div>                    
                 { IS_RUNNING_ON_CLOUD &&
                     !(settings.openAiApiKey) && settings.init && (

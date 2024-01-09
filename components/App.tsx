@@ -11,6 +11,7 @@ import {
   FaCopy,
   FaChevronLeft,
 } from "react-icons/fa";
+import { AiFillCodepenCircle } from "react-icons/ai";
 
 import { Switch } from "./components/ui/switch";
 import { Button } from "./components/ui/button";
@@ -452,32 +453,27 @@ ${error.stack}
                 New</Button>
               {appState === AppState.CODE_READY && (
                 <>
-                  <Button
-                    title="Copy Code"
-                    onClick={copyCode}
-                  >
-                    <FaCopy className="mr-2"/>
-                    Copy 
-                  </Button>
-                  <Button
+                  <span
                     onClick={doOpenInCodepenio}
-                    className="bg-gray-100 text-black ml-2 py-2 px-4 border border-black rounded-md hover:bg-gray-400 focus:outline-none"
+                    className="hover:bg-slate-200 rounded-sm w-[36px] h-[36px] flex items-center justify-center border-black border-2"
                   >
-                    <img
-                      src="https://assets.codepen.io/t-1/codepen-logo.svg"
-                      alt="codepen.io"
-                      className="h-4 ml-1"
-                    />
-                  </Button>
+                    <AiFillCodepenCircle className="w-[18px] h-[18px]"/>
+                  </span>
+                  <span
+                    onClick={copyCode}
+                    className="hover:bg-slate-200 rounded-sm w-[36px] h-[36px] flex items-center justify-center border-black border-2"
+                  > 
+                    <FaCopy />
+                  </span> 
                   <span
                     onClick={downloadCode}
-                    className="hover:bg-slate-200 p-2 rounded-sm"
+                    className="hover:bg-slate-200 rounded-sm w-[36px] h-[36px] flex items-center justify-center border-black border-2"
                   >
                     <FaDownload />
                   </span>
                   <span
                     className={classNames(
-                      "rounded-full border-black border w-[30px] h-[30px] flex items-center justify-center",
+                      "hover:bg-slate-200 rounded-full border-black border-2 w-[36px] h-[36px] flex items-center justify-center",
                       {
                         "border-blue-500 text-blue-500": enableEdit,
                       }

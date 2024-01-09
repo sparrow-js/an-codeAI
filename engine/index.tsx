@@ -6,6 +6,7 @@ import useThrottle from "../components/hooks/useThrottle";
 import {setHtmlCodeUid} from '../components/compiler';
 import html2canvas from "html2canvas";
 import {HistoryContext} from '../components/contexts/HistoryContext';
+import {EditorContext} from '../components/contexts/EditorContext';
 import {
     FaBug
   } from "react-icons/fa";
@@ -58,6 +59,15 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
       stack: ''
     });
 
+    const { enableEdit, setEnableEdit } = useContext(EditorContext);
+    useEffect(() => {
+      if (enableEdit) {
+        designer.project.simulator?.set('designMode', 'design')
+      } else {
+        designer.project.simulator?.set('designMode', 'live')
+      }
+    }, [enableEdit])
+
     const onIframeLoad = async () => {
         const img = await takeScreenshot();
         setTimeout(() => {
@@ -74,6 +84,7 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
 
         }
     }, [history]);
+    
 
     useEffect(() => {
         if (appState === AppState.CODE_READY) {

@@ -23,6 +23,7 @@ import toast from "react-hot-toast";
 import {UploadFileContext} from './contexts/UploadFileContext';
 import {SettingContext} from './contexts/SettingContext';
 import {HistoryContext} from './contexts/HistoryContext';
+import {EditorContext} from './contexts/EditorContext';
 import NativePreview from './components/NativeMobile';
 import UpdateChatInput from './components/chatInput/Update';
 import dynamic from "next/dynamic";
@@ -32,6 +33,7 @@ import { useRouter } from 'next/navigation';
 import copy from "copy-to-clipboard";
 import CodePreview from './components/CodePreview';
 import { PiCursorClickFill } from "react-icons/pi";
+import classNames from "classnames";
 
 
 const CodeTab = dynamic(
@@ -70,6 +72,7 @@ function App() {
   const {settings, setSettings, initCreate, setInitCreate, initCreateText, setInitCreateText} = useContext(SettingContext);
 
   const {history, addHistory,  currentVersion, setCurrentVersion, resetHistory, updateHistoryCode} = useContext(HistoryContext);
+  const { enableEdit, setEnableEdit } = useContext(EditorContext)
   const tabValue = useRef<string>(settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop');
 
   // Tracks the currently shown version from app history
@@ -472,14 +475,19 @@ ${error.stack}
                   >
                     <FaDownload />
                   </span>
-                  {/* <span
-                    className="hover:bg-slate-200 p-2 rounded-sm"
+                  <span
+                    className={classNames(
+                      "rounded-full border-black border w-[30px] h-[30px] flex items-center justify-center",
+                      {
+                        "border-blue-500 text-blue-500": enableEdit,
+                      }
+                    )}
                     onClick={() => {
-                      
+                      setEnableEdit(!enableEdit);
                     }}
                   >
-                    <PiCursorClickFill className="w-[18px] h-[18px] text-amber-500"/>
-                  </span> */}
+                    <PiCursorClickFill className="w-[18px] h-[18px]"/>
+                  </span>
                 </>
               )}
 

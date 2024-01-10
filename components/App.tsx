@@ -10,6 +10,7 @@ import {
   FaUndo,
   FaCopy,
   FaChevronLeft,
+  FaCloud,
 } from "react-icons/fa";
 import { AiFillCodepenCircle } from "react-icons/ai";
 
@@ -35,6 +36,8 @@ import copy from "copy-to-clipboard";
 import CodePreview from './components/CodePreview';
 import { PiCursorClickFill } from "react-icons/pi";
 import classNames from "classnames";
+import { createClient } from 'zeabur'
+import JSZip from 'jszip'
 
 
 const CodeTab = dynamic(
@@ -68,6 +71,7 @@ function App() {
     dataUrls,
     setDataUrls,
   } = useContext(UploadFileContext)
+  const [isDeploying, setIsDeploying] = useState<boolean>(false);
   
   // Settings
   const {settings, setSettings, initCreate, setInitCreate, initCreateText, setInitCreateText} = useContext(SettingContext);
@@ -152,6 +156,31 @@ function App() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
+
+  const deployToZeabur = async () => {
+    if (isDeploying) return;
+
+    if (settings.zeaburApiKey === null) {
+      return;
+    }
+    setIsDeploying(true);
+    const zeaburClient = createClient(settings.zeaburApiKey);
+
+    const zip = new JSZip();
+    zip.file('index.html', generatedCode);
+    const zipFile = await zip.generateAsync({type:"blob"});
+    
+    const domain = await zeaburClient.deploy(zipFile, 'hkg1', 'any-codeAI');
+
+    if (domain) {
+      setTimeout(() => {
+        window.open(`https://${domain}`, '_blank');
+        setIsDeploying(false);
+      }, 3000);
+    }
+
+    setIsDeploying(false);
+  }
 
   const reset = () => {
     setAppState(AppState.INITIAL);
@@ -470,6 +499,12 @@ ${error.stack}
                     className="hover:bg-slate-200 rounded-sm w-[36px] h-[36px] flex items-center justify-center border-black border-2"
                   >
                     <FaDownload />
+                </span>
+                <span
+                    onClick={deployToZeabur}
+                    className="hover:bg-slate-200 cursor-pointer select-none rounded-sm px-4 h-[36px] flex items-center justify-center border-black border-2"
+                >
+                  {isDeploying ? 'Deploying...' : 'Deploy to Zeabur'}
                   </span>
                   <span
                     className={classNames(

@@ -31,6 +31,7 @@ export interface Settings {
   init: boolean;
   llm: string;
   geminiApiKey: string;
+  zeaburApiKey: string | null;
 }
 
 export enum AppState {

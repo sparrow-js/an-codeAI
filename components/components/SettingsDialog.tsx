@@ -161,6 +161,28 @@ function SettingsDialog({ settings, setSettings }: Props) {
           />
         </div>
 
+        <div className="flex flex-col space-y-4">
+          <Label htmlFor="zeabur-api-key">
+            <div>Zeabur API key</div>
+            <div className="font-light mt-2 leading-relaxed">
+              Only stored in your browser. Never stored on servers. Overrides
+              your .env config.
+            </div>
+          </Label>
+
+          <Input
+            id="zeabur-api-key"
+            placeholder="Zeabur API key"
+            value={settings?.zeaburApiKey || ""}
+            onChange={(e) =>
+              setSettings({
+                ...settings,
+                zeaburApiKey: e.target.value,
+              })
+            }
+          />
+        </div>
+
         <DialogFooter>
           <DialogClose>Save</DialogClose>
         </DialogFooter>

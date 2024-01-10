@@ -14,7 +14,7 @@ export default () => {
   return (
     <header className="flex items-center p-4 justify-between relative">
       <div>
-        <img className="w-[80px] h-[80px] absolute -top-[12px] left-5" src="/logo.jpg" />
+        <img className="w-[40px] h-[40px] left-5" src="/logo.png" />
       </div>
       <div className="flex items-center">
         <div className="flex-1">

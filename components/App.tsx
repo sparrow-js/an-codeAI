@@ -72,6 +72,7 @@ function App() {
     setDataUrls,
   } = useContext(UploadFileContext)
   const [isDeploying, setIsDeploying] = useState<boolean>(false);
+  const [deployedDomain, setDeployedDomain] = useState<string>('');
   
   // Settings
   const {settings, setSettings, initCreate, setInitCreate, initCreateText, setInitCreateText} = useContext(SettingContext);
@@ -161,25 +162,38 @@ function App() {
     if (isDeploying) return;
 
     if (settings.zeaburApiKey === null) {
+      toast.error("Please enter your Zeabur API key in settings");
       return;
     }
-    setIsDeploying(true);
-    const zeaburClient = createClient(settings.zeaburApiKey);
 
-    const zip = new JSZip();
-    zip.file('index.html', generatedCode);
-    const zipFile = await zip.generateAsync({type:"blob"});
-    
-    const domain = await zeaburClient.deploy(zipFile, 'hkg1', 'any-codeAI');
+    try {
+      setIsDeploying(true);
+      const zeaburClient = createClient(settings.zeaburApiKey);
 
-    if (domain) {
-      setTimeout(() => {
-        window.open(`https://${domain}`, '_blank');
-        setIsDeploying(false);
-      }, 3000);
+      const zip = new JSZip();
+      zip.file('index.html', generatedCode);
+      const zipFile = await zip.generateAsync({ type: "blob" });
+      
+      const domain = await zeaburClient.deploy(zipFile, 'hkg1', 'any-codeAI');
+
+      if (domain) {
+        setDeployedDomain(domain);
+        toast(() => <span className="inline-flex gap-x-2 items-center">
+          Deployed successfully!
+
+          <a
+            className="bg-slate-600 text-white text-sm rounded-lg px-4 py-2"
+            href={`https://${domain}`}
+          >
+            Open
+          </a>
+        </span>)
+      }
+    } catch (error) {
+      toast.error('Failed to deploy to Zeabur');
+    } finally { 
+      setIsDeploying(false);
     }
-
-    setIsDeploying(false);
   }
 
   const reset = () => {
@@ -502,9 +516,12 @@ ${error.stack}
                 </span>
                 <span
                     onClick={deployToZeabur}
-                    className="hover:bg-slate-200 cursor-pointer select-none rounded-sm px-4 h-[36px] flex items-center justify-center border-black border-2"
+                    className="hover:bg-slate-200 cursor-pointer select-none rounded-sm w-[36px] h-[36px] flex items-center justify-center border-black border-2"
                 >
-                  {isDeploying ? 'Deploying...' : 'Deploy to Zeabur'}
+                  {isDeploying ?
+                    <span className="w-[18px] rounded-full h-[18px] border-2 border-slate-700 border-t-transparent animate-spin" /> :
+                    <img className="w-[18px] h-[18px]" src='/zeabur-assets/logo.svg' />
+                  }
                   </span>
                   <span
                     className={classNames(

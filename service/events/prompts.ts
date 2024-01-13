@@ -567,7 +567,7 @@ export async function assemblePrompt(
 
 
   if (generated_code_config === 'react_shadcn_ui') {
-      console.log('************react_shadcn_ui', origin)
+      console.log('************react_shadcn_ui', `${origin}/prompts/shadcn-ui.md`)
 
       const response = await fetch(`${origin}/prompts/shadcn-ui.md`, {
       method: 'get',

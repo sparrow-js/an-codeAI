@@ -10,7 +10,6 @@ export const runtime = 'edge';
 export default async function handler(req: Request) {
     if (req.method === 'POST') {
         const origin = req.headers.get('origin') || '';
-        console.log('*************1', origin);
         try {
             const { data } = await req.json();
             const stream = new ReadableStream({

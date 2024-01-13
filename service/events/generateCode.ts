@@ -26,6 +26,7 @@ const encoder = new TextEncoder();
 export async function streamGenerateCode(
   params: IGenerateCodeParams,
   socket: { enqueue: (v: any) => any },
+  origin?: string,
 ) {
   function noticeHost(data: Record<any, any>) {
     if (socket.enqueue) {
@@ -36,19 +37,21 @@ export async function streamGenerateCode(
   let prompt_messages;
   try {
     if (params['resultImage']) {
-      prompt_messages = assemblePrompt(
+      prompt_messages = await assemblePrompt(
         params['image'],
         params['text'],
         generated_code_config,
         params['promptCode'],
+        origin,
         params['resultImage'],
       );
     } else {
-      prompt_messages = assemblePrompt(
+      prompt_messages = await assemblePrompt(
         params['image'],
         params['text'],
         generated_code_config,
         params['promptCode'],
+        origin,
       );
     }
   } catch (e) {
@@ -68,6 +71,7 @@ export async function streamGenerateCode(
       });
     });
   }
+
 
   let completion;
   const SHOULD_MOCK_AI_RESPONSE = params['mockAiResponse'];

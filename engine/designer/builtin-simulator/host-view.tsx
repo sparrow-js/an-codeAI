@@ -5,6 +5,15 @@ import { BemTools } from './bem-tools';
 import { StatusBar } from './tools/status-bar';
 import { Project } from '../project';
 import './host.scss';
+import {   
+  SandpackProvider, 
+  SandpackLayout, 
+  SandpackPreview, 
+  SandpackCodeEditor,
+  Sandpack 
+} from "@codesandbox/sandpack-react";
+// import { githubLight, sandpackDark } from "@codesandbox/sandpack-themes";
+
 
 type SimulatorHostProps = BuiltinSimulatorProps & {
     project: Project;
@@ -99,6 +108,23 @@ class Content extends Component<{ host: BuiltinSimulatorHost }> {
     };
     if (disabledEvents) {
       frameStyle.pointerEvents = 'none';
+    }
+    if (sim.get('isSandpack')) {
+      return (
+        <div className="lc-simulator-content">
+           <SandpackProvider
+            template="react"
+            options={{
+              bundlerURL: `${location.origin}/sandpack/`,
+            }}
+            files={sim.files}
+           >
+            <SandpackLayout>
+              <SandpackPreview startRoute="/sandpack"/>
+            </SandpackLayout>
+          </SandpackProvider>
+        </div>
+      )
     }
     return (
       <div className="lc-simulator-content">

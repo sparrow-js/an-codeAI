@@ -551,11 +551,12 @@ const SYSTEM_MAP = {
   react_native_text: REACT_NATIVE_SYSTEM_PROMPT_TEXT,
 };
 
-export function assemblePrompt(
+export async function assemblePrompt(
   image_data_url: string,
   text_data: string,
   generated_code_config: string,
   promptCode: string,
+  origin?: string,
   result_image_data_url = '',
 ) {
   let systemConent =
@@ -563,6 +564,23 @@ export function assemblePrompt(
   if (text_data) {
     systemConent = (SYSTEM_MAP as any)[`${generated_code_config}_text`] || TAILWIND_SYSTEM_PROMPT_TEXT;
   }
+
+
+  if (generated_code_config === 'react_shadcn_ui') {
+
+      const response = await fetch(`${origin}/prompts/shadcn-ui.md`, {
+      method: 'get',
+      headers: new Headers({
+          'Content-Type': 'text/markdown'
+      })
+      });
+      const systemPrompt = await response.text();
+      if (systemPrompt) {
+        systemConent = systemPrompt;
+      }
+  }
+
+
 
   const userContent: any[] = [
     {

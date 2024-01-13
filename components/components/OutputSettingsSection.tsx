@@ -30,6 +30,13 @@ function generateDisplayComponent(config: GeneratedCodeConfig) {
           <span className="font-semibold">Tailwind 🔥</span>
         </div>
       );
+    case GeneratedCodeConfig.REACT_SHADCN_UI:
+      return (
+        <div>
+          <span className="font-semibold">React</span> +{" "}
+          <span className="font-semibold">shadcn/ui 🔥</span>
+        </div>
+      );  
     case GeneratedCodeConfig.BOOTSTRAP:
       return (
         <div>
@@ -104,6 +111,9 @@ function OutputSettingsSection({
               </SelectItem>
               <SelectItem value={GeneratedCodeConfig.REACT_TAILWIND}>
                 {generateDisplayComponent(GeneratedCodeConfig.REACT_TAILWIND)}
+              </SelectItem>
+              <SelectItem value={GeneratedCodeConfig.REACT_SHADCN_UI}>
+                {generateDisplayComponent(GeneratedCodeConfig.REACT_SHADCN_UI)}
               </SelectItem>
               <SelectItem value={GeneratedCodeConfig.REACT_ANTD}>
                 {generateDisplayComponent(GeneratedCodeConfig.REACT_ANTD)}

@@ -9,7 +9,9 @@ import {HistoryContext} from '../components/contexts/HistoryContext';
 import {EditorContext} from '../components/contexts/EditorContext';
 import {
     FaBug
-  } from "react-icons/fa";
+} from "react-icons/fa";
+import filesTemplate from './apps/react-shadcnui/files-template';
+
 
 const editor = new Editor();
 globalContext.register(editor, Editor);
@@ -160,6 +162,10 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
                 designer={editor.get('designer')}
                 simulatorProps={{
                     simulatorUrl: '',
+                    isSandpack: true,
+                    files: {
+                      ...filesTemplate
+                    },
                     code: code
                 }}
             />

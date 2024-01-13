@@ -569,7 +569,7 @@ export async function assemblePrompt(
   if (generated_code_config === 'react_shadcn_ui') {
       console.log('************react_shadcn_ui', `${origin}/prompts/shadcn-ui.md`)
 
-      const response = await fetch(`${origin}/prompts/shadcn-ui.md`, {
+      const response = await fetch(`https://raw.githubusercontent.com/sparrow-js/ant-codeAI/main/README.md`, {
       method: 'get',
       headers: new Headers({
           'Content-Type': 'text/markdown'

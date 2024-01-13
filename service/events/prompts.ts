@@ -567,6 +567,7 @@ export async function assemblePrompt(
 
 
   if (generated_code_config === 'react_shadcn_ui') {
+      console.log('************react_shadcn_ui')
 
       const response = await fetch(`${origin}/prompts/shadcn-ui.md`, {
       method: 'get',
@@ -575,6 +576,7 @@ export async function assemblePrompt(
       })
       });
       const systemPrompt = await response.text();
+      console.log('************systemPrompt', systemPrompt);
       if (systemPrompt) {
         systemConent = systemPrompt;
       }

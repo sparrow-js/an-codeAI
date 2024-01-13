@@ -7,6 +7,7 @@ import {setHtmlCodeUid} from '../components/compiler';
 import html2canvas from "html2canvas";
 import {HistoryContext} from '../components/contexts/HistoryContext';
 import {EditorContext} from '../components/contexts/EditorContext';
+import { cloneDeep } from 'lodash';
 import {
     FaBug
 } from "react-icons/fa";
@@ -83,10 +84,11 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
     useEffect(() => {
         editor.on('editor.sendMessageChange', sendMessageChange);
         document.querySelector('.lc-simulator-content-frame')?.addEventListener('load', onIframeLoad);
+        // document.querySelector('.sp-preview-iframe')?.addEventListener('load', onIframeLoad);
         return () => {
             editor.removeListener('editor.sendMessageChange', sendMessageChange);
             document.querySelector('.lc-simulator-content-frame')?.removeEventListener('load', onIframeLoad);
-
+            // document.querySelector('.sp-preview-iframe')?.removeEventListener('load', onIframeLoad);
         }
     }, [history]);
     
@@ -130,6 +132,19 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
             }
             
 
+        } else if(appState === AppState.INITIAL) {
+          filesTemplate['/src/Preview.jsx'] = `
+          import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "components/ui/card";
+          import { Button } from "components/ui/button";
+          
+          export default function App() {
+            return (
+              <div className="p-8">
+                loading
+              </div>
+            );
+          }
+          `;
         } else {
             // designer.project.simulator?.writeIframeDocument(throttledCode);
         }

@@ -1,5 +1,5 @@
 export default {
-  '/src/components/drawer.jsx': `
+  '/src/components/ui/drawer.jsx': `
   import * as React from "react"
   import { Drawer as DrawerPrimitive } from "vaul"
   

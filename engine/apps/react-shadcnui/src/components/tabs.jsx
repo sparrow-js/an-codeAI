@@ -1,5 +1,5 @@
 export default {
-  '/src/components/tabs.jsx': `
+  '/src/components/ui/tabs.jsx': `
   import * as React from "react"
   import * as TabsPrimitive from "@radix-ui/react-tabs"
   

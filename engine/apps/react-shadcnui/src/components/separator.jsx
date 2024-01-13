@@ -1,5 +1,5 @@
 export default {
-  '/src/components/separator.jsx': `
+  '/src/components/ui/separator.jsx': `
   import * as React from "react"
   import * as SeparatorPrimitive from "@radix-ui/react-separator"
   

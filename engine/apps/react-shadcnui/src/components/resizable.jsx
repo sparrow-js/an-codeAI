@@ -1,5 +1,5 @@
 export default {
-  '/src/components/resizable.jsx': `
+  '/src/components/ui/resizable.jsx': `
   import { GripVertical } from "lucide-react"
   import * as ResizablePrimitive from "react-resizable-panels"
   

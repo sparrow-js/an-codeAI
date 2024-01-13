@@ -10,7 +10,8 @@ import {
   SandpackLayout, 
   SandpackPreview, 
   SandpackCodeEditor,
-  Sandpack 
+  Sandpack,
+  SandpackPreviewRef
 } from "@codesandbox/sandpack-react";
 // import { githubLight, sandpackDark } from "@codesandbox/sandpack-themes";
 
@@ -109,6 +110,7 @@ class Content extends Component<{ host: BuiltinSimulatorHost }> {
     if (disabledEvents) {
       frameStyle.pointerEvents = 'none';
     }
+    // @ts-ignore
     if (sim.get('isSandpack')) {
       return (
         <div className="lc-simulator-content">
@@ -116,11 +118,26 @@ class Content extends Component<{ host: BuiltinSimulatorHost }> {
             template="react"
             options={{
               bundlerURL: `${location.origin}/sandpack/`,
+              classes: {
+                "sp-wrapper": "ant-codeai-wrapper",
+              }
             }}
-            files={sim.files}
+            // @ts-ignore
+            files={sim.designer.simulatorProps.files}
            >
             <SandpackLayout>
-              <SandpackPreview startRoute="/sandpack"/>
+              {/* <SandpackCodeEditor /> */}
+              <SandpackPreview 
+                startRoute="/sandpack" 
+                ref={(previewRef: SandpackPreviewRef) => {
+                  if (previewRef) {
+                    const iframe = previewRef.getClient()?.iframe;
+                    if (iframe) {
+                      sim.mountContentFrame(iframe)
+                    }
+                  }
+                }} 
+              />
             </SandpackLayout>
           </SandpackProvider>
         </div>

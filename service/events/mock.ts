@@ -196,115 +196,91 @@ export const NO_IMAGES_NYTIMES_MOCK_CODE = `
 `;
 
 const REACT_ANTD_MOCK_CODE = `
+import { Search } from 'lucide-react';
+import { Button } from 'components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from 'components/ui/card';
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <title>Product Categories</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <style>
-    body {
-      font-family: 'Helvetica', 'Arial', sans-serif;
-    }
-
-    .banner {
-      background-image: url("/placeholder.svg");
-      background-size: cover;
-      background-position: center;
-      height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-    }
-
-    .banner h1 {
-      font-size: 3rem;
-      font-weight: bold;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    }
-
-    .category-list {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    .category-item {
-      background-color: #fff;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      text-align: center;
-    }
-
-    .category-item img {
-      width: 100%;
-      height: 150px;
-      object-fit: contain;
-      margin-bottom: 10px;
-    }
-
-    .category-item h3 {
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    .category-item p {
-      font-size: 0.9rem;
-      color: #666;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="container mx-auto px-4">
-    <div class="banner">
-      <h1>Product Categories</h1>
-    </div>
-
-    <h1 class="text-3xl font-bold text-center my-10">Product Categories</h1>
-
-    <div class="category-list">
-      <div class="category-item">
-        <img src="/placeholder.svg" alt="Image of a laptop computer" />
-        <h3>Laptops</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+export default function VxDev() {
+  return (
+    <div className="max-w-6xl mx-auto p-8">
+      <div className="flex items-center space-x-2 mb-8">
+        <div className="flex items-center bg-white shadow rounded overflow-hidden w-full">
+          <span className="p-4">
+            <Search className="w-5 h-5 text-gray-500" />
+          </span>
+          <input
+            type="text"
+            placeholder="Search for villas"
+            className="p-4 w-full"
+            defaultValue="Villa"
+          />
+        </div>
       </div>
-      <div class="category-item">
-        <img src="/placeholder.svg" alt="Image of a desktop computer" />
-        <h3>Desktops</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
-      </div>
-      <div class="category-item">
-        <img src="/placeholder.svg" alt="Image of a tablet computer" />
-        <h3>Tablets</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
-      </div>
-      <div class="category-item">
-        <img src="/placeholder.svg" alt="Image of a smartphone" />
-        <h3>Smartphones</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
-      </div>
-      <div class="category-item">
-        <img src="/placeholder.svg" alt="Image of a smartwatch" />
-        <h3>Smartwatches</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
-      </div>
-      <div class="category-item">
-        <img src="/placeholder.svg" alt="Image of a pair of headphones" />
-        <h3>Headphones</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Villa 1 */}
+        <Card>
+          <img
+            src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&dpr=2&q=80"
+            alt="The Royal Bali Villas"
+            className="w-full h-64 object-cover"
+          />
+          <CardHeader>
+            <CardTitle>The Royal Bali Villas</CardTitle>
+            <CardDescription>Canggu</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-lg font-semibold">$300 / night</p>
+            <p className="text-sm text-gray-600">Canggu</p>
+            <p className="text-sm">Rating: <span className="text-yellow-400">★★★★★</span></p>
+          </CardContent>
+          <CardFooter>
+            <Button variant="solid" className="w-full bg-blue-500 hover:bg-blue-600 text-white">Learn More</Button>
+          </CardFooter>
+        </Card>
+        {/* Villa 2 */}
+        <Card data-uid="1111">
+          <img
+            src="https://images.unsplash.com/photo-1590486803837-92e1a4e481aa?w=800&dpr=2&q=80"
+            alt="Villa Maxceo"
+            className="w-full h-64 object-cover"
+          />
+          <CardHeader>
+            <CardTitle>Villa Maxceo</CardTitle>
+            <CardDescription>Canggu</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-lg font-semibold">$290 / night</p>
+            <p className="text-sm text-gray-600">Canggu</p>
+            <p className="text-sm">Rating: <span className="text-yellow-400">★★★★☆</span></p>
+          </CardContent>
+          <CardFooter>
+            <Button variant="solid" className="w-full bg-blue-500 hover:bg-blue-600 text-white">Learn More</Button>
+          </CardFooter>
+        </Card>
+        {/* Villa 3 */}
+        <Card>
+          <img
+            src="https://images.unsplash.com/photo-1570213489059-0aac6626cade?w=800&dpr=2&q=80"
+            alt="Fella Villa"
+            className="w-full h-64 object-cover"
+          />
+          <CardHeader>
+            <CardTitle>Fella Villa</CardTitle>
+            <CardDescription>Canggu</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-lg font-semibold">$290 / night</p>
+            <p className="text-sm text-gray-600">Canggu</p>
+            <p className="text-sm">Rating: <span className="text-yellow-400">★★★★★</span></p>
+          </CardContent>
+          <CardFooter>
+            <Button variant="solid" className="w-full bg-blue-500 hover:bg-blue-600 text-white">Learn More</Button>
+          </CardFooter>
+        </Card>
       </div>
     </div>
-  </div>
-</body>
-
-</html>
+  );
+}
 `;
 
 export async function mockComletion(process_chunk) {

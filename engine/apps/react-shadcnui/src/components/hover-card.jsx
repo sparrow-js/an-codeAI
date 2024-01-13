@@ -1,5 +1,5 @@
 export default {
-  '/src/components/hover-card.jsx': `
+  '/src/components/ui/hover-card.jsx': `
   import * as React from "react"
   import * as HoverCardPrimitive from "@radix-ui/react-hover-card"
   

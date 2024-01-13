@@ -1,5 +1,5 @@
 export default {
-  '/src/components/scroll-area.jsx': `
+  '/src/components/ui/scroll-area.jsx': `
   import * as React from "react"
   import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area"
   

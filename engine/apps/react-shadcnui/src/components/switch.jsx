@@ -1,5 +1,5 @@
 export default {
-  '/src/components/switch.jsx': `
+  '/src/components/ui/switch.jsx': `
   import * as React from "react"
   import * as SwitchPrimitives from "@radix-ui/react-switch"
   

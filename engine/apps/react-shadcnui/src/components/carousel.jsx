@@ -1,5 +1,5 @@
 export default {
-  '/src/components/carousel.jsx': `
+  '/src/components/ui/carousel.jsx': `
   import * as React from "react"
   import useEmblaCarousel from "embla-carousel-react";
   import { ArrowLeft, ArrowRight } from "lucide-react"

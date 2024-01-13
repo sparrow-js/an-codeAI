@@ -1,5 +1,5 @@
 export default {
-  '/src/components/dropdown-menu.jsx': `
+  '/src/components/ui/dropdown-menu.jsx': `
   import * as React from "react"
   import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
   import { Check, ChevronRight, Circle } from "lucide-react"

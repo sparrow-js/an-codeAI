@@ -1,5 +1,5 @@
 export default {
-  '/src/components/command.jsx': `
+  '/src/components/ui/command.jsx': `
   import * as React from "react"
   import { Command as CommandPrimitive } from "cmdk"
   import { Search } from "lucide-react"

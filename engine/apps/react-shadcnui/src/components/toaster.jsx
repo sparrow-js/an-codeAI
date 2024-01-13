@@ -1,5 +1,5 @@
 export default {
-  '/src/components/toaster.jsx': `
+  '/src/components/ui/toaster.jsx': `
   import {
     Toast,
     ToastClose,

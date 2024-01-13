@@ -1,5 +1,5 @@
 export default {
-  '/src/components/context-menu.jsx': `
+  '/src/components/ui/context-menu.jsx': `
   import * as React from "react"
   import * as ContextMenuPrimitive from "@radix-ui/react-context-menu"
   import { Check, ChevronRight, Circle } from "lucide-react"

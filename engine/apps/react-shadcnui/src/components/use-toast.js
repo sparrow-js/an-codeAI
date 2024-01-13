@@ -1,5 +1,5 @@
 export default {
-  '/src/components/use-toast.js': `
+  '/src/components/ui/use-toast.js': `
   // Inspired by react-hot-toast library
   import * as React from "react"
   

@@ -1,5 +1,5 @@
 export default {
-  '/src/components/textarea.jsx': `
+  '/src/components/ui/textarea.jsx': `
   import * as React from "react"
 
   import { cn } from "lib/utils"

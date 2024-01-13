@@ -62,6 +62,9 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
     });
 
     const { enableEdit, setEnableEdit } = useContext(EditorContext);
+    const [filesObj, setFilesObj]= useState<any>(filesTemplate);
+
+
     useEffect(() => {
       if (enableEdit) {
         designer.project.simulator?.set('designMode', 'design')
@@ -90,28 +93,43 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
 
     useEffect(() => {
         if (appState === AppState.CODE_READY) {
-            const codeUid = setHtmlCodeUid(generatedCodeConfig, code);
-            if (codeUid) {
-              const errorIframe = `
-              <script>
-                window.addEventListener('error', (event) => {
-                    window.parent.postMessage({
-                      message: event.message,
-                      error: event.error
-                    }, '*')
-                })
-              </script>  
-                        `;
-              let content = '';
-              var patternHead = /<title[^>]*>((.|[\n\r])*)<\/title>/im; //匹配header
-              const headMatch = codeUid.match(patternHead);
-              if (headMatch) {
-                const headContent = headMatch[0] + errorIframe;
-                content = codeUid.replace(patternHead, headContent);
+            if (
+              generatedCodeConfig === GeneratedCodeConfig.HTML_TAILWIND ||
+              generatedCodeConfig === GeneratedCodeConfig.REACT_TAILWIND
+            ) {
+              const codeUid = setHtmlCodeUid(generatedCodeConfig, code);
+              if (codeUid) {
+                const errorIframe = `
+                <script>
+                  window.addEventListener('error', (event) => {
+                      window.parent.postMessage({
+                        message: event.message,
+                        error: event.error
+                      }, '*')
+                  })
+                </script>  
+                          `;
+                let content = '';
+                var patternHead = /<title[^>]*>((.|[\n\r])*)<\/title>/im; //匹配header
+                const headMatch = codeUid.match(patternHead);
+                if (headMatch) {
+                  const headContent = headMatch[0] + errorIframe;
+                  content = codeUid.replace(patternHead, headContent);
+                }
+                designer.project.simulator?.writeIframeDocument(content || codeUid);
               }
-              designer.project.simulator?.writeIframeDocument(content || codeUid);
+            } else if (generatedCodeConfig === GeneratedCodeConfig.REACT_SHADCN_UI) {
+              setFilesObj((prev: any) => {
+                const newFiles = {...prev};
+                newFiles['/src/Preview.jsx'] = code;
+                return newFiles;
+              });
+              filesTemplate['/src/Preview.jsx'] = code;
+            } else {
+              designer.project.simulator?.writeIframeDocument(code);
             }
-           
+            
+
         } else {
             // designer.project.simulator?.writeIframeDocument(throttledCode);
         }
@@ -163,10 +181,7 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
                 simulatorProps={{
                     simulatorUrl: '',
                     isSandpack: true,
-                    files: {
-                      ...filesTemplate
-                    },
-                    code: code
+                    files: filesObj,
                 }}
             />
         </div>

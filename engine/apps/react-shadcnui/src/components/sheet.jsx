@@ -1,5 +1,5 @@
 export default {
-  '/src/components/sheet.jsx': `
+  '/src/components/ui/sheet.jsx': `
   import * as React from "react"
   import * as SheetPrimitive from "@radix-ui/react-dialog"
   import { cva } from "class-variance-authority";

@@ -1,5 +1,5 @@
 export default {
-  '/src/components/skeleton.jsx': `
+  '/src/components/ui/skeleton.jsx': `
 import { cn } from "lib/utils"
 
 function Skeleton({

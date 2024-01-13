@@ -59,5 +59,4 @@ export class DesignerView extends Component<DesignerProps & {
           </div>
         );
       }
-
 }

@@ -1,5 +1,5 @@
 export default {
-  '/src/components/toggle-group.jsx': `
+  '/src/components/ui/toggle-group.jsx': `
   import * as React from "react"
   import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group"
   

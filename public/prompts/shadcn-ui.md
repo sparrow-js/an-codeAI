@@ -948,6 +948,14 @@ function PieChart(props) {
 </div>
 ```
 
+- Correctly import component reference example:
+
+```jsx
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+```
+
+
 Create JSX code when you get the detailed instructions.
 
 Return only the full code.

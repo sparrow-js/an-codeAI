@@ -196,70 +196,62 @@ export const NO_IMAGES_NYTIMES_MOCK_CODE = `
 `;
 
 const REACT_ANTD_MOCK_CODE = `
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The New York Times - News</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Libre Franklin', sans-serif;
-        }
-    </style>
-</head>
-<body class="bg-gray-100">
-    <div class="container mx-auto px-4">
-        <header class="border-b border-gray-300 py-4">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-4">
-                    <button class="text-gray-700"><i class="fas fa-bars"></i></button>
-                    <button class="text-gray-700"><i class="fas fa-search"></i></button>
-                    <div class="text-xs uppercase tracking-widest">Tuesday, November 14, 2023<br>Today's Paper</div>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button class="bg-black text-white px-4 py-1 text-xs uppercase tracking-widest">Give the times</button>
-                    <div class="text-xs">Account</div>
-                </div>
-            </div>
-            <nav class="flex justify-between items-center py-4">
-                <div class="flex space-x-4">
-                    <a href="#" class="text-xs uppercase tracking-widest text-gray-700">U.S.</a>
-                    <!-- Add other navigation links as needed -->
-                </div>
-                <div class="flex space-x-4">
-                    <a href="#" class="text-xs uppercase tracking-widest text-gray-700">Cooking</a>
-                    <!-- Add other navigation links as needed -->
-                </div>
-            </nav>
-        </header>
-        <main>
-            <section class="py-6">
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="col-span-2">
-                        <article class="mb-4">
-                            <h2 class="text-xl font-bold mb-2">Israeli Military Raids Gaza’s Largest Hospital</h2>
-                            <p class="text-gray-700 mb-2">Israeli troops have entered the Al-Shifa Hospital complex, where conditions have grown dire and Israel says Hamas fighters are embedded.</p>
-                            <a href="#" class="text-blue-600 text-sm">See more updates <i class="fas fa-external-link-alt"></i></a>
-                        </article>
-                        <!-- Repeat for each news item -->
-                    </div>
-                    <div class="col-span-1">
-                        <article class="mb-4">
-                            <h2 class="text-xl font-bold mb-2">From Elvis to Elopements, the Evolution of the Las Vegas Wedding</h2>
-                            <p class="text-gray-700 mb-2">The glittering city that attracts thousands of couples seeking unconventional nuptials has grown beyond the drive-through wedding.</p>
-                            <a href="#" class="text-blue-600 text-sm">8 MIN READ</a>
-                        </article>
-                        <!-- Repeat for each news item -->
-                    </div>
-                </div>
-            </section>
-        </main>
+import { Input } from "components/ui/input";
+import { Button } from "components/ui/button";
+import { Home as HomeIcon, Rss as RssIcon, ArrowRight } from "lucide-react";
+
+export default function App() {
+  return (
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
+      <header className="flex flex-col items-center">
+        <div className="mb-4">
+          <img
+            src="https://via.placeholder.com/50"
+            alt="Commit Logo"
+            className="w-12 h-12"
+          />
+        </div>
+        <h1 className="text-4xl font-bold mb-2">Commit</h1>
+        <h2 className="text-3xl font-light text-center mb-6">
+          Open-source Git client <br />
+          for macOS minimalists
+        </h2>
+        <p className="text-center mb-6">
+          Commit is a lightweight Git client you can open from anywhere any time
+          you're ready to commit your work with a single keyboard shortcut. It's
+          fast, beautiful, and completely unnecessary.
+        </p>
+      </header>
+      <div className="flex space-x-4 mb-8">
+        <Input
+          placeholder="Email address"
+          className="text-black rounded px-4 py-2"
+        />
+        <Button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Get updates <ArrowRight className="ml-2" />
+        </Button>
+      </div>
+      <footer className="flex items-center justify-center space-x-6 mb-8">
+        <a href="#" className="flex items-center space-x-1">
+          <HomeIcon className="w-5 h-5" />
+          <span>Documentation</span>
+        </a>
+        <a href="#" className="flex items-center space-x-1">
+          <HomeIcon className="w-5 h-5" />
+          <span>GitHub</span>
+        </a>
+        <a href="#" className="flex items-center space-x-1">
+          <RssIcon className="w-5 h-5" />
+          <span>RSS</span>
+        </a>
+      </footer>
+      <div className="text-center text-sm">
+        Brought to you by <span className="font-bold">Joe Davola</span>
+      </div>
     </div>
-</body>
-</html>
+  );
+}
+
 `;
 
 export async function mockComletion(process_chunk) {

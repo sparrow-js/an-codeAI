@@ -28,36 +28,24 @@ import { useSandpack, SandpackProvider } from "@codesandbox/sandpack-react";
 // `;
 
 interface ISandpackProps {
-  appState: AppState;
-  generatedCodeConfig: GeneratedCodeConfig,
+  sandpackDone: () => void;
 }
 
 const SandpackCustom = ({
-  appState,
-  generatedCodeConfig,
+  sandpackDone
 }: ISandpackProps) => {
   const { dispatch, listen, sandpack } = useSandpack();
  
-  const handleRefresh = () => {
-    sandpack.runSandpack();
-    // sandpack.resetFile('/src/Preview.jsx')
-  };
-
-  useEffect(() => {
-    if (appState === AppState.CODE_READY && generatedCodeConfig === GeneratedCodeConfig.REACT_SHADCN_UI) {
-      console.log('************8888****');
-      // sandpack.resetFile('/src/Preview.jsx');
-      // sandpack.
-      // sandpack.runSandpack();
-    }
-
-  }, [appState, generatedCodeConfig])
-
-
- 
   useEffect(() => {
     // listens for any message dispatched between sandpack and the bundler
-    const stopListening = listen((msg) => console.log(msg));
+    const stopListening = listen((msg) => {
+      console.log(msg)
+      if (msg.type === 'done') {
+        setTimeout(() => {
+          sandpackDone();
+        }, 500);
+      }
+    });
  
     return () => {
       // unsubscribe
@@ -66,7 +54,7 @@ const SandpackCustom = ({
   }, [listen]);
  
   return (
-    <button onClick={handleRefresh}>handleRefresh</button>
+    <></>
   );
 };
 
@@ -269,6 +257,12 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
                 // @ts-ignore
                 files={filesObj}
              >
+              <SandpackCustom sandpackDone={async () => {
+                 const img = await takeScreenshot();
+                 setTimeout(() => {
+                     updateHistoryScreenshot(img);
+                 }, 1000)
+              }}/>
               <DesignerView 
                   editor={editor}
                   designer={editor.get('designer')}

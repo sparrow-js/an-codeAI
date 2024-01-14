@@ -90,6 +90,8 @@ export interface BuiltinSimulatorProps {
     library?: LibraryItem[];
     utilsMetadata?: UtilsMetadata;
     simulatorUrl?: Asset;
+    files?: any;
+    isSandPack?: boolean;
     theme?: Asset;
     componentsAsset?: Asset;
     [key: string]: any;
@@ -123,6 +125,10 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
 
     @computed get device(): string {
         return this.get('device') || 'default';
+    }
+
+    @computed get files(): any {
+      return this.get('files') || {};
     }
 
     @obx.ref private _contentWindow?: Window;

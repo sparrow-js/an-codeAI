@@ -7,9 +7,56 @@ import {setHtmlCodeUid} from '../components/compiler';
 import html2canvas from "html2canvas";
 import {HistoryContext} from '../components/contexts/HistoryContext';
 import {EditorContext} from '../components/contexts/EditorContext';
+import { cloneDeep } from 'lodash';
 import {
     FaBug
-  } from "react-icons/fa";
+} from "react-icons/fa";
+import filesTemplate from './apps/react-shadcnui/files-template';
+import { useSandpack, SandpackProvider } from "@codesandbox/sandpack-react";
+
+// filesTemplate['/src/Preview.jsx'] = `
+// import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "components/ui/card";
+// import { Button } from "components/ui/button";
+
+// export default function App() {
+//   return (
+//     <div className="p-8">
+//       loading
+//     </div>
+//   );
+// }
+// `;
+
+interface ISandpackProps {
+  sandpackDone: () => void;
+}
+
+const SandpackCustom = ({
+  sandpackDone
+}: ISandpackProps) => {
+  const { dispatch, listen, sandpack } = useSandpack();
+ 
+  useEffect(() => {
+    // listens for any message dispatched between sandpack and the bundler
+    const stopListening = listen((msg) => {
+      console.log(msg)
+      if (msg.type === 'done') {
+        setTimeout(() => {
+          sandpackDone();
+        }, 500);
+      }
+    });
+ 
+    return () => {
+      // unsubscribe
+      stopListening();
+    };
+  }, [listen]);
+ 
+  return (
+    <></>
+  );
+};
 
 const editor = new Editor();
 globalContext.register(editor, Editor);
@@ -58,8 +105,13 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
       message: '',
       stack: ''
     });
+    // const { dispatch, listen } = useSandpack();
+
 
     const { enableEdit, setEnableEdit } = useContext(EditorContext);
+    const [filesObj, setFilesObj]= useState<any>(filesTemplate);
+
+
     useEffect(() => {
       if (enableEdit) {
         designer.project.simulator?.set('designMode', 'design')
@@ -78,38 +130,72 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
     useEffect(() => {
         editor.on('editor.sendMessageChange', sendMessageChange);
         document.querySelector('.lc-simulator-content-frame')?.addEventListener('load', onIframeLoad);
+        // document.querySelector('.sp-preview-iframe')?.addEventListener('load', onIframeLoad);
         return () => {
             editor.removeListener('editor.sendMessageChange', sendMessageChange);
             document.querySelector('.lc-simulator-content-frame')?.removeEventListener('load', onIframeLoad);
-
+            // document.querySelector('.sp-preview-iframe')?.removeEventListener('load', onIframeLoad);
         }
     }, [history]);
     
 
     useEffect(() => {
         if (appState === AppState.CODE_READY) {
-            const codeUid = setHtmlCodeUid(generatedCodeConfig, code);
-            if (codeUid) {
-              const errorIframe = `
-              <script>
-                window.addEventListener('error', (event) => {
-                    window.parent.postMessage({
-                      message: event.message,
-                      error: event.error
-                    }, '*')
-                })
-              </script>  
-                        `;
-              let content = '';
-              var patternHead = /<title[^>]*>((.|[\n\r])*)<\/title>/im; //匹配header
-              const headMatch = codeUid.match(patternHead);
-              if (headMatch) {
-                const headContent = headMatch[0] + errorIframe;
-                content = codeUid.replace(patternHead, headContent);
+            if (
+              generatedCodeConfig === GeneratedCodeConfig.HTML_TAILWIND ||
+              generatedCodeConfig === GeneratedCodeConfig.REACT_TAILWIND
+            ) {
+              const codeUid = setHtmlCodeUid(generatedCodeConfig, code);
+              if (codeUid) {
+                const errorIframe = `
+                <script>
+                  window.addEventListener('error', (event) => {
+                      window.parent.postMessage({
+                        message: event.message,
+                        error: event.error
+                      }, '*')
+                  })
+                </script>  
+                          `;
+                let content = '';
+                var patternHead = /<title[^>]*>((.|[\n\r])*)<\/title>/im; //匹配header
+                const headMatch = codeUid.match(patternHead);
+                if (headMatch) {
+                  const headContent = headMatch[0] + errorIframe;
+                  content = codeUid.replace(patternHead, headContent);
+                }
+                designer.project.simulator?.writeIframeDocument(content || codeUid);
               }
-              designer.project.simulator?.writeIframeDocument(content || codeUid);
+            } else if (generatedCodeConfig === GeneratedCodeConfig.REACT_SHADCN_UI) {
+              const codeUid = setHtmlCodeUid(generatedCodeConfig, code.replaceAll('@/components', 'components'));
+              filesObj['/src/Preview.jsx'] = codeUid;
+              setFilesObj((prev: any) => {
+                const newFiles = {...prev};
+                newFiles['/src/Preview.jsx'] = codeUid;
+                return newFiles;
+              });
+              filesTemplate['/src/Preview.jsx'] = codeUid;
+            } else {
+              designer.project.simulator?.writeIframeDocument(code);
             }
-           
+        } else if(appState === AppState.INITIAL) {
+          filesTemplate['/src/Preview.jsx'] = `
+          import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "components/ui/card";
+          import { Button } from "components/ui/button";
+          
+          export default function App() {
+            return (
+              <div className="p-8">
+                loading
+              </div>
+            );
+          }
+          `;
+          setFilesObj((prev: any) => {
+            const newFiles = {...prev};
+            newFiles['/src/Preview.jsx'] = filesTemplate['/src/Preview.jsx'];
+            return newFiles;
+          });
         } else {
             // designer.project.simulator?.writeIframeDocument(throttledCode);
         }
@@ -155,14 +241,54 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
                 </span>
                 )
             }
-            <DesignerView 
-                editor={editor}
-                designer={editor.get('designer')}
-                simulatorProps={{
-                    simulatorUrl: '',
-                    code: code
+            {
+              appState === AppState.CODE_READY && 
+              !filesObj['/src/Preview.jsx'].includes('loading') && 
+              generatedCodeConfig === GeneratedCodeConfig.REACT_SHADCN_UI &&
+              (
+                <SandpackProvider
+                template="react"
+                options={{
+                  bundlerURL: `${location.origin}/sandpack/`,
+                  classes: {
+                    "sp-wrapper": "ant-codeai-wrapper",
+                  }
                 }}
-            />
+                // @ts-ignore
+                files={filesObj}
+             >
+              <SandpackCustom sandpackDone={async () => {
+                 const img = await takeScreenshot();
+                 setTimeout(() => {
+                     updateHistoryScreenshot(img);
+                 }, 1000)
+              }}/>
+              <DesignerView 
+                  editor={editor}
+                  designer={editor.get('designer')}
+                  simulatorProps={{
+                      simulatorUrl: '',
+                      isSandpack: true,
+                      files: filesObj,
+                  }}
+              />
+             </SandpackProvider>
+              )
+            }
+            {
+              generatedCodeConfig !== GeneratedCodeConfig.REACT_SHADCN_UI &&
+              (
+                <DesignerView 
+                  editor={editor}
+                  designer={editor.get('designer')}
+                  simulatorProps={{
+                      simulatorUrl: '',
+                      isSandpack: false,
+                      files: filesObj,
+                  }}
+              />
+              )
+            }
         </div>
     )
 }

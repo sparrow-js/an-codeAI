@@ -196,115 +196,62 @@ export const NO_IMAGES_NYTIMES_MOCK_CODE = `
 `;
 
 const REACT_ANTD_MOCK_CODE = `
+import { Input } from "components/ui/input";
+import { Button } from "components/ui/button";
+import { Home as HomeIcon, Rss as RssIcon, ArrowRight } from "lucide-react";
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <title>Product Categories</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <style>
-    body {
-      font-family: 'Helvetica', 'Arial', sans-serif;
-    }
-
-    .banner {
-      background-image: url("/placeholder.svg");
-      background-size: cover;
-      background-position: center;
-      height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-    }
-
-    .banner h1 {
-      font-size: 3rem;
-      font-weight: bold;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    }
-
-    .category-list {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    .category-item {
-      background-color: #fff;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      text-align: center;
-    }
-
-    .category-item img {
-      width: 100%;
-      height: 150px;
-      object-fit: contain;
-      margin-bottom: 10px;
-    }
-
-    .category-item h3 {
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    .category-item p {
-      font-size: 0.9rem;
-      color: #666;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="container mx-auto px-4">
-    <div class="banner">
-      <h1>Product Categories</h1>
-    </div>
-
-    <h1 class="text-3xl font-bold text-center my-10">Product Categories</h1>
-
-    <div class="category-list">
-      <div class="category-item">
-        <img src="/placeholder.svg" alt="Image of a laptop computer" />
-        <h3>Laptops</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+export default function App() {
+  return (
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
+      <header className="flex flex-col items-center">
+        <div className="mb-4">
+          <img
+            src="https://via.placeholder.com/50"
+            alt="Commit Logo"
+            className="w-12 h-12"
+          />
+        </div>
+        <h1 className="text-4xl font-bold mb-2">Commit</h1>
+        <h2 className="text-3xl font-light text-center mb-6">
+          Open-source Git client <br />
+          for macOS minimalists
+        </h2>
+        <p className="text-center mb-6">
+          Commit is a lightweight Git client you can open from anywhere any time
+          you're ready to commit your work with a single keyboard shortcut. It's
+          fast, beautiful, and completely unnecessary.
+        </p>
+      </header>
+      <div className="flex space-x-4 mb-8">
+        <Input
+          placeholder="Email address"
+          className="text-black rounded px-4 py-2"
+        />
+        <Button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Get updates <ArrowRight className="ml-2" />
+        </Button>
       </div>
-      <div class="category-item">
-        <img src="/placeholder.svg" alt="Image of a desktop computer" />
-        <h3>Desktops</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
-      </div>
-      <div class="category-item">
-        <img src="/placeholder.svg" alt="Image of a tablet computer" />
-        <h3>Tablets</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
-      </div>
-      <div class="category-item">
-        <img src="/placeholder.svg" alt="Image of a smartphone" />
-        <h3>Smartphones</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
-      </div>
-      <div class="category-item">
-        <img src="/placeholder.svg" alt="Image of a smartwatch" />
-        <h3>Smartwatches</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
-      </div>
-      <div class="category-item">
-        <img src="/placeholder.svg" alt="Image of a pair of headphones" />
-        <h3>Headphones</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget lacus eget nunc luctus tincidunt. Nunc eget lacus eget nunc luctus tincidunt.</p>
+      <footer className="flex items-center justify-center space-x-6 mb-8">
+        <a href="#" className="flex items-center space-x-1">
+          <HomeIcon className="w-5 h-5" />
+          <span>Documentation</span>
+        </a>
+        <a href="#" className="flex items-center space-x-1">
+          <HomeIcon className="w-5 h-5" />
+          <span>GitHub</span>
+        </a>
+        <a href="#" className="flex items-center space-x-1">
+          <RssIcon className="w-5 h-5" />
+          <span>RSS</span>
+        </a>
+      </footer>
+      <div className="text-center text-sm">
+        Brought to you by <span className="font-bold">Joe Davola</span>
       </div>
     </div>
-  </div>
-</body>
+  );
+}
 
-</html>
 `;
 
 export async function mockComletion(process_chunk) {

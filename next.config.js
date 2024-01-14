@@ -2,7 +2,12 @@ const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 const { patchWebpackConfig } = require("next-global-css");
 
 const rewrites = async () => {
-  const ret = [];
+  const ret = [
+    {
+      source: '/sandpack',
+      destination: '/sandpack/index.html',
+    }
+  ];
 
   return {
       beforeFiles: ret,

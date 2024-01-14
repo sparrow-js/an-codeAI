@@ -30,6 +30,14 @@ function generateDisplayComponent(config: GeneratedCodeConfig) {
           <span className="font-semibold">Tailwind 🔥</span>
         </div>
       );
+    case GeneratedCodeConfig.REACT_SHADCN_UI:
+      return (
+        <div>
+          <span className="font-semibold">React</span> +{" "}
+          <span className="font-semibold">shadcn/ui</span>
+          <span className="text-orange-600 ml-[20px]">Beta</span>
+        </div>
+      );  
     case GeneratedCodeConfig.BOOTSTRAP:
       return (
         <div>
@@ -86,7 +94,7 @@ function OutputSettingsSection({
 }: Props) {
   return (
     <div className="flex flex-col gap-y-2 justify-between text-sm">
-      <div className="w-[180px]">
+      <div className="w-[200px]">
         <Select
           value={generatedCodeConfig}
           onValueChange={(value: string) =>
@@ -104,6 +112,9 @@ function OutputSettingsSection({
               </SelectItem>
               <SelectItem value={GeneratedCodeConfig.REACT_TAILWIND}>
                 {generateDisplayComponent(GeneratedCodeConfig.REACT_TAILWIND)}
+              </SelectItem>
+              <SelectItem value={GeneratedCodeConfig.REACT_SHADCN_UI}>
+                {generateDisplayComponent(GeneratedCodeConfig.REACT_SHADCN_UI)}
               </SelectItem>
               <SelectItem value={GeneratedCodeConfig.REACT_ANTD}>
                 {generateDisplayComponent(GeneratedCodeConfig.REACT_ANTD)}

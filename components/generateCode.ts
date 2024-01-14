@@ -40,7 +40,7 @@ export function generateCode(
           } else if (response.type === 'status') {
               onStatusUpdate(response.value);
           } else if (response.type === 'setCode') {
-              onSetCode(response.value);
+              onSetCode(response.value.replace('```jsx', '').replace('```', ''));
           } else if (response.type === 'error') {
               console.error('Error generating code', response.value);
               toast.error(response.value);

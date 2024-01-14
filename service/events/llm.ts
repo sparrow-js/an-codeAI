@@ -167,6 +167,5 @@ export async function streamingOpenAIResponses(
     callback(content);
   }
 
-  console.log('********full_response', full_response)
   return full_response;
 }

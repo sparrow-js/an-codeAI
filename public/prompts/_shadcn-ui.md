@@ -11,16 +11,13 @@ The JSX code should ONLY use the following components, there are no other libs a
 - Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
 
 
-You can use icons from 'lucide-react', for example:
+You can build a SVG  icon, for example:
 
-```
-1. ArrowRight
-2. Check
-3. Home
-4. User
-5. Search
-6. Github
-```
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="11" cy="11" r="8"/>
+  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+</svg>
+
 
 When creating JSX code, refer to the usage method in the following sample code without omitting any code.
 Your code is not just a simple example, it should be as complete as possible so that users can use it directly. Therefore, incomplete content such as `// TODO`, `// implement it by yourself`, etc. should not appear.
@@ -635,15 +632,26 @@ import {
   <ResizablePanel>Two</ResizablePanel>
 </ResizablePanelGroup>;
 
-### Available Component 42, SVG icons:
-
-import { Home, User, Settings, Github } from "lucide-react";
+### Available SVG icons:
 
 <div className="p-3 bg-white bg-opacity-20 rounded-full border border-white">
-  <Home className="w-8 h-8 text-white" />
-  <User className="w-8 h-8 text-white" />
-  <Settings className="w-8 h-8 text-white" />
-  <Github className="w-8 h-8 text-white" />
+  <span className="w-8 h-8 text-white">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+  </span>
+  <span className="w-8 h-8 text-white">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 2a4 4 0 1 1-4 4 4 4 0 0 1 4-4zM12 18v2m5-3a7 7 0 1 1-14 0"/>
+    </svg>
+  </span>
+  <span className="w-8 h-8 text-white">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 12h2.6M2.6 12h2.6M15 19.4v2.6M15 2.6v2.6M4.93 4.93l1.87 1.87M18.2 18.2l1.87 1.87M4.93 18.2l1.87-1.87M18.2 4.93l1.87-1.87"/>
+    </svg>
+  </span>
 </div>;
 
 ### Available Component 43, BarChart:

@@ -12,7 +12,63 @@ import {
     FaBug
 } from "react-icons/fa";
 import filesTemplate from './apps/react-shadcnui/files-template';
+import { useSandpack, SandpackProvider } from "@codesandbox/sandpack-react";
 
+// filesTemplate['/src/Preview.jsx'] = `
+// import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "components/ui/card";
+// import { Button } from "components/ui/button";
+
+// export default function App() {
+//   return (
+//     <div className="p-8">
+//       loading
+//     </div>
+//   );
+// }
+// `;
+
+interface ISandpackProps {
+  appState: AppState;
+  generatedCodeConfig: GeneratedCodeConfig,
+}
+
+const SandpackCustom = ({
+  appState,
+  generatedCodeConfig,
+}: ISandpackProps) => {
+  const { dispatch, listen, sandpack } = useSandpack();
+ 
+  const handleRefresh = () => {
+    sandpack.runSandpack();
+    // sandpack.resetFile('/src/Preview.jsx')
+  };
+
+  useEffect(() => {
+    if (appState === AppState.CODE_READY && generatedCodeConfig === GeneratedCodeConfig.REACT_SHADCN_UI) {
+      console.log('************8888****');
+      // sandpack.resetFile('/src/Preview.jsx');
+      // sandpack.
+      // sandpack.runSandpack();
+    }
+
+  }, [appState, generatedCodeConfig])
+
+
+ 
+  useEffect(() => {
+    // listens for any message dispatched between sandpack and the bundler
+    const stopListening = listen((msg) => console.log(msg));
+ 
+    return () => {
+      // unsubscribe
+      stopListening();
+    };
+  }, [listen]);
+ 
+  return (
+    <button onClick={handleRefresh}>handleRefresh</button>
+  );
+};
 
 const editor = new Editor();
 globalContext.register(editor, Editor);
@@ -61,6 +117,8 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
       message: '',
       stack: ''
     });
+    // const { dispatch, listen } = useSandpack();
+
 
     const { enableEdit, setEnableEdit } = useContext(EditorContext);
     const [filesObj, setFilesObj]= useState<any>(filesTemplate);
@@ -121,17 +179,17 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
                 designer.project.simulator?.writeIframeDocument(content || codeUid);
               }
             } else if (generatedCodeConfig === GeneratedCodeConfig.REACT_SHADCN_UI) {
+              const codeUid = setHtmlCodeUid(generatedCodeConfig, code);
+              filesObj['/src/Preview.jsx'] = codeUid;
               setFilesObj((prev: any) => {
                 const newFiles = {...prev};
-                newFiles['/src/Preview.jsx'] = code;
+                newFiles['/src/Preview.jsx'] = codeUid;
                 return newFiles;
               });
-              filesTemplate['/src/Preview.jsx'] = code;
+              filesTemplate['/src/Preview.jsx'] = codeUid;
             } else {
               designer.project.simulator?.writeIframeDocument(code);
             }
-            
-
         } else if(appState === AppState.INITIAL) {
           filesTemplate['/src/Preview.jsx'] = `
           import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "components/ui/card";
@@ -145,6 +203,11 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
             );
           }
           `;
+          setFilesObj((prev: any) => {
+            const newFiles = {...prev};
+            newFiles['/src/Preview.jsx'] = filesTemplate['/src/Preview.jsx'];
+            return newFiles;
+          });
         } else {
             // designer.project.simulator?.writeIframeDocument(throttledCode);
         }
@@ -190,15 +253,48 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
                 </span>
                 )
             }
-            <DesignerView 
-                editor={editor}
-                designer={editor.get('designer')}
-                simulatorProps={{
-                    simulatorUrl: '',
-                    isSandpack: true,
-                    files: filesObj,
+            {
+              appState === AppState.CODE_READY && 
+              !filesObj['/src/Preview.jsx'].includes('loading') && 
+              generatedCodeConfig === GeneratedCodeConfig.REACT_SHADCN_UI &&
+              (
+                <SandpackProvider
+                template="react"
+                options={{
+                  bundlerURL: `${location.origin}/sandpack/`,
+                  classes: {
+                    "sp-wrapper": "ant-codeai-wrapper",
+                  }
                 }}
-            />
+                // @ts-ignore
+                files={filesObj}
+             >
+              <DesignerView 
+                  editor={editor}
+                  designer={editor.get('designer')}
+                  simulatorProps={{
+                      simulatorUrl: '',
+                      isSandpack: true,
+                      files: filesObj,
+                  }}
+              />
+             </SandpackProvider>
+              )
+            }
+            {
+              generatedCodeConfig !== GeneratedCodeConfig.REACT_SHADCN_UI &&
+              (
+                <DesignerView 
+                  editor={editor}
+                  designer={editor.get('designer')}
+                  simulatorProps={{
+                      simulatorUrl: '',
+                      isSandpack: false,
+                      files: filesObj,
+                  }}
+              />
+              )
+            }
         </div>
     )
 }

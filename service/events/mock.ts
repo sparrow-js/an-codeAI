@@ -196,91 +196,62 @@ export const NO_IMAGES_NYTIMES_MOCK_CODE = `
 `;
 
 const REACT_ANTD_MOCK_CODE = `
-import { Search } from 'lucide-react';
-import { Button } from 'components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from 'components/ui/card';
+import { Input } from "components/ui/input";
+import { Button } from "components/ui/button";
+import { Home as HomeIcon, Rss as RssIcon, ArrowRight } from "lucide-react";
 
-export default function VxDev() {
+export default function App() {
   return (
-    <div className="max-w-6xl mx-auto p-8">
-      <div className="flex items-center space-x-2 mb-8">
-        <div className="flex items-center bg-white shadow rounded overflow-hidden w-full">
-          <span className="p-4">
-            <Search className="w-5 h-5 text-gray-500" />
-          </span>
-          <input
-            type="text"
-            placeholder="Search for villas"
-            className="p-4 w-full"
-            defaultValue="Villa"
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
+      <header className="flex flex-col items-center">
+        <div className="mb-4">
+          <img
+            src="https://via.placeholder.com/50"
+            alt="Commit Logo"
+            className="w-12 h-12"
           />
         </div>
+        <h1 className="text-4xl font-bold mb-2">Commit</h1>
+        <h2 className="text-3xl font-light text-center mb-6">
+          Open-source Git client <br />
+          for macOS minimalists
+        </h2>
+        <p className="text-center mb-6">
+          Commit is a lightweight Git client you can open from anywhere any time
+          you're ready to commit your work with a single keyboard shortcut. It's
+          fast, beautiful, and completely unnecessary.
+        </p>
+      </header>
+      <div className="flex space-x-4 mb-8">
+        <Input
+          placeholder="Email address"
+          className="text-black rounded px-4 py-2"
+        />
+        <Button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Get updates <ArrowRight className="ml-2" />
+        </Button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Villa 1 */}
-        <Card>
-          <img
-            src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&dpr=2&q=80"
-            alt="The Royal Bali Villas"
-            className="w-full h-64 object-cover"
-          />
-          <CardHeader>
-            <CardTitle>The Royal Bali Villas</CardTitle>
-            <CardDescription>Canggu</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold">$300 / night</p>
-            <p className="text-sm text-gray-600">Canggu</p>
-            <p className="text-sm">Rating: <span className="text-yellow-400">★★★★★</span></p>
-          </CardContent>
-          <CardFooter>
-            <Button variant="solid" className="w-full bg-blue-500 hover:bg-blue-600 text-white">Learn More</Button>
-          </CardFooter>
-        </Card>
-        {/* Villa 2 */}
-        <Card data-uid="1111">
-          <img
-            src="https://images.unsplash.com/photo-1590486803837-92e1a4e481aa?w=800&dpr=2&q=80"
-            alt="Villa Maxceo"
-            className="w-full h-64 object-cover"
-          />
-          <CardHeader>
-            <CardTitle>Villa Maxceo</CardTitle>
-            <CardDescription>Canggu</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold">$290 / night</p>
-            <p className="text-sm text-gray-600">Canggu</p>
-            <p className="text-sm">Rating: <span className="text-yellow-400">★★★★☆</span></p>
-          </CardContent>
-          <CardFooter>
-            <Button variant="solid" className="w-full bg-blue-500 hover:bg-blue-600 text-white">Learn More</Button>
-          </CardFooter>
-        </Card>
-        {/* Villa 3 */}
-        <Card>
-          <img
-            src="https://images.unsplash.com/photo-1570213489059-0aac6626cade?w=800&dpr=2&q=80"
-            alt="Fella Villa"
-            className="w-full h-64 object-cover"
-          />
-          <CardHeader>
-            <CardTitle>Fella Villa</CardTitle>
-            <CardDescription>Canggu</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold">$290 / night</p>
-            <p className="text-sm text-gray-600">Canggu</p>
-            <p className="text-sm">Rating: <span className="text-yellow-400">★★★★★</span></p>
-          </CardContent>
-          <CardFooter>
-            <Button variant="solid" className="w-full bg-blue-500 hover:bg-blue-600 text-white">Learn More</Button>
-          </CardFooter>
-        </Card>
+      <footer className="flex items-center justify-center space-x-6 mb-8">
+        <a href="#" className="flex items-center space-x-1">
+          <HomeIcon className="w-5 h-5" />
+          <span>Documentation</span>
+        </a>
+        <a href="#" className="flex items-center space-x-1">
+          <HomeIcon className="w-5 h-5" />
+          <span>GitHub</span>
+        </a>
+        <a href="#" className="flex items-center space-x-1">
+          <RssIcon className="w-5 h-5" />
+          <span>RSS</span>
+        </a>
+      </footer>
+      <div className="text-center text-sm">
+        Brought to you by <span className="font-bold">Joe Davola</span>
       </div>
     </div>
   );
 }
+
 `;
 
 export async function mockComletion(process_chunk) {

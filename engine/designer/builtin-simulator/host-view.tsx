@@ -114,17 +114,6 @@ class Content extends Component<{ host: BuiltinSimulatorHost }> {
     if (sim.get('isSandpack')) {
       return (
         <div className="lc-simulator-content">
-           <SandpackProvider
-            template="react"
-            options={{
-              bundlerURL: `${location.origin}/sandpack/`,
-              classes: {
-                "sp-wrapper": "ant-codeai-wrapper",
-              }
-            }}
-            // @ts-ignore
-            files={sim.designer.simulatorProps.files}
-           >
             <SandpackLayout>
               {/* <SandpackCodeEditor /> */}
               <SandpackPreview 
@@ -132,6 +121,7 @@ class Content extends Component<{ host: BuiltinSimulatorHost }> {
                 ref={(previewRef: SandpackPreviewRef) => {
                   if (previewRef) {
                     const iframe = previewRef.getClient()?.iframe;
+
                     if (iframe) {
                       sim.mountContentFrame(iframe)
                     }
@@ -139,7 +129,6 @@ class Content extends Component<{ host: BuiltinSimulatorHost }> {
                 }} 
               />
             </SandpackLayout>
-          </SandpackProvider>
         </div>
       )
     }

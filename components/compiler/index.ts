@@ -269,6 +269,9 @@ ${codeJsx}
       return code;
     }
     return code;
+  } else if (generatedCodeConfig === GeneratedCodeConfig.REACT_SHADCN_UI) {
+    const codeJsx = setCodeUid(code, anchorUid, path);
+    return codeJsx;
   }
   return code;
 }

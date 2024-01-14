@@ -167,7 +167,7 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
                 designer.project.simulator?.writeIframeDocument(content || codeUid);
               }
             } else if (generatedCodeConfig === GeneratedCodeConfig.REACT_SHADCN_UI) {
-              const codeUid = setHtmlCodeUid(generatedCodeConfig, code);
+              const codeUid = setHtmlCodeUid(generatedCodeConfig, code.replaceAll('@/components', 'components'));
               filesObj['/src/Preview.jsx'] = codeUid;
               setFilesObj((prev: any) => {
                 const newFiles = {...prev};

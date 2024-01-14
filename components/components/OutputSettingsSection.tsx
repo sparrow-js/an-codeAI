@@ -34,7 +34,8 @@ function generateDisplayComponent(config: GeneratedCodeConfig) {
       return (
         <div>
           <span className="font-semibold">React</span> +{" "}
-          <span className="font-semibold">shadcn/ui 🔥</span>
+          <span className="font-semibold">shadcn/ui</span>
+          <span className="text-orange-600 ml-[20px]">Beta</span>
         </div>
       );  
     case GeneratedCodeConfig.BOOTSTRAP:
@@ -93,7 +94,7 @@ function OutputSettingsSection({
 }: Props) {
   return (
     <div className="flex flex-col gap-y-2 justify-between text-sm">
-      <div className="w-[180px]">
+      <div className="w-[200px]">
         <Select
           value={generatedCodeConfig}
           onValueChange={(value: string) =>

@@ -915,7 +915,7 @@ function PieChart(props) {
 </div>;
 ```
 
-### Available html 48, Grid Layout:
+### Available html fragment for Grid Layout:
 
 ```jsx
 <div className="grid grid-cols-3 gap-4 p-4">
@@ -925,7 +925,7 @@ function PieChart(props) {
 </div>
 ```
 
-### Available html 49, Sidebar Layout:
+### Available html fragment for Sidebar Layout:
 
 ```jsx
 <div className="flex h-screen bg-gray-100">
@@ -936,7 +936,7 @@ function PieChart(props) {
 </div>
 ```
 
-### Available html 50, Header and Footer Layout:
+### Available html fragment for Header and Footer Layout:
 
 ```jsx
 <div className="flex flex-col h-screen">
@@ -954,6 +954,8 @@ function PieChart(props) {
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 ```
+
+- The components used should not lack import.
 
 
 Create JSX code when you get the detailed instructions.

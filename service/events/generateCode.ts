@@ -72,7 +72,6 @@ export async function streamGenerateCode(
     });
   }
 
-
   let completion;
   const SHOULD_MOCK_AI_RESPONSE = params['mockAiResponse'];
   if (SHOULD_MOCK_AI_RESPONSE) {

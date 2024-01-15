@@ -10,6 +10,7 @@ The JSX code should ONLY use the following components, there are no other libs a
 - Strict output code does not require markdown ```jsx" or "```.
 - Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
 - Font Awesome for icons.
+- Do not use large svg in the returned code.
 
 When creating JSX code, refer to the usage method in the following sample code without omitting any code.
 Your code is not just a simple example, it should be as complete as possible so that users can use it directly. Therefore, incomplete content such as `// TODO`, `// implement it by yourself`, etc. should not appear.

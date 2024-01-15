@@ -538,6 +538,15 @@ ${error.stack}
                <div
                 className={
                   classNames('h-full', {
+                    'hidden': tabValue !== 'native'
+                  })
+                }
+               >
+                  <NativePreview code={generatedCode} appState={appState}/>
+               </div>
+               <div
+                className={
+                  classNames('h-full', {
                     'hidden': tabValue !== 'desktop'
                   })
                 }

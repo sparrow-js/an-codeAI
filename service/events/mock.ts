@@ -196,62 +196,42 @@ export const NO_IMAGES_NYTIMES_MOCK_CODE = `
 `;
 
 const REACT_ANTD_MOCK_CODE = `
-import { Input } from "components/ui/input";
-import { Button } from "components/ui/button";
-import { Home as HomeIcon, Rss as RssIcon, ArrowRight } from "lucide-react";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
-      <header className="flex flex-col items-center">
-        <div className="mb-4">
-          <img
-            src="https://via.placeholder.com/50"
-            alt="Commit Logo"
-            className="w-12 h-12"
-          />
-        </div>
-        <h1 className="text-4xl font-bold mb-2">Commit</h1>
-        <h2 className="text-3xl font-light text-center mb-6">
-          Open-source Git client <br />
-          for macOS minimalists
-        </h2>
-        <p className="text-center mb-6">
-          Commit is a lightweight Git client you can open from anywhere any time
-          you're ready to commit your work with a single keyboard shortcut. It's
-          fast, beautiful, and completely unnecessary.
-        </p>
-      </header>
-      <div className="flex space-x-4 mb-8">
-        <Input
-          placeholder="Email address"
-          className="text-black rounded px-4 py-2"
-        />
-        <Button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Get updates <ArrowRight className="ml-2" />
-        </Button>
-      </div>
-      <footer className="flex items-center justify-center space-x-6 mb-8">
-        <a href="#" className="flex items-center space-x-1">
-          <HomeIcon className="w-5 h-5" />
-          <span>Documentation</span>
-        </a>
-        <a href="#" className="flex items-center space-x-1">
-          <HomeIcon className="w-5 h-5" />
-          <span>GitHub</span>
-        </a>
-        <a href="#" className="flex items-center space-x-1">
-          <RssIcon className="w-5 h-5" />
-          <span>RSS</span>
-        </a>
-      </footer>
-      <div className="text-center text-sm">
-        Brought to you by <span className="font-bold">Joe Davola</span>
+    <div className="bg-gray-100 p-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {Array.from({ length: 6 }, (_, index) => (
+          <Card key={index} className="bg-white shadow rounded overflow-hidden">
+            <CardHeader className="p-4 border-b">
+              <CardTitle className="text-lg font-semibold">分布式文件系统 BC-HDFS</CardTitle>
+              <CardDescription className="text-sm">
+                建在Hadoop上的数据仓库，它能够为用户提供数据的搭载、查询和分析
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-4 flex justify-center">
+              <img
+                src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80"
+                alt="BC-HDFS"
+                className="h-32"
+              />
+            </CardContent>
+            <CardFooter className="p-4 flex justify-between">
+              <Button variant="outline" className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-colors">
+                加入购物车
+              </Button>
+              <Button className="bg-blue-500 text-white hover:bg-blue-600 transition-colors">
+                立即订购
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
       </div>
     </div>
   );
 }
-
 `;
 
 export async function mockComletion(process_chunk) {

@@ -105,6 +105,7 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
       message: '',
       stack: ''
     });
+    const [initSandpack, setInitSandpack] = useState<boolean>(false);
     // const { dispatch, listen } = useSandpack();
 
 
@@ -175,6 +176,7 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
                 return newFiles;
               });
               filesTemplate['/src/Preview.jsx'] = codeUid;
+              setInitSandpack(true);
             } else {
               designer.project.simulator?.writeIframeDocument(code);
             }
@@ -242,9 +244,7 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
                 )
             }
             {
-              appState === AppState.CODE_READY && 
-              !filesObj['/src/Preview.jsx'].includes('loading') && 
-              generatedCodeConfig === GeneratedCodeConfig.REACT_SHADCN_UI &&
+              initSandpack &&
               (
                 <SandpackProvider
                 template="react"

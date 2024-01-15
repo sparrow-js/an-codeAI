@@ -76,7 +76,7 @@ function App() {
 
   const {history, addHistory,  currentVersion, setCurrentVersion, resetHistory, updateHistoryCode} = useContext(HistoryContext);
   const { enableEdit, setEnableEdit } = useContext(EditorContext)
-  const tabValue = useRef<string>(settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop');
+  const [tabValue, setTabValue] = useState<string>(settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop')
 
   // Tracks the currently shown version from app history
 
@@ -511,8 +511,8 @@ ${error.stack}
                 </>
               )}
             </div>
-            <Tabs onValueChange={(e) => {
-              tabValue.current = e;
+            <Tabs onValueChange={(e: any) => {
+              setTabValue(e)
             }} className="h-full flex flex-col" defaultValue={settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop'}>
               <div className="flex justify-end mr-8 mb-4">
                 <TabsList>
@@ -535,14 +535,13 @@ ${error.stack}
                   </TabsTrigger>
                 </TabsList>
               </div>
-              {
-                settings.generatedCodeConfig === GeneratedCodeConfig.REACT_NATIVE ? (
-                  <TabsContent value="native">
-                    <NativePreview code={generatedCode} appState={appState}/>
-                  </TabsContent>
-                ) : (
-                  <>
-                    <TabsContent value="desktop">
+               <div
+                className={
+                  classNames('h-full', {
+                    'hidden': tabValue !== 'desktop'
+                  })
+                }
+               >
                       <PreviewBox  
                         code={generatedCode}
                         appState={appState}
@@ -554,17 +553,20 @@ ${error.stack}
                         fixBug={fixBug}
                       />
                       {/* <Preview code={generatedCode} device="desktop" appState={appState} fixBug={fixBug}/> */}
-                    </TabsContent>
-                  </>
-                )
-              }
-              <TabsContent value="code">
+                </div>
+              <div 
+                className={
+                  classNames('h-full', {
+                    'hidden': tabValue !== 'code'
+                  })
+                }
+              >
                 <CodeTab
                   code={generatedCode}
                   setCode={setGeneratedCode}
                   settings={settings}
                 />
-              </TabsContent>
+              </div>
             </Tabs>
           </div>
           <div className="flex justify-center mt-10">

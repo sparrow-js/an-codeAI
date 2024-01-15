@@ -35,8 +35,6 @@ import copy from "copy-to-clipboard";
 import CodePreview from './components/CodePreview';
 import { PiCursorClickFill } from "react-icons/pi";
 import classNames from "classnames";
-import filesTemplate from '../engine/apps/react-shadcnui/files-template';
-
 
 
 const CodeTab = dynamic(
@@ -161,19 +159,6 @@ function App() {
     setReferenceImages([]);
     setExecutionConsole([]);
     resetHistory();
-    // todo: Put it somewhere else
-    // filesTemplate['/src/Preview.jsx'] = `
-    // import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "components/ui/card";
-    // import { Button } from "components/ui/button";
-    
-    // export default function App() {
-    //   return (
-    //     <div className="p-8">
-    //       loading
-    //     </div>
-    //   );
-    // }
-    // `
   };
 
   const stop = () => {
@@ -535,15 +520,18 @@ ${error.stack}
                   </TabsTrigger>
                 </TabsList>
               </div>
-               <div
-                className={
-                  classNames('h-full', {
-                    'hidden': tabValue !== 'native'
-                  })
-                }
-               >
-                  <NativePreview code={generatedCode} appState={appState}/>
-               </div>
+              {
+                tabValue === 'native' && (
+                <div
+                  className={
+                    classNames('h-full')
+                  }
+                 >
+                    <NativePreview code={generatedCode} appState={appState}/>
+                 </div>
+                )
+              }
+             
                <div
                 className={
                   classNames('h-full', {

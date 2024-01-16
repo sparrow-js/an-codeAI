@@ -43,6 +43,7 @@ export function generateCode(
     
 
  if (params.slug && params.slug !== 'create' && params.generationType === 'create') {
+    let tempData = '';
     request.post('/getTemplate',{
         data: {
             event: 'getTemplate',
@@ -68,18 +69,22 @@ export function generateCode(
             reader.read().then(({ done, value }: { done: boolean; value: Uint8Array }) => {
                 // If there is no more data to read
                 if (done) {
-                    console.log('done', done);
+                    console.log('done', done, tempData);
+                    handleMessage({
+                        data: tempData,
+                    });
                     onComplete();
                     return;
                 }
                 // Get the data and send it to the browser via the controller
                 // Check chunks by logging to the console
-                map(textDecoder.decode(value).split('\n'), v => {
-                    v &&
-                        handleMessage({
-                            data: v,
-                        });
-                });
+                tempData += textDecoder.decode(value);
+                // map(textDecoder.decode(value).split('\n'), v => {
+                //     v &&
+                //         handleMessage({
+                //             data: v,
+                //         });
+                // });
                 push();
             });
         };

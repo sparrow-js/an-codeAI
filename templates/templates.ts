@@ -18,7 +18,8 @@ export default {
             from: "github",
             fromUrl: "https://github.com/themesberg/landwind",
             type: "html",
-            fetchUrl: "https://raw.githubusercontent.com/sparrow-js/ant-codeAI/accurate-output/templates/landwind.html",
+            fetchUrl: "https://raw.githubusercontent.com/sparrow-js/ant-codeAI/accurate-output/templates/landwind.html"
+            // fetchUrl: "http://localhost:3000/templates/landwind.html",
         },
         {
             id: 'tailwind-landing-page',

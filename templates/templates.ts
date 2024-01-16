@@ -4,7 +4,7 @@ export default {
             id: 'Landing_Page_Tailwind',
             title: "Landing Page",
             description: "A beautiful landing page.",
-            imageUrl: "https://github.com/sparrow-js/ant-codeAI/assets/59440091/05919fbc-93b3-4c71-bfa3-e2982a76d0c6",
+            imageUrl: "/images/05919fbc-93b3-4c71-bfa3-e2982a76d0c6.png",
             from: "github",
             fromUrl: "",
             type: "html",

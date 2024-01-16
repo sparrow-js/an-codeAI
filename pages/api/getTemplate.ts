@@ -6,6 +6,7 @@ type Data = {
   data: any
 }
 
+export const runtime = 'edge';
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
@@ -14,6 +15,7 @@ export default async function handler(
   const { list } = templates;
   const template = list.find(template => template.id === id);
   if (template) {
+    console.log('******', template.fetchUrl);
     const response = await fetch(template.fetchUrl, {
         method: 'get',
         headers: new Headers({

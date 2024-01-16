@@ -8,7 +8,7 @@ export default {
             from: "github",
             fromUrl: "",
             type: "html",
-            fetchUrl: "http://localhost:3000/templates/Landing_Page_Tailwind.html",
+            fetchUrl: "https://raw.githubusercontent.com/sparrow-js/ant-codeAI/accurate-output/templates/simple_Landing_Page_Tailwind.html",
         }
     ]
 }

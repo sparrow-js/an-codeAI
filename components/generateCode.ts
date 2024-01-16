@@ -16,6 +16,7 @@ export interface CodeGenerationParams {
   history?: string[];
   isChunk?: boolean;
   partData?: any;
+  slug?: string;
 
   // isImageGenerationEnabled: boolean; // TODO: Merge with Settings type in types.ts
 }
@@ -29,6 +30,18 @@ export function generateCode(
   onComplete: () => void
 ) {
 
+ if (params.slug && params.slug !== 'create' && params.generationType === 'create') {
+    request('/getTemplate',{
+        method: 'GET',
+        params: {
+            id: params.slug 
+        }
+    }).then((res: any) => {
+        handleMessage(res.data)
+        onComplete();
+    });
+    return;
+ }
   
   wsRef.current = new AbortController();
 
@@ -46,7 +59,7 @@ export function generateCode(
               toast.error(response.value);
           }
       } catch (e) {
-          console.log(event);
+          console.log(event, e);
       }
   }
 
@@ -65,6 +78,7 @@ export function generateCode(
       }
       toast.error(ERROR_MESSAGE);
   };
+
   try {
     request
           .post(

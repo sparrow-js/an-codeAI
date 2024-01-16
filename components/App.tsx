@@ -35,6 +35,7 @@ import copy from "copy-to-clipboard";
 import CodePreview from './components/CodePreview';
 import { PiCursorClickFill } from "react-icons/pi";
 import classNames from "classnames";
+import { useRouter as useNextRouter } from 'next/router';
 
 
 const CodeTab = dynamic(
@@ -82,6 +83,7 @@ function App() {
     useState<boolean>(false);
 
   const router = useRouter();
+  const nextRouter = useNextRouter();
 
   const wsRef = useRef<AbortController>(null);
   const initFn = useDebounceFn(() => {
@@ -101,6 +103,14 @@ function App() {
     wait: 300
   });
 
+  const templateFn = useDebounceFn(() => {
+    console.log('*************88899', nextRouter.query.slug);
+    doCreate([], '', nextRouter.query.slug as string);
+  }, {
+    wait: 300
+  });
+
+
   // When the user already has the settings in local storage, newly added keys
   // do not get added to the settings so if it's falsy, we populate it with the default
   // value
@@ -115,11 +125,16 @@ function App() {
   }, [settings.generatedCodeConfig, setSettings]);
 
   useEffect(() => {
-    if (dataUrls.length) {
-      initFn.run();
-    }
-    if (initCreateText) {
-      initTextFn.run();
+    const slug = nextRouter.query.slug;
+    if (slug === 'create') {
+      if (dataUrls.length) {
+        initFn.run();
+      }
+      if (initCreateText) {
+        initTextFn.run();
+      }
+    } else {
+      templateFn.run();
     }
   }, [initCreate, dataUrls, initCreateText]);
 
@@ -176,7 +191,7 @@ function App() {
     setAppState(AppState.CODING);
 
     // Merge settings with params
-    const updatedParams = { ...params, ...settings };
+    const updatedParams = { ...params, ...settings, slug: nextRouter.query.slug };
 
     generateCode(
       wsRef,
@@ -194,14 +209,14 @@ function App() {
   }
 
   // Initial version creation
-  function doCreate(referenceImages: string[], text: string) {
+  function doCreate(referenceImages: string[], text: string, slug?: string) {
     // Reset any existing state
     reset();
 
     setReferenceImages(referenceImages);
     setReferenceText(text);
 
-    if (referenceImages.length > 0 || text) {
+    if (referenceImages.length > 0 || text || slug) {
       doGenerateCode(
         {
           generationType: "create",

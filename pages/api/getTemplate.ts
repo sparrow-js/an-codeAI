@@ -6,7 +6,6 @@ type Data = {
   data: any
 }
 
-export const runtime = 'edge';
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>

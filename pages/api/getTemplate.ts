@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import templates from '../templates';
+import templates from '../../templates/templates';
 
 type Data = {
   data: any

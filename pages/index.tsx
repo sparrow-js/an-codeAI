@@ -7,7 +7,7 @@ import {UploadFileContext} from '../components/contexts/UploadFileContext'
 import { IS_RUNNING_ON_CLOUD } from "../components/config";
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
-import templates from './templates';
+import templates from '../templates/templates';
 
 import dynamic from "next/dynamic";
 const Whiteboard = dynamic(

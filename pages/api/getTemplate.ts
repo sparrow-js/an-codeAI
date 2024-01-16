@@ -11,6 +11,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
+  console.log('******1111', req.query);
   const { id } = req.query;
   const { list } = templates;
   const template = list.find(template => template.id === id);

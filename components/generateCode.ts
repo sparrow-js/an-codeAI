@@ -102,7 +102,6 @@ export function generateCode(
   async function handleMessage(event: { data: string }) {
       try {
           const response = JSON.parse(event.data);
-          console.log('***********', response);
           if (response.type === 'chunk') {
               onChange(response.value);
           } else if (response.type === 'status') {

@@ -14,9 +14,10 @@ export default async function handler(
   const { id } = req.query;
   const { list } = templates;
   const template = list.find(template => template.id === id);
+  console.log('******11', template?.fetchUrl);
   if (template) {
     console.log('******', template.fetchUrl);
-    const response = await fetch(template.fetchUrl, {
+    const response = await fetch('https://raw.githubusercontent.com/sparrow-js/ant-codeAI/accurate-output/templates/simple_Landing_Page_Tailwind.html', {
         method: 'get',
         headers: new Headers({
             'Content-Type': 'text/html'

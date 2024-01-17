@@ -9,7 +9,7 @@ Editing support (HTML+Tailwind, react+Tailwind, react+Tailwind+shadcn/ui)
 
 **Home page display and editing capabilities**
 
-| home page | Support local editing |
+| home page | Support editing |
 | --- | --- |
 | ![截屏2024-01-17 下午6.12.59.png](https://cdn.nlark.com/yuque/0/2024/png/34596612/1705486394521-9791307f-ce03-4932-af0b-d2bf2c69b3b7.png#averageHue=%23fcfaf9&clientId=u86429f36-ee0d-4&from=drop&id=u883fd1bd&originHeight=1444&originWidth=2586&originalType=binary&ratio=2&rotation=0&showTitle=false&size=484148&status=done&style=none&taskId=ua5359990-5a35-4a11-af9c-98979ba53f0&title=) | ![截屏2024-01-17 下午6.14.19.png](https://cdn.nlark.com/yuque/0/2024/png/34596612/1705486482935-c7689364-6f09-4517-8093-31ea8b859d39.png#averageHue=%23f8f7f7&clientId=u86429f36-ee0d-4&from=drop&id=u43e4bcc6&originHeight=1448&originWidth=2740&originalType=binary&ratio=2&rotation=0&showTitle=false&size=362827&status=done&style=none&taskId=uf1ee5937-d8d6-4c7a-bc5b-76fdf6bef7d&title=) |
 

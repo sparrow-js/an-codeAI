@@ -5,6 +5,7 @@ type CommonHistoryItem = {
   code: string;
   originPrompt?: string;
   screenshot?: string;
+  isLock?: boolean;
 };
 
 export type HistoryItem =

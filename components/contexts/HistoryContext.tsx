@@ -78,11 +78,13 @@ export default function SettingProvider({ children }: { children: ReactNode }) {
         }
     }
     const updateHistoryScreenshot = (img: string, version?: number) => {
+
       setHistory((prevState) => {
           const newHistory = [...prevState];
           const index = version || currentVersion || 0;
-          if (index !== -1 && newHistory && newHistory[index]) {
+          if (index !== -1 && newHistory && newHistory[index] && !newHistory[index].isLock) {
             newHistory[index].screenshot = img;
+            newHistory[index].isLock = true;
           }
           return newHistory;
         });

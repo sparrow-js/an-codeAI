@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import templates from '../templates/templates';
 
 import dynamic from "next/dynamic";
+import { GeneratedCodeConfig } from '@/components/types';
 const Whiteboard = dynamic(
     async () => (await import("../components//components/Whiteboard")),
     {
@@ -145,7 +146,11 @@ export default function Dashboard() {
                             templates.list.map(template => {
                                 return (
                                     <div onClick={() => {
-                                        router.push(`/editor/${template.id}`)
+                                        setSettings({
+                                            ...settings,
+                                            generatedCodeConfig: GeneratedCodeConfig.HTML_TAILWIND,
+                                          })
+                                        router.push(`/editor/${template.id}`);
                                     }} key={template.id} className="bg-white shadow-lg rounded-lg p-4 flex flex-col hover:ring ring-black">
                                         <div className="flex-1">
                                             <div className='aspect-[1376/768]'>

@@ -11,6 +11,7 @@ import {
   FaCopy,
   FaChevronLeft,
 } from "react-icons/fa";
+
 import { AiFillCodepenCircle } from "react-icons/ai";
 
 import { Switch } from "./components/ui/switch";
@@ -36,6 +37,7 @@ import CodePreview from './components/CodePreview';
 import { PiCursorClickFill } from "react-icons/pi";
 import classNames from "classnames";
 import { useRouter as useNextRouter } from 'next/router';
+import templates from "@/templates/templates";
 
 
 const CodeTab = dynamic(
@@ -76,7 +78,7 @@ function App() {
   const {history, addHistory,  currentVersion, setCurrentVersion, resetHistory, updateHistoryCode} = useContext(HistoryContext);
   const { enableEdit, setEnableEdit } = useContext(EditorContext)
   const [tabValue, setTabValue] = useState<string>(settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop')
-
+  const [ template, setTemplate ] = useState<any>({});
   // Tracks the currently shown version from app history
 
   const [shouldIncludeResultImage, setShouldIncludeResultImage] =
@@ -104,8 +106,12 @@ function App() {
   });
 
   const templateFn = useDebounceFn(() => {
-    console.log('*************88899', nextRouter.query.slug);
-    doCreate([], '', nextRouter.query.slug as string);
+    const slug = nextRouter.query.slug;
+    const template = templates.list.find(item => item.id === slug);
+    if (template) {
+      setTemplate(template)
+    }
+    doCreate([], '', slug as string);
   }, {
     wait: 300
   });
@@ -359,7 +365,7 @@ ${error.stack}
   return (
     <div className="dark:bg-black dark:text-white h-full">
  
-      <div className="lg:fixed lg:inset-y-0 lg:z-40 lg:flex w-[200px] lg:flex-col">
+      <div className="fixed inset-y-0 z-40 flex w-[200px] flex-col">
         <div className="flex grow flex-col gap-y-2 overflow-y-auto border-r border-gray-200 bg-white px-4 py-4 dark:bg-zinc-950 dark:text-white">
           {(appState === AppState.CODING ||
             appState === AppState.CODE_READY) && (
@@ -411,7 +417,7 @@ ${error.stack}
                     ) : (
                         <img
                           className="w-[340px] border border-gray-200 rounded-md"
-                          src={referenceImages[0]}
+                          src={referenceImages[0] || template.imageUrl}
                           alt="Reference"
                         />
                     )}

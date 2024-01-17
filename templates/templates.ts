@@ -24,7 +24,7 @@ export default {
         {
             id: 'tailwind-landing-page',
             title: "tailwind-landing-page",
-            description: "Responsive and clean landing page built with Tailwind CSS and Flowbite",
+            description: "Tailwind Manage Landing Page",
             imageUrl: "/images/tailwind-landing-page.png",
             from: "github",
             fromUrl: "https://github.com/bradtraversy/tailwind-landing-page",

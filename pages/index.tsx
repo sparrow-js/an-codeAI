@@ -86,7 +86,7 @@ export default function Dashboard() {
             <div className='fixed w-full bg-slate-50 z-20'>
                 <Header />
             </div>
-            <main className='pb-20'>
+            <main className='pb-10'>
                 <div className='fixed right-0 top-20 w-[115px] flex flex-col items-center  justify-center py-6 gap-12'>
                     <div
                         onClick={open}
@@ -160,10 +160,11 @@ export default function Dashboard() {
                         }
                     </div>
                 </div>
+                <div className="mt-[50px] w-[100%] p-2">
+                    <p className='text-slate-300 text-center'>© Copyright <a className='text-sky-400 hover:text-sky-600' href="https://www.ancodeai.com/">ancodeAI</a> All rights reserved.</p>
+                </div>
             </main>
-            {/* <div className="absolute bottom-[10px] w-[100%] p-2">
-                <p className='text-slate-300 text-center'>© Copyright <a className='text-sky-400 hover:text-sky-600' href="https://www.ancodeai.com/">ancodeAI</a> All rights reserved.</p>
-            </div> */}
+       
             <div 
                 className={classNames(
                     "fixed w-full h-full top-0 left-0 z-50",

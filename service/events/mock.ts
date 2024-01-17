@@ -325,8 +325,6 @@ const REACT_ANTD_MOCK_CODE = `
         </div>
       </div>
     </section>
-    
-   
 </body>
 </html>
 `;

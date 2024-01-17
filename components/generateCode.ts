@@ -16,6 +16,7 @@ export interface CodeGenerationParams {
   history?: string[];
   isChunk?: boolean;
   partData?: any;
+  slug?: string;
 
   // isImageGenerationEnabled: boolean; // TODO: Merge with Settings type in types.ts
 }
@@ -29,6 +30,77 @@ export function generateCode(
   onComplete: () => void
 ) {
 
+    const handleError = (error: any) => {
+        if (error.name === 'AbortError') {
+            // 处理中止错误
+            console.error('Fetch aborted:', error);
+        } else {
+            // 处理其他错误
+            console.error('Fetch error:', error);
+        }
+        toast.error(ERROR_MESSAGE);
+    };
+    
+
+ if (params.slug && params.slug !== 'create' && params.generationType === 'create') {
+    let tempData = '';
+    request.post('/getTemplate',{
+        data: {
+            event: 'getTemplate',
+            id: params.slug 
+        }
+    },
+    {
+        responseType: 'stream',
+        // signal: wsRef.current.signal,
+        // @ts-ignore
+        fetch: (...args) => {
+            // @ts-ignore
+            return fetch(...args);
+        },
+        // .then((res: any) => {
+        //     handleMessage(res.data)
+        //     onComplete();
+        // }) 
+    }).then(data => {
+        const reader = data.data.getReader();
+        const push = () => {
+            // "done" is a Boolean and value a "Uint8Array"
+            reader.read().then(({ done, value }: { done: boolean; value: Uint8Array }) => {
+                // If there is no more data to read
+                if (done) {
+                    console.log('done', done, tempData);
+                    handleMessage({
+                        data: tempData,
+                    });
+                    onComplete();
+                    return;
+                }
+                // Get the data and send it to the browser via the controller
+                // Check chunks by logging to the console
+                tempData += textDecoder.decode(value);
+                // map(textDecoder.decode(value).split('\n'), v => {
+                //     v &&
+                //         handleMessage({
+                //             data: v,
+                //         });
+                // });
+                push();
+            });
+        };
+        push();
+    }, handleError)
+    .catch(error => {
+        if (error.name === 'AbortError') {
+            // 处理中止错误
+            console.error('Fetch aborted:', error);
+        } else {
+            // 处理其他错误
+            console.error('Fetch error:', error);
+        }
+    });
+    return;
+ }
   
   wsRef.current = new AbortController();
 
@@ -46,7 +118,7 @@ export function generateCode(
               toast.error(response.value);
           }
       } catch (e) {
-          console.log(event);
+          console.log(event, e);
       }
   }
 
@@ -55,16 +127,7 @@ export function generateCode(
       onComplete();
   });
 
-  const handleError = (error: any) => {
-      if (error.name === 'AbortError') {
-          // 处理中止错误
-          console.error('Fetch aborted:', error);
-      } else {
-          // 处理其他错误
-          console.error('Fetch error:', error);
-      }
-      toast.error(ERROR_MESSAGE);
-  };
+
   try {
     request
           .post(

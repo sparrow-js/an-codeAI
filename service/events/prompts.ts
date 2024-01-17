@@ -526,6 +526,23 @@ The return result must only include the code.
 `;
 
 
+const IMPORTED_CODE_TAILWIND_SYSTEM_PROMPT = `
+You are an expert Tailwind developer.
+
+- Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
+- Repeat elements as needed. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
+
+In terms of libraries,
+
+- Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
+- You can use Google Fonts
+- Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+
+Return only the full code in <html></html> tags.
+Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.
+`;
+
+
 
 const USER_PROMPT = `
 Generate code for a app that looks exactly like this.
@@ -549,6 +566,7 @@ const SYSTEM_MAP = {
   vue_tailwind_text: VUE_TAILWIND_SYSTEM_PROMPT_TEXT,
   vue_element_text: VUE_ELEMENT_SYSTEM_PROMPT_TEXT,
   react_native_text: REACT_NATIVE_SYSTEM_PROMPT_TEXT,
+  import_code_html_tailwind: IMPORTED_CODE_TAILWIND_SYSTEM_PROMPT,
 };
 
 export async function assemblePrompt(
@@ -556,13 +574,19 @@ export async function assemblePrompt(
   text_data: string,
   generated_code_config: string,
   promptCode: string,
-  origin?: string,
+  slug: string | undefined,
+  initTemplateCode: string,
   result_image_data_url = '',
 ) {
   let systemConent =
     (SYSTEM_MAP as any)[generated_code_config] || TAILWIND_SYSTEM_PROMPT;
   if (text_data) {
     systemConent = (SYSTEM_MAP as any)[`${generated_code_config}_text`] || TAILWIND_SYSTEM_PROMPT_TEXT;
+  }
+
+  // todo: temporary hard code.
+  if (slug && slug !== 'create') {
+    systemConent = SYSTEM_MAP.import_code_html_tailwind;
   }
 
 
@@ -584,12 +608,21 @@ export async function assemblePrompt(
 
 
 
-  const userContent: any[] = [
+  let userContent: any[] = [
     {
       type: 'text',
       text: USER_PROMPT.replace('{promptCode}', promptCode),
     },
   ];
+  if (slug && slug !== 'create') {
+    userContent = [
+      {
+        type: 'text',
+        text:  `Here is the code of the app: ${initTemplateCode}`,
+      },
+    ];
+    // "Here is the code of the app: " + code
+  }
 
   if (image_data_url) {
     userContent.unshift({

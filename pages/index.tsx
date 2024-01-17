@@ -7,8 +7,10 @@ import {UploadFileContext} from '../components/contexts/UploadFileContext'
 import { IS_RUNNING_ON_CLOUD } from "../components/config";
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
+import templates from '../templates/templates';
 
 import dynamic from "next/dynamic";
+import { GeneratedCodeConfig } from '@/components/types';
 const Whiteboard = dynamic(
     async () => (await import("../components//components/Whiteboard")),
     {
@@ -57,7 +59,7 @@ export default function Dashboard() {
     useEffect(() => {
         setUploadComplete(() => {
             setInitCreate(true);
-            router.push('/editor')
+            router.push('/editor/create');
         })
     }, []);
 
@@ -85,7 +87,7 @@ export default function Dashboard() {
             <div className='fixed w-full bg-slate-50 z-20'>
                 <Header />
             </div>
-            <main>
+            <main className='pb-10'>
                 <div className='fixed right-0 top-20 w-[115px] flex flex-col items-center  justify-center py-6 gap-12'>
                     <div
                         onClick={open}
@@ -129,10 +131,45 @@ export default function Dashboard() {
                     </div>
                     )
                 }
+                <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
+                        <h1 className="text-2xl font-bold">Templates</h1>
+                        {/* <nav className="hidden md:flex space-x-10">
+                            <a href="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
+                            Prompts
+                            </a>
+                        </nav> */}
+                    </div>
+
+                    <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                        {
+                            templates.list.map(template => {
+                                return (
+                                    <div onClick={() => {
+                                        setSettings({
+                                            ...settings,
+                                            generatedCodeConfig: GeneratedCodeConfig.HTML_TAILWIND,
+                                          })
+                                        router.push(`/editor/${template.id}`);
+                                    }} key={template.id} className="bg-white shadow-lg rounded-lg p-4 flex flex-col hover:ring ring-black">
+                                        <div className="flex-1">
+                                            <div className='aspect-[1376/768]'>
+                                                <img className="w-full" src={template.imageUrl} alt={template.title} />
+                                            </div>
+                                            <h3 className="mt-4 text-sm text-gray-700">{template.title}</h3>
+                                            <p className="mt-1 text-lg font-medium text-gray-900">{template.description}</p>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                </div>
+                <div className="mt-[50px] w-[100%] p-2">
+                    <p className='text-slate-300 text-center'>© Copyright <a className='text-sky-400 hover:text-sky-600' href="https://www.ancodeai.com/">ancodeAI</a> All rights reserved.</p>
+                </div>
             </main>
-            <div className="absolute bottom-[10px] w-[100%] p-2">
-                <p className='text-slate-300 text-center'>© Copyright <a className='text-sky-400 hover:text-sky-600' href="https://www.ancodeai.com/">ancodeAI</a> All rights reserved.</p>
-            </div>
+       
             <div 
                 className={classNames(
                     "fixed w-full h-full top-0 left-0 z-50",
@@ -146,7 +183,7 @@ export default function Dashboard() {
                         setOpenWhiteboard(false);
                         setDataUrls(urls);
                         setInitCreate(true);
-                        router.push('/editor')
+                        router.push('/editor/create');
                     }}
                     closeWhiteboard={() => {
                         setOpenWhiteboard(false);

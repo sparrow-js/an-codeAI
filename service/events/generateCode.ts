@@ -20,6 +20,7 @@ export interface IGenerateCodeParams {
   mockAiResponse?: boolean;
   llm: string;
   geminiApiKey: string;
+  slug?: string;
 }
 
 const encoder = new TextEncoder();
@@ -35,6 +36,8 @@ export async function streamGenerateCode(
   }
   const generated_code_config = params['generatedCodeConfig'];
   let prompt_messages;
+  const history = params['history'];
+  const initTemplateCode = history ? history.splice(0, 1)[0] : '';
   try {
     if (params['resultImage']) {
       prompt_messages = await assemblePrompt(
@@ -42,7 +45,8 @@ export async function streamGenerateCode(
         params['text'],
         generated_code_config,
         params['promptCode'],
-        origin,
+        params.slug,
+        initTemplateCode,
         params['resultImage'],
       );
     } else {
@@ -51,7 +55,8 @@ export async function streamGenerateCode(
         params['text'],
         generated_code_config,
         params['promptCode'],
-        origin,
+        params.slug,
+        initTemplateCode
       );
     }
   } catch (e) {
@@ -71,6 +76,8 @@ export async function streamGenerateCode(
       });
     });
   }
+
+  console.log('***********133', prompt_messages);
 
   let completion;
   const SHOULD_MOCK_AI_RESPONSE = params['mockAiResponse'];

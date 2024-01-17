@@ -69,7 +69,6 @@ export function generateCode(
             reader.read().then(({ done, value }: { done: boolean; value: Uint8Array }) => {
                 // If there is no more data to read
                 if (done) {
-                    console.log('done', done, tempData);
                     handleMessage({
                         data: tempData,
                     });

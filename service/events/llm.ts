@@ -156,7 +156,7 @@ export async function streamingOpenAIResponses(
   const stream = await openai.chat.completions.create({
     model: 'gpt-4-vision-preview',
     temperature: 0,
-    max_tokens: 8192,
+    max_tokens: 4096,
     messages,
     stream: true,
   });

@@ -5,7 +5,7 @@
 
 https://github.com/sparrow-js/ant-codeAI/assets/59440091/e53fae82-d797-4a52-a1a7-a327bc3917a4
 
-编辑支持（HTML + Tailwind，react + Tailwind）
+编辑支持（HTML + Tailwind,react + Tailwind,react+Tailwind+shadcn/ui）
 <img width="1206" alt="Editing support (HTML+Tailwind, react+Tailwind)" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/9e1be3c2-5fff-40e9-bba0-ddbdad68a586">
 
 

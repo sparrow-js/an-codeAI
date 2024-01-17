@@ -36,7 +36,6 @@ export default async function handler(
         start(controller) {
             // 初始化时可以进行的操作，例如设置计数器
             if (template) {
-              console.log('******11', template?.fetchUrl);
               getTemplate(template.fetchUrl, controller).finally(() => {
                 controller.close();
               })

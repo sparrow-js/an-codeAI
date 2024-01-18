@@ -7,6 +7,8 @@ import OutputSettingsSection from './OutputSettingsSection';
 import {GeneratedCodeConfig} from '../types'
 import { MdOutlineHelp } from "react-icons/md";
 import { SiBuymeacoffee } from "react-icons/si";
+import { RiMoneyDollarCircleFill } from "react-icons/ri";
+import OnboardingNote from './OnboardingNote';
 
 export default () => {
   const { settings, setSettings } = useContext(SettingContext);
@@ -14,7 +16,7 @@ export default () => {
 
   return (
     <header className="flex items-center p-4 justify-between relative">
-      <div>
+      <div className="flex">
         <img className="w-[40px] h-[40px] left-5" src="/logo.png" />
       </div>
       <div className="flex items-center">
@@ -31,6 +33,11 @@ export default () => {
                   }
                 />
             </li>
+            <li>
+              <span className="hover:bg-slate-200 rounded-sm p-2 relative flex justify-center items-center">
+                <OnboardingNote />
+              </span>
+            </li>
             <li className="mx-2">
               <span>
                 <SettingsDialog 
@@ -41,14 +48,14 @@ export default () => {
                 />
               </span>
             </li>
-            <li className="mr-2 hover:bg-slate-200 rounded-sm p-2">
+            {/* <li className="mr-2 hover:bg-slate-200 rounded-sm p-2">
                 <a
                   href="https://github.com/sparrow-js/ant-codeAI/blob/main/README.md"
                   target="_blank"
                 >
                   <MdOutlineHelp className="text-xl" />
                 </a>
-            </li>
+            </li> */}
             <li className="mx-2">
                 <a
                   href="https://github.com/sparrow-js/ant-codeAI"

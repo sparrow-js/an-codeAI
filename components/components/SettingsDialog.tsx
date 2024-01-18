@@ -14,6 +14,9 @@ import { Switch } from "./ui/switch";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import {RadioGroup, RadioGroupItem} from './ui/radio-group';
+import classNames from 'classnames';
+import { HiArrowUp } from "react-icons/hi2";
+
 
 interface Props {
   settings: Settings;
@@ -29,10 +32,21 @@ function SettingsDialog({ settings, setSettings, openDialog, setOpenDialog }: Pr
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger 
-        className="hover:bg-slate-200 rounded-sm p-2"
-
+        className={classNames(
+          "hover:bg-slate-200 rounded-sm p-2 relative flex justify-center items-center",
+      )}
       >
-          <FaCog />
+      {
+        !settings?.openAiApiKey && (
+        <>
+            <div className="absolute top-[46px] right-[-5px] animate-bounce bg-white dark:bg-slate-800 p-2 w-10 h-10 ring-1 ring-slate-900/5 dark:ring-slate-200/20 shadow-lg rounded-full flex items-center justify-center">
+              <HiArrowUp className="w-6 h-6 text-violet-500"/>
+            </div>
+            <span className="text-sm font-bold mr-2">Setting OpenAI Key </span>
+          </>
+        )
+      }
+      <FaCog />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

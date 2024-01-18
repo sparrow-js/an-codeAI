@@ -14,7 +14,7 @@ export default function OnboardingNote() {
   return (
     <Dialog>
     <DialogTrigger className="rounded-sm w-full">
-      <span className="hover:bg-slate-200 rounded-sm p-2 relative flex justify-center items-center">
+      <span className="hover:bg-slate-200 rounded-sm relative flex justify-center items-center">
         <span className="text-sm font-bold mr-2">try out</span>
         <RiMoneyDollarCircleFill className="text-xl"/>
       </span>

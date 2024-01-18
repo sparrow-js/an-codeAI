@@ -42,7 +42,7 @@ function SettingsDialog({ settings, setSettings, openDialog, setOpenDialog }: Pr
             <div className="absolute top-[46px] right-[-5px] animate-bounce bg-white dark:bg-slate-800 p-2 w-10 h-10 ring-1 ring-slate-900/5 dark:ring-slate-200/20 shadow-lg rounded-full flex items-center justify-center">
               <HiArrowUp className="w-6 h-6 text-violet-500"/>
             </div>
-            <span className="text-sm font-bold mr-2">Setting OpenAI Key </span>
+            <span className="text-sm font-bold mr-2">Setting Key </span>
           </>
         )
       }

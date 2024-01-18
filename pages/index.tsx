@@ -88,7 +88,7 @@ export default function Dashboard() {
                 <Header />
             </div>
             <main className='pb-10'>
-                <div className='fixed right-0 top-20 w-[115px] flex flex-col items-center  justify-center py-6 gap-12'>
+                {/* <div className='fixed right-0 top-20 w-[115px] flex flex-col items-center  justify-center py-6 gap-12'>
                     <div
                         onClick={open}
                         className='cursor-pointer before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-pink-500 relative inline-block px-2'>
@@ -112,7 +112,7 @@ export default function Dashboard() {
                         >
                         <span className='relative text-white'>ideas</span>
                     </div>
-                </div>
+                </div> */}
                 <div className="w-full bg-white dark:bg-gray-800 border-t dark:border-t-gray-600 flex-col flex items-center justify-between p-3">
                     <div className="relative mt-80 w-[520px] rounded-md shadow-sm">
                         <ChatInput
@@ -124,13 +124,13 @@ export default function Dashboard() {
                     </div>
                     <p className='mt-8'>Support Drag & drop a screenshot</p>
                 </div>                    
-                { IS_RUNNING_ON_CLOUD &&
+                {/* { IS_RUNNING_ON_CLOUD &&
                     !(settings.openAiApiKey) && settings.init && (
                     <div className="fixed left-[20px] bottom-[20px] z-[49]">
                         <OnboardingNote />
                     </div>
                     )
-                }
+                } */}
                 <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
                         <h1 className="text-2xl font-bold">Templates</h1>

@@ -31,12 +31,12 @@ export default function OnboardingNote() {
 
           <hr className="mb-6"/>
           <div className="space-y-4">
-            <p>
-            如有openAI API key, GPT-4 Vision权限自行设置使用即可.
+            <p className="mb-3">
+            1.如有openAI API key, GPT-4 Vision权限自行设置使用即可.
             </p>
           </div>
           <p className="text-gray-700 pb-2">
-          初次使用体验不要超过10元,感觉对自己有用在继续使用。每天20:00前发送Key至邮箱.
+          2.初次使用体验不要超过10元,感觉对自己有用在继续使用。每天20:00前发送Key至邮箱.
           </p> 
           <p className="text-red-500 pb-2">
             备注一定要添加自己邮箱地址

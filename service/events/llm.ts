@@ -142,7 +142,7 @@ export async function streamingOpenAIResponses(
   }
 
   if (!params.openAiApiKey) {
-    callback('No openai key', 'error');
+    callback('No openai key, set it', 'error');
     return '';
   }
   const openai = new OpenAI({

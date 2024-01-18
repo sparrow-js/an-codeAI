@@ -27,7 +27,8 @@ export function generateCode(
   onChange: (chunk: string) => void,
   onSetCode: (code: string) => void,
   onStatusUpdate: (status: string) => void,
-  onComplete: () => void
+  onComplete: () => void,
+  onError: (error: string) => void,
 ) {
 
     const handleError = (error: any) => {
@@ -114,6 +115,7 @@ export function generateCode(
               onSetCode(response.value.replace('```jsx', '').replace('```', ''));
           } else if (response.type === 'error') {
               console.error('Error generating code', response.value);
+              onError(response.value);
               toast.error(response.value);
           }
       } catch (e) {

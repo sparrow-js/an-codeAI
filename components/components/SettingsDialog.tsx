@@ -18,15 +18,20 @@ import {RadioGroup, RadioGroupItem} from './ui/radio-group';
 interface Props {
   settings: Settings;
   setSettings: (newState: Settings) => void;
+  openDialog: boolean;
+  setOpenDialog: (newState: boolean) => void;
 }
 
-function SettingsDialog({ settings, setSettings }: Props) {
+function SettingsDialog({ settings, setSettings, openDialog, setOpenDialog }: Props) {
 
   const [llm, setLlm] = useState<string>('openai')
 
   return (
-    <Dialog>
-      <DialogTrigger className="hover:bg-slate-200 rounded-sm p-2">
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+      <DialogTrigger 
+        className="hover:bg-slate-200 rounded-sm p-2"
+
+      >
           <FaCog />
       </DialogTrigger>
       <DialogContent>
@@ -116,7 +121,7 @@ function SettingsDialog({ settings, setSettings }: Props) {
 
             ) : (
               <>
-                <p className="text-rose-500">The output effect is not good</p>
+                <p className="text-rose-500">The output effect is not good and it will not be maintained for the time being.</p>
                 <Label htmlFor="openai-api-key">
                   <div>Gemini API key</div>
                   <div className="font-light mt-2 leading-relaxed">

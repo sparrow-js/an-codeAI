@@ -10,6 +10,7 @@ import { SiBuymeacoffee } from "react-icons/si";
 
 export default () => {
   const { settings, setSettings } = useContext(SettingContext);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
 
   return (
     <header className="flex items-center p-4 justify-between relative">
@@ -32,7 +33,12 @@ export default () => {
             </li>
             <li className="mx-2">
               <span>
-                <SettingsDialog settings={settings} setSettings={setSettings} />
+                <SettingsDialog 
+                  settings={settings} 
+                  setSettings={setSettings}
+                  openDialog={openDialog}
+                  setOpenDialog={setOpenDialog}
+                />
               </span>
             </li>
             <li className="mr-2 hover:bg-slate-200 rounded-sm p-2">

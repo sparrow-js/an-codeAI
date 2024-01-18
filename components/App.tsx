@@ -38,6 +38,7 @@ import { PiCursorClickFill } from "react-icons/pi";
 import classNames from "classnames";
 import { useRouter as useNextRouter } from 'next/router';
 import templates from "@/templates/templates";
+import SettingsDialog from '@/components/components/SettingsDialog';
 
 
 const CodeTab = dynamic(
@@ -79,6 +80,8 @@ function App() {
   const { enableEdit, setEnableEdit } = useContext(EditorContext)
   const [tabValue, setTabValue] = useState<string>(settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop')
   const [ template, setTemplate ] = useState<any>({});
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+
   // Tracks the currently shown version from app history
 
   const [shouldIncludeResultImage, setShouldIncludeResultImage] =
@@ -210,7 +213,12 @@ function App() {
       (line) => setExecutionConsole((prev) => [...prev, line]),
       () => {
         setAppState(AppState.CODE_READY);
-      }
+      },
+      (error)=> {
+        if (error === 'No openai key, set it') {
+          setOpenDialog(true);
+        }
+      },
     );
   }
 
@@ -364,7 +372,6 @@ ${error.stack}
 
   return (
     <div className="dark:bg-black dark:text-white h-full">
- 
       <div className="fixed inset-y-0 z-40 flex w-[200px] flex-col">
         <div className="flex grow flex-col gap-y-2 overflow-y-auto border-r border-gray-200 bg-white px-4 py-4 dark:bg-zinc-950 dark:text-white">
           {(appState === AppState.CODING ||
@@ -599,6 +606,14 @@ ${error.stack}
             </div>
           </div>
       </main>
+      <span className="hidden">
+        <SettingsDialog 
+            settings={settings} 
+            setSettings={setSettings}
+            openDialog={openDialog}
+            setOpenDialog={setOpenDialog}
+        />
+      </span>
     </div>
   );
 }

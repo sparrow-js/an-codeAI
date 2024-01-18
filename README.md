@@ -50,11 +50,6 @@ Gemini（free）：
 - Gemini API key
 
 
-## Generate
-| Original | Generate |
-| --- | --- |
-| <img width="1090" alt="截屏2023-12-16 上午12 14 18" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/0620753c-9c48-4878-a40f-3d79e40f1230"> | <img width="910" alt="截屏2023-12-16 上午8 41 15" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/18fd642c-9f92-4b76-a20d-7a59c6905256"> |
-
 
 > if this project is helpful to you, buy me a coffee.
 

@@ -50,12 +50,6 @@ Gemini（免费）：
 - Gemini API key
 
 
-## 生成对比
-| 原图 | 生成网页 |
-| --- | --- |
-| <img width="1090" alt="截屏2023-12-16 上午12 14 18" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/0620753c-9c48-4878-a40f-3d79e40f1230"> | <img width="910" alt="截屏2023-12-16 上午8 41 15" src="https://github.com/sparrow-js/ant-codeAI/assets/59440091/18fd642c-9f92-4b76-a20d-7a59c6905256"> |
-
-
 ##  🙋‍♂️ 合作
 - 如果有合作意向欢迎加wx：sparrow777-js，不闲聊，没有具体事情请不要加🙏。
 - bug，意见等直接提交到git上即可

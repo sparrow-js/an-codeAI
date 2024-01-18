@@ -8,7 +8,7 @@ export default {
             from: "github",
             fromUrl: "https://github.com/tailwindtoolbox/Landing-Page",
             type: "html",
-            fetchUrl: "https://raw.githubusercontent.com/sparrow-js/ant-codeAI/accurate-output/templates/simple_Landing_Page_Tailwind.html",
+            fetchUrl: "https://raw.githubusercontent.com/sparrow-js/ant-codeAI/main/templates/simple_Landing_Page_Tailwind.html",
         },
         {
             id: 'landwind',
@@ -18,7 +18,7 @@ export default {
             from: "github",
             fromUrl: "https://github.com/themesberg/landwind",
             type: "html",
-            fetchUrl: "https://raw.githubusercontent.com/sparrow-js/ant-codeAI/accurate-output/templates/landwind.html"
+            fetchUrl: "https://raw.githubusercontent.com/sparrow-js/ant-codeAI/main/templates/landwind.html"
             // fetchUrl: "http://localhost:3000/templates/landwind.html",
         },
         {
@@ -29,7 +29,7 @@ export default {
             from: "github",
             fromUrl: "https://github.com/bradtraversy/tailwind-landing-page",
             type: "html",
-            fetchUrl: "https://raw.githubusercontent.com/sparrow-js/ant-codeAI/accurate-output/templates/tailwind-manage-landing.html",
+            fetchUrl: "https://raw.githubusercontent.com/sparrow-js/ant-codeAI/main/templates/tailwind-manage-landing.html",
         }
     ]
 }

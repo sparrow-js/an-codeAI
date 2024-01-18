@@ -25,7 +25,7 @@ const initialValue = {
         promptCode: '',
         init: false,
         llm: 'gemini',
-        geminiApiKey: 'AIzaSyBHpr3hWhy3vLvRsfHcgzK8Ff_KkigMd7o',
+        geminiApiKey: '',
     },
     initCreate: false,
     setSettings: () => {},

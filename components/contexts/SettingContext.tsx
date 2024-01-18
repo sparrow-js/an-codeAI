@@ -24,7 +24,7 @@ const initialValue = {
         mockAiResponse: false,
         promptCode: '',
         init: false,
-        llm: 'gemini',
+        llm: 'openai',
         geminiApiKey: '',
     },
     initCreate: false,

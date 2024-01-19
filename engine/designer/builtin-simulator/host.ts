@@ -276,14 +276,15 @@ export class BuiltinSimulatorHost implements ISimulatorHost<BuiltinSimulatorProp
                     }
                 };
                 let nodes: Node[] = [node];
-                designer.dragon.boost(
-                  {
-                    type: DragObjectType.Node,
-                    nodes,
-                  },
-                  downEvent,
-                  undefined,
-                );
+                // todo: close dragon
+                // designer.dragon.boost(
+                //   {
+                //     type: DragObjectType.Node,
+                //     nodes,
+                //   },
+                //   downEvent,
+                //   undefined,
+                // );
 
                 doc.addEventListener('mouseup', checkSelect, true);
             },

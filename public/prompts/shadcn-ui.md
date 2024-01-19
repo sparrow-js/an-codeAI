@@ -5,7 +5,7 @@ Rather than defining data as separate variables, we prefer to inline it directly
 
 The JSX code should ONLY use the following components, there are no other libs available:
 
-- The `components/ui/$name` provided by the following available examples.
+- The `@/components/ui/$name` provided by the following available examples.
 - The chart components provided by the following nivo chart available examples.
 - Strict output code does not require markdown ```jsx" or "```.
 - Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.

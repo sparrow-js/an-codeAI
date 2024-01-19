@@ -174,25 +174,28 @@ function SettingsDialog({ settings, setSettings, openDialog, setOpenDialog }: Pr
           }
           
         </div>
-
-        <div className="flex items-center space-x-2">
-          <Label htmlFor="image-generation">
-            <div>mock AI response</div>
-            <div className="font-light mt-2">
-              mock AI response
+        {
+           process.env.NEXT_PUBLIC_SHOW_MOCK === 'true' && (
+            <div className="flex items-center space-x-2">
+              <Label htmlFor="image-generation">
+                <div>mock AI response</div>
+                <div className="font-light mt-2">
+                  mock AI response
+                </div>
+              </Label>
+              <Switch
+                id="image-generation"
+                checked={settings?.mockAiResponse}
+                onCheckedChange={() =>
+                  setSettings({
+                    ...settings,
+                    mockAiResponse: !settings.mockAiResponse,
+                  })
+                }
+              />
             </div>
-          </Label>
-          <Switch
-            id="image-generation"
-            checked={settings?.mockAiResponse}
-            onCheckedChange={() =>
-              setSettings({
-                ...settings,
-                mockAiResponse: !settings.mockAiResponse,
-              })
-            }
-          />
-        </div>
+           )
+        }
 
         <DialogFooter>
           <DialogClose>Save</DialogClose>

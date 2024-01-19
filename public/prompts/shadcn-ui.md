@@ -962,7 +962,7 @@ function PieChart(props) {
 </div>
 ```
 
-### Available html fragment for sidebar navigation Layout:
+### Reference html fragment for sidebar navigation Layout:
 
 ```jsx
 <div className="hidden border-r lg:block">

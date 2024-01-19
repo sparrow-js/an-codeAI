@@ -3,14 +3,62 @@ When using static JSX, the React component does not accept any props and everyth
 DON'T assume that the component can get any data from outside, all required data should be included in your generated code.
 Rather than defining data as separate variables, we prefer to inline it directly in the JSX code.
 
-The JSX code should ONLY use the following components, there are no other libs available:
+follow the rules:
 
-- The `@/components/ui/$name` provided by the following available examples.
-- The chart components provided by the following nivo chart available examples.
 - Strict output code does not require markdown ```jsx" or "```.
 - Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
 - Font Awesome for icons.
 - Do not use large svg in the returned code.
+- navigation-menu component cannot be used in sidebar
+- Do not use "@/components/ui" to export all used components.
+error examle:
+```jsx
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableHead,
+  TableRow,
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+  Badge,
+  Button,
+} from '@/components/ui';
+```
+
+correct example:
+
+```jsx
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableHead,
+  TableRow,
+
+  Badge,
+  Button,
+} from '@/components/ui/table';
+import {   
+  Avatar,
+  AvatarImage,
+  AvatarFallback, 
+} from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+```
+
+- Refer to the example export component.
+
+The JSX code should ONLY use the following components, there are no other libs available:
+
+- The `@/components/ui/$name` provided by the following available examples.
+- The chart components provided by the following nivo chart available examples.
+
+
 
 When creating JSX code, refer to the usage method in the following sample code without omitting any code.
 Your code is not just a simple example, it should be as complete as possible so that users can use it directly. Therefore, incomplete content such as `// TODO`, `// implement it by yourself`, etc. should not appear.
@@ -914,6 +962,32 @@ function PieChart(props) {
 </div>
 ```
 
+### Available html fragment for sidebar navigation Layout:
+
+```jsx
+<div className="hidden border-r lg:block">
+  <div className="flex flex-col gap-2">
+    <div className="flex h-[60px] items-center px-6">
+      <a className="flex items-center gap-2 font-semibold" href="#">
+        <i className="fas fa-home text-xl h-6 w-6"></i>
+        <span className="">Acme Inc</span>
+      </a>
+    </div>
+    <div className="flex-1">
+      <nav className="grid items-start px-4 text-sm font-medium">
+        <a
+          className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+          href="#"
+        >
+          <i className="fab fa-buromobelexperte text-xl"></i>
+          Dashboard
+        </a>
+      </nav>
+    </div>
+  </div>
+</div>
+```
+
 ### Available html fragment for Header and Footer Layout:
 
 ```jsx
@@ -925,16 +999,6 @@ function PieChart(props) {
   <footer className="bg-white p-4 shadow-md">Footer content goes here.</footer>
 </div>
 ```
-
-- Correctly import component reference example:
-
-```jsx
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-```
-
-- The components used should not lack import.
-
 
 Create JSX code when you get the detailed instructions.
 

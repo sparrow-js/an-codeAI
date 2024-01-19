@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
   Dialog,
   DialogClose,
@@ -27,7 +27,13 @@ interface Props {
 
 function SettingsDialog({ settings, setSettings, openDialog, setOpenDialog }: Props) {
 
-  const [llm, setLlm] = useState<string>('openai')
+  const [llm, setLlm] = useState<string>('openai');
+  const [delayShowArrow, setDelayShowArrow] = useState<boolean>(false);
+  useEffect(() => {
+    setTimeout(() => {
+      setDelayShowArrow(true);
+    }, 500)
+  }, []);
 
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
@@ -37,12 +43,16 @@ function SettingsDialog({ settings, setSettings, openDialog, setOpenDialog }: Pr
       )}
       >
       {
-        !settings?.openAiApiKey && (
+        delayShowArrow && !settings?.openAiApiKey && (
         <>
-            <div className="absolute top-[46px] right-[-5px] animate-bounce bg-white dark:bg-slate-800 p-2 w-10 h-10 ring-1 ring-slate-900/5 dark:ring-slate-200/20 shadow-lg rounded-full flex items-center justify-center">
+            <div 
+              className="absolute top-[46px] right-[-5px] animate-bounce bg-white dark:bg-slate-800 p-2 w-10 h-10 ring-1 ring-slate-900/5 dark:ring-slate-200/20 shadow-lg rounded-full flex items-center justify-center"
+            >
               <HiArrowUp className="w-6 h-6 text-violet-500"/>
             </div>
-            <span className="text-sm font-bold mr-2">Setting Key </span>
+            <span 
+              className="text-sm font-bold mr-2"
+            >Setting Key </span>
           </>
         )
       }

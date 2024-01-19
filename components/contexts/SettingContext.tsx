@@ -12,7 +12,7 @@ interface settingContextType {
 
 const initialValue = {
     settings: {
-        openAiApiKey: null,
+        openAiApiKey: '',
         openAiBaseURL: null,
         screenshotOneApiKey: null,
         isImageGenerationEnabled: true,

@@ -266,20 +266,21 @@ update it to look more like the reference image(The first image).
 - Pay close attention to background color, text color, font size, font family, 
 padding, margin, border, etc. Match the colors and sizes exactly.
 - Make sure the generated HTML elements are placed on the Vue template an Make sure the do not add any html elements to the div id="app" under the body.
-example:
-<div id="app"></div>
-<script type="module">
-const { createApp, ref } = Vue;
-createApp({
-  setup() {
-    const message = ref('Hello vue!')
-    return {
-      message
+- Use Vue using the global build like so:
+
+<div id="app">{{ message }}</div>
+<script>
+  const { createApp, ref } = Vue
+  createApp({
+    setup() {
+      const message = ref('Hello vue!')
+      return {
+        message
+      }
     }
-  },
-  template: \`<div>count is</div>\`
-}).mount('#app');
+  }).mount('#app')
 </script>
+
 - Use the exact text from the screenshot.
 - Strict output code does not require markdown format.
 - Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
@@ -419,20 +420,21 @@ using Vue and Tailwind CSS.
 - Pay close attention to background color, text color, font size, font family, 
 padding, margin, border, etc. Match the colors and sizes exactly.
 - Make sure the generated HTML elements are placed on the Vue template an Make sure the do not add any html elements to the div id="app" under the body.
-example:
-<div id="app"></div>
-<script type="module">
-const { createApp, ref } = Vue;
-createApp({
-  setup() {
-    const message = ref('Hello vue!')
-    return {
-      message
+- Use Vue using the global build like so:
+
+<div id="app">{{ message }}</div>
+<script>
+  const { createApp, ref } = Vue
+  createApp({
+    setup() {
+      const message = ref('Hello vue!')
+      return {
+        message
+      }
     }
-  },
-  template: \`<div>count is</div>\`
-}).mount('#app');
+  }).mount('#app')
 </script>
+
 - Use the exact text from the detailed description.
 - Strict output code does not require markdown format.
 - Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.

@@ -16,7 +16,7 @@ import { Input } from "./ui/input";
 import {RadioGroup, RadioGroupItem} from './ui/radio-group';
 import classNames from 'classnames';
 import { HiArrowUp } from "react-icons/hi2";
-
+import OnboardingNote from './OnboardingNote';
 
 interface Props {
   settings: Settings;
@@ -108,6 +108,10 @@ function SettingsDialog({ settings, setSettings, openDialog, setOpenDialog }: Pr
                 <div className="font-light mt-2 leading-relaxed">
                   Only stored in your browser. Never stored on servers. Overrides
                   your .env config.
+                  <button 
+                    className="inline-flex items-center justify-center ml-2">
+                     <OnboardingNote/>
+                  </button>
                 </div>
               </Label>
 

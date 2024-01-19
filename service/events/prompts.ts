@@ -594,7 +594,7 @@ export async function assemblePrompt(
       // https://raw.githubusercontent.com/sparrow-js/ant-codeAI/accurate-output/public/prompts/shadcn-ui.md
       // http://localhost:3000/prompts/shadcn-ui.md
       // const response = await fetch(`http://localhost:3000/prompts/shadcn-ui.md`, {
-      const response = await fetch(`https://raw.githubusercontent.com/sparrow-js/ant-codeAI/accurate-output/public/prompts/shadcn-ui.md`, {
+      const response = await fetch(`https://raw.githubusercontent.com/sparrow-js/ant-codeAI/main/public/prompts/shadcn-ui.md`, {
       method: 'get',
       headers: new Headers({
           'Content-Type': 'text/markdown'

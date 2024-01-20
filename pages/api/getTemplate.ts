@@ -9,12 +9,13 @@ type Data = {
 const encoder = new TextEncoder();
 
 async function getTemplate(fetchUrl: string,  socket: { enqueue: (v: any) => any }) {
+    // const response = await fetch('http://localhost:3000/templates/simple_Landing_Page_Tailwind.html', {
     const response = await fetch(fetchUrl, {
         method: 'get',
         headers: new Headers({
             'Content-Type': 'text/html'
         })
-      });
+    });
     const systemPrompt = await response.text();
     socket.enqueue(encoder.encode(`${JSON.stringify({ value: systemPrompt, type: 'setCode' })}\n`))
     return response;

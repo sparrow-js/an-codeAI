@@ -234,7 +234,7 @@ export function setHtmlCodeUid(generatedCodeConfig: GeneratedCodeConfig, code: s
       const htmlCode = `
       function htmlRender () {
         return (
-    ${headMatch[0].replaceAll(/<!--((.)*)-->/img, '')}
+    ${headMatch[0].replaceAll(/<!--((.)*)-->/img, '').replaceAll('$', '')}; // todo: if string include $ out error.
         )
       }
       `;

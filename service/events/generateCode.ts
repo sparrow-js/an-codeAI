@@ -37,7 +37,7 @@ export async function streamGenerateCode(
   const generated_code_config = params['generatedCodeConfig'];
   let prompt_messages;
   const history = params['history'];
-  const initTemplateCode = history ? history.splice(0, 1)[0] : '';
+  const initTemplateCode = history && params.slug && params.slug !== 'create' ? history.splice(0, 1)[0] : '';
   try {
     if (params['resultImage']) {
       prompt_messages = await assemblePrompt(

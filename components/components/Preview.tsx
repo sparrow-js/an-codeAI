@@ -89,7 +89,7 @@ function Preview({ code, device, appState, fixBug }: Props) {
         ref={iframeRef}
         title="Preview"
         className={classNames(
-          "border-[4px] border-black rounded-[20px] shadow-lg w-full",
+          "border-[4px] border-black rounded-[10px] shadow-lg w-full",
           "transform scale-[0.9] origin-top",
         )}
       ></iframe>

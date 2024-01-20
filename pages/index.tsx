@@ -8,6 +8,8 @@ import { IS_RUNNING_ON_CLOUD } from "../components/config";
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import templates from '../templates/templates';
+import { FaGithubSquare } from "react-icons/fa";
+
 
 import dynamic from "next/dynamic";
 import { GeneratedCodeConfig } from '@/components/types';
@@ -151,7 +153,7 @@ export default function Dashboard() {
                                             generatedCodeConfig: GeneratedCodeConfig.HTML_TAILWIND,
                                           })
                                         router.push(`/editor/${template.id}`);
-                                    }} key={template.id} className="bg-white shadow-lg rounded-lg p-4 flex flex-col hover:ring ring-black">
+                                    }} key={template.id} className="bg-white shadow-lg rounded-lg p-4 flex flex-col hover:ring ring-black relative border">
                                         <div className="flex-1">
                                             <div className='aspect-[1376/768]'>
                                                 <img className="w-full" src={template.imageUrl} alt={template.title} />
@@ -159,6 +161,16 @@ export default function Dashboard() {
                                             <h3 className="mt-4 text-sm text-gray-700">{template.title}</h3>
                                             <p className="mt-1 text-lg font-medium text-gray-900">{template.description}</p>
                                         </div>
+                                        {
+                                            template.fromUrl && (
+                                                <a onClick={(e) => {
+                                                    e.stopPropagation()
+                                                }} className='absolute right-2 top-2' href={template.fromUrl} target="_blank">
+                                                    <FaGithubSquare className="text-xl"/>
+                                                </a>
+                                            )
+                                        }
+
                                     </div>
                                 )
                             })

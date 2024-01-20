@@ -168,7 +168,7 @@ function App() {
     // Create an anchor element and set properties for download
     const a = document.createElement("a");
     a.href = url;
-    a.download = "index.html"; // Set the file name for download
+    a.download = settings.generatedCodeConfig === GeneratedCodeConfig.REACT_SHADCN_UI ? "index.jsx" : "index.html"; // Set the file name for download
     document.body.appendChild(a); // Append to the document
     a.click(); // Programmatically click the anchor to trigger download
 
@@ -481,12 +481,16 @@ ${error.stack}
                 New</Button>
               {appState === AppState.CODE_READY && (
                 <>
-                  <span
-                    onClick={doOpenInCodepenio}
-                    className="hover:bg-slate-200 rounded-sm w-[36px] h-[36px] flex items-center justify-center border-black border-2"
-                  >
-                    <AiFillCodepenCircle className="w-[18px] h-[18px]"/>
-                  </span>
+                  {
+                    GeneratedCodeConfig.REACT_SHADCN_UI !== settings.generatedCodeConfig && (
+                      <span
+                        onClick={doOpenInCodepenio}
+                        className="hover:bg-slate-200 rounded-sm w-[36px] h-[36px] flex items-center justify-center border-black border-2"
+                      >
+                        <AiFillCodepenCircle className="w-[18px] h-[18px]"/>
+                      </span>
+                    )
+                  }
                   <span
                     onClick={copyCode}
                     className="hover:bg-slate-200 rounded-sm w-[36px] h-[36px] flex items-center justify-center border-black border-2"

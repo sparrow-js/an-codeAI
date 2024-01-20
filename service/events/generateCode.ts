@@ -77,9 +77,6 @@ export async function streamGenerateCode(
     });
   }
 
-
-  console.log('***********1', prompt_messages);
-
   let completion;
   const SHOULD_MOCK_AI_RESPONSE = params['mockAiResponse'];
   if (SHOULD_MOCK_AI_RESPONSE) {

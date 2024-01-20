@@ -79,6 +79,7 @@ export async function streamGenerateCode(
 
   let completion;
   const SHOULD_MOCK_AI_RESPONSE = params['mockAiResponse'];
+  //test: params['generationType'] === 'create'
   if (SHOULD_MOCK_AI_RESPONSE) {
     completion = await mockComletion((content: any) => {
       noticeHost({

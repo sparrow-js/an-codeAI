@@ -238,7 +238,7 @@ const REACT_ANTD_MOCK_CODE = `
       <div class="bg-white shadow-lg rounded-lg overflow-hidden">
         <img src="https://www.ancodeai.com/placeholder.svg" alt="Placeholder image for product category 4" class="w-full h-56 object-cover object-center">
         <div class="p-4">
-          <h3 class="text-lg font-semibold text-red-500">Category Name 4</h3>
+          <h3 class="text-lg font-semibold text-gray-800">Category Name 4</h3>
           <p class="text-gray-600 mt-1">Description for product category 4. It should be brief and to the point, giving a clear idea of what this category is about.</p>
         </div>
       </div>

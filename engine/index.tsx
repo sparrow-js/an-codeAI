@@ -231,7 +231,7 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
     };
 
     return (
-        <div className="border-[4px] border-black rounded-[20px] shadow-lg w-full h-full">
+        <div className="border-[4px] border-black rounded-[10px] shadow-lg w-full h-full">
             {
                 showDebug && (
                 <span

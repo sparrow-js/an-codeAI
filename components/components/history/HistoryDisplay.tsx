@@ -39,14 +39,13 @@ export default function HistoryDisplay({
       <h1 className="font-bold mb-2">History</h1>
       <ul className="space-y-2 flex flex-col">
         {history && history.map((item, index) => (
-          <li className="bg-white rounded-lg hover:border-slate-900 border border-slate-300 bor overflow-hidden" key={index}>
+          <li className="bg-white rounded-lg overflow-hidden" key={index}>
             <HoverCard>
               <HoverCardTrigger
                 className={classNames(
-                  "rounded-lg flex items-center justify-between space-x-2 flex-col",
-                  "border-b cursor-pointer",
+                  "rounded-lg space-x-2 cursor-pointer w-full block hover:border-slate-900 border border-slate-300 relative rounded-lg overflow-hidden",
                   {
-                   'text-block border-2 border-solid border-blue-500': index === currentVersion,
+                   'text-block border-sky-500 hover:border-sky-500': index === currentVersion,
                   }
                 )}
                 onClick={() =>
@@ -64,15 +63,15 @@ export default function HistoryDisplay({
                       backgroundImage: `url(${item.screenshot || 'https://www.ancodeai.com/placeholder.svg'})`
                     }
                   }></div>
-                <div className="flex gap-x-1 truncate">
+                <div className="flex absolute bottom-[6px] px-1 bg-blue-100 text-blue-600 border-blue-600 border rounded-sm">
                   {/* <h2 className="text-sm">{displayHistoryItemType(item.type)}</h2> */}
                   {item.parentIndex !== null &&
                   item.parentIndex !== index - 1 ? (
-                    <h2 className="text-sm">
-                      (parent: v{(item.parentIndex || 0) + 1})
-                    </h2>
+                    <span className="text-xs">
+                      (p: v{(item.parentIndex || 0) + 1})
+                    </span>
                   ) : null}
-                  <h2 className="text-sm">v{index + 1}</h2>
+                  <span className="text-xs">v{index + 1}</span>
                 </div>
               </HoverCardTrigger>
               <HoverCardContent>

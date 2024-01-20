@@ -43,7 +43,7 @@ function NativePreview({ code, appState }: Props) {
         ref={iframeRef}
         title="Preview native"
         className={classNames(
-          "border-[4px] border-black rounded-[20px] shadow-lg w-[400px] h-[700px]",
+          "border-[4px] border-black rounded-[10px] shadow-lg w-[400px] h-[700px]",
           "transform scale-[0.9] origin-top",
         )}
       ></iframe>

@@ -69,14 +69,22 @@ export async function streamGenerateCode(
 
   if (params['generationType'] === 'update') {
     const history = params['history'];
-    history.forEach((item, index) => {
-      prompt_messages.push({
-        role: index % 2 === 0 ? 'assistant' : 'user',
-        content: item,
+    if (params.slug && params.slug !== 'create') {
+      history.forEach((item, index) => {
+        prompt_messages.push({
+          role: index % 2 === 0 ? 'user' : 'assistant',
+          content: item,
+        });
       });
-    });
+    } else {
+      history.forEach((item, index) => {
+        prompt_messages.push({
+          role: index % 2 === 0 ? 'assistant' : 'user',
+          content: item,
+        });
+      });
+    }
   }
-
   let completion;
   const SHOULD_MOCK_AI_RESPONSE = params['mockAiResponse'];
   //test: params['generationType'] === 'create'

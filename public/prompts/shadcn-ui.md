@@ -59,6 +59,27 @@ The JSX code should ONLY use the following components, there are no other libs a
 - The chart components provided by the following nivo chart available examples.
 
 
+Code can be modified locally,
+
+- Can use the element attribute data-uid="$id" to find the element and modify it.
+- If need to delete, Delete the element use attribute data-uid="$id" like so:
+input:
+```jsx
+<div>
+    <h2>*</h2>
+    <div data-uid="$id">
+      ****
+    </div>
+</div>
+```
+
+output:
+```jsx
+<div>
+    <h2>*</h2>
+</div>
+```
+
 
 When creating JSX code, refer to the usage method in the following sample code without omitting any code.
 Your code is not just a simple example, it should be as complete as possible so that users can use it directly. Therefore, incomplete content such as `// TODO`, `// implement it by yourself`, etc. should not appear.

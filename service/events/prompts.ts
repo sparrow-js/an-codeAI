@@ -574,6 +574,23 @@ In terms of libraries,
 - You can use Google Fonts
 - Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
 
+Code can be modified locally,
+
+- Can use the element attribute data-uid="$id" to find the element and modify it.
+- If need to delete, Delete the element use attribute data-uid="$id" like so:
+input:
+<div>
+    <h2>*</h2>
+    <div data-uid="$id">
+      ****
+    </div>
+</div>
+
+output:
+<div>
+    <h2>*</h2>
+</div>
+
 Return only the full code in <html></html> tags.
 Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.
 `;

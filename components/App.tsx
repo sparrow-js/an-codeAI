@@ -469,7 +469,7 @@ ${error.stack}
         </div>
       </div>
       <main className="pl-[200px] relative h-full flex flex-col pb-10">
-          <div className="ml-4 w-[80%] ml-[10%] flex-1 mt-4">
+          <div className="w-[90%] ml-[5%] flex-1 mt-4">
             <div className="flex absolute gap-2">
               <Button 
                 onClick={() => {

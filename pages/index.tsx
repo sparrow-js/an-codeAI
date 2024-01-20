@@ -77,7 +77,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         // Prefetch the dashboard page
-        router.prefetch('/editor')
+        router.prefetch('/editor/create')
       }, [router])
     
 

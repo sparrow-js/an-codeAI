@@ -43,9 +43,10 @@ export default function HistoryDisplay({
             <HoverCard>
               <HoverCardTrigger
                 className={classNames(
-                  "rounded-lg space-x-2 cursor-pointer w-full block hover:border-slate-900 border border-slate-300 relative rounded-lg overflow-hidden",
+                  "rounded-lg space-x-2 cursor-pointer w-full block border relative rounded-lg overflow-hidden",
                   {
                    'text-block border-sky-500 hover:border-sky-500': index === currentVersion,
+                   'hover:border-slate-900 border-slate-300 ': index !== currentVersion,
                   }
                 )}
                 onClick={() =>

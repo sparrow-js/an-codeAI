@@ -38,7 +38,7 @@ OpenAI：
 - OpenAI Base URL(proxy url, default：https://api.openai.com/v1)
 - Mock AI Response(mock AIThe returned data does not directly request AI)
 
-Gemini（free）：
+Gemini (Not recommended)（free）：
 - Gemini API key
 
 

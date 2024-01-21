@@ -37,7 +37,7 @@ OpenAI：
 - OpenAI Base URL(代理地址，默认：https://api.openai.com/v1)
 - Mock AI Response(mock AI返回的数据，不直接请求AI)，直接请求OpenAI 接口会消耗费用
 
-Gemini（免费）：
+Gemini (不推荐)（免费）：
 - Gemini API key
 
 

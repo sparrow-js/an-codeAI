@@ -5,10 +5,11 @@ By using OpenAI and Gemini technologies to generate highly available code, it su
 
 https://github.com/sparrow-js/ant-codeAI/assets/59440091/2c7de0b1-8bea-425f-b186-79891246c7f5
 
-**Support**
+## Support
 
 - technology stack: web (React, Vue, Tailwind CSS, shadcn/ui), native (react native)
 - Editing support (HTML+Tailwind, react+Tailwind, react+Tailwind+shadcn/ui)
+- Entry Information: screenshot、text、whiteboard
 
 
 **React+shadcn/ui**

@@ -5,10 +5,11 @@
 
 https://github.com/sparrow-js/ant-codeAI/assets/59440091/2c7de0b1-8bea-425f-b186-79891246c7f5
 
-**支持**
+## 🔥 支持
 
 - 技术栈: web (React, Vue, Tailwind CSS, shadcn/ui), native (react native)
-- 编辑能力支持（HTML + Tailwind,react + Tailwind,react+Tailwind+shadcn/ui）
+- 编辑能力支持：（HTML + Tailwind,react + Tailwind,react+Tailwind+shadcn/ui）
+- 录入信息：文本，截图，白板
 
 **React+shadcn/ui**
 
@@ -36,7 +37,7 @@ OpenAI：
 - OpenAI Base URL(代理地址，默认：https://api.openai.com/v1)
 - Mock AI Response(mock AI返回的数据，不直接请求AI)，直接请求OpenAI 接口会消耗费用
 
-Gemini（免费）：
+Gemini (不推荐)（免费）：
 - Gemini API key
 
 

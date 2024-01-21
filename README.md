@@ -7,19 +7,6 @@ https://github.com/sparrow-js/ant-codeAI/assets/59440091/38d8d8f1-c098-4b70-88eb
 
 Editing support (HTML+Tailwind, react+Tailwind, react+Tailwind+shadcn/ui)
 
-**Home page display and editing capabilities**
-
-| home page | Support editing |
-| --- | --- |
-| ![截屏2024-01-17 下午6.12.59.png](https://cdn.nlark.com/yuque/0/2024/png/34596612/1705486394521-9791307f-ce03-4932-af0b-d2bf2c69b3b7.png#averageHue=%23fcfaf9&clientId=u86429f36-ee0d-4&from=drop&id=u883fd1bd&originHeight=1444&originWidth=2586&originalType=binary&ratio=2&rotation=0&showTitle=false&size=484148&status=done&style=none&taskId=ua5359990-5a35-4a11-af9c-98979ba53f0&title=) | ![截屏2024-01-17 下午6.14.19.png](https://cdn.nlark.com/yuque/0/2024/png/34596612/1705486482935-c7689364-6f09-4517-8093-31ea8b859d39.png#averageHue=%23f8f7f7&clientId=u86429f36-ee0d-4&from=drop&id=u43e4bcc6&originHeight=1448&originWidth=2740&originalType=binary&ratio=2&rotation=0&showTitle=false&size=362827&status=done&style=none&taskId=uf1ee5937-d8d6-4c7a-bc5b-76fdf6bef7d&title=) |
-
-
-**template**
-
-| Original template | prompt:  Change to blue style. |
-| --- | --- |
-| ![截屏2024-01-17 下午5.37.29.png](https://cdn.nlark.com/yuque/0/2024/png/34596612/1705485282856-9dd11d46-34ac-4f00-b45c-e5f9366daef3.png#averageHue=%23dfe1de&clientId=u813d9b56-7155-4&from=drop&id=u6aff3063&originHeight=1462&originWidth=2874&originalType=binary&ratio=2&rotation=0&showTitle=false&size=1466846&status=done&style=none&taskId=uc0c950ae-df0a-4b30-910b-5da9482dc2d&title=) | ![截屏2024-01-17 下午5.39.12.png](https://cdn.nlark.com/yuque/0/2024/png/34596612/1705485284669-97b68bd2-8d31-4db7-88eb-d9f69cbe110f.png#averageHue=%23b0d7c3&clientId=u813d9b56-7155-4&from=drop&id=u0a05b922&originHeight=1460&originWidth=2864&originalType=binary&ratio=2&rotation=0&showTitle=false&size=1359476&status=done&style=none&taskId=ub662bba9-8d26-46f5-ae57-a4c6c14eb17&title=) |
-
 **React+shadcn/ui**
 
 | excalidraw draw | Output code |

@@ -3,7 +3,7 @@
 
 通过使用OpenAI、Gemini技术生成高可用代码，支持 web（React，Vue，Tailwind CSS, shadcn/ui），native（react native）等代码，使用GPT-4 Vision生成，通过截图、绘制草稿、输入创意生成代码。
 
-https://github.com/sparrow-js/ant-codeAI/assets/59440091/2c7de0b1-8bea-425f-b186-79891246c7f5
+https://github.com/sparrow-js/ant-codeAI/assets/59440091/afd51668-3d48-4ef9-bf5d-ac8d3b8d54f8
 
 ## 🔥 支持
 

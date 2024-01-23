@@ -1,4 +1,4 @@
-# ant-codeAI
+# an-codeAI
 中文 · [English](./README.md)
 
 通过使用OpenAI、Gemini技术生成高可用代码，支持 web（React，Vue，Tailwind CSS, shadcn/ui），native（react native）等代码，使用GPT-4 Vision生成，通过截图、绘制草稿、输入创意生成代码。

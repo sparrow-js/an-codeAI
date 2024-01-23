@@ -750,7 +750,6 @@ export async function assemblePrompt(
 
   // todo: temporary hard code.
   if (slug && slug !== 'create') {
-    console.log('********1223', `import_code_${generated_code_config}`);
     systemConent = (SYSTEM_MAP as any)[`import_code_${generated_code_config}`];
   }
 

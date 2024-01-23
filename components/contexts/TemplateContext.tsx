@@ -146,7 +146,6 @@ export default function TemplatetProvider({ children }: { children: ReactNode })
             return;
         }
         let SaveTemplates = cloneDeep(templateList);
-        console.log('**********111', SaveTemplates)
         if (SaveTemplates) {
           window.localStorage.setItem(
             'templateData',

@@ -182,7 +182,7 @@ export default function Dashboard() {
                                 )
                             })
                         }
-                        <TemplatePanel settings={settings} setSettings={setSettings}/>
+                        <TemplatePanel key={'TemplatePanel'} settings={settings} setSettings={setSettings}/>
                     </div>
                 </div>
                 <div className="mt-[50px] w-[100%] p-2">

@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <title>Hacker News Clone</title>
+    <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+    <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+    <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <style>
+      body {
+        font-family: 'Verdana', sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-200">
+    <div id="app"></div>
+
+    
+
+<script type="text/babel">
+const newsItems = [
+    { id: 1, title: "Czech republic sets IPv4 end date", points: 95, author: "deadbunny", time: "1 hour ago", comments: 39, url: "konecipv4.cz" },
+    // ... Add all other news items here with the same structure
+    { id: 20, title: "Depth Anything: Unleashing the Power of Large-Scale Unlabeled Data", points: 9, author: "liheyoung", time: "1 hour ago", comments: 0, url: "github.com/liheyoung" }
+];
+function App() {
+    return (<div className="bg-white p-4">
+            <header className="flex justify-between items-center mb-4 bg-orange-400">
+              <h1 className="text-lg font-bold">Hacker News</h1>
+              <nav>
+                <a href="#" className="text-red-600 hover:underline">new</a> |
+                <a href="#" className="hover:underline">past</a> |
+                <a href="#" className="hover:underline">comments</a> |
+                <a href="#" className="hover:underline">ask</a> |
+                <a href="#" className="hover:underline">show</a> |
+                <a href="#" className="hover:underline">jobs</a> |
+                <a href="#" className="hover:underline">submit</a>
+              </nav>
+              <a href="#" className="hover:underline">login</a>
+            </header>
+            <main>
+              <ul>
+                {newsItems.map(item => (<li key={item.id} className="mb-2">
+                    <span className="text-orange-400 mr-2">{item.id}.</span>
+                    <a href={item.url} className="text-black hover:underline">{item.title}</a>
+                    <span className="text-gray-600 text-sm ml-2">({item.url})</span>
+                    <div className="text-gray-600 text-sm">
+                      {item.points} points by {item.author} {item.time} | <a href="#" className="hover:underline">hide</a> | {item.comments} comments
+                    </div>
+                  </li>))}
+              </ul>
+            </main>
+          </div>);
+}
+ReactDOM.render(<App />, document.getElementById("app"));
+
+</script>
+        
+        
+  </body>
+</html>

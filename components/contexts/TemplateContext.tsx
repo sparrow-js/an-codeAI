@@ -1,7 +1,19 @@
-import { createContext, ReactNode, useState, useEffect, useRef } from 'react';
+import { 
+    createContext, 
+    ReactNode, 
+    useState, 
+    useEffect, 
+    useRef, 
+    SetStateAction,
+    Dispatch,
+    useContext
+} from 'react';
 import {GeneratedCodeConfig} from '../types'
 import {cloneDeep} from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
+import { useDebounceFn } from 'ahooks';
+
+
 const InitTemplateData = {
     list: [
         {
@@ -34,7 +46,7 @@ export type TemplateType = {
     id: string;
     code: string;
     type: GeneratedCodeConfig,
-    title: string;
+    title?: string;
     description?: string;
     imageUrl?: string;
     from?: string;
@@ -44,6 +56,8 @@ export type TemplateType = {
 
 interface templatetContextType {
     templateList: Array<TemplateType>,
+    debugTemplate: TemplateType,
+    setDebugTemplate: Dispatch<SetStateAction<TemplateType>>
     save: () => void;
     addTemplate: (templatet: TemplateType) => void;
     removeTemplate: (id: string) => void;
@@ -52,6 +66,12 @@ interface templatetContextType {
 
 const initialValue = {
     templateList: [],
+    debugTemplate: {
+        id: "",
+        code: "",
+        type: GeneratedCodeConfig.HTML_TAILWIND,
+    },
+    setDebugTemplate: (value: SetStateAction<TemplateType>) => {},
     addTemplate: (templatet?: any) => {},
     removeTemplate: (id: string) => {},
     save: () => {},
@@ -67,48 +87,45 @@ const initialValue = {
 };
 
 export interface TemplateState{
-    templatetList: Array<TemplateType>
+    templateList: Array<TemplateType>
 }
 
-export const templatetContext = createContext<templatetContextType>(initialValue);
+export const TemplateContext = createContext<templatetContextType>(initialValue);
 export default function TemplatetProvider({ children }: { children: ReactNode }) {
 
     const [templateList, setTemplateList] = useState<TemplateType[]>([]);
     const didMountRef = useRef(false);
+    const [debugTemplate, setDebugTemplate] = useState<TemplateType>({
+        id: "",
+        code: "",
+        type: GeneratedCodeConfig.HTML_TAILWIND,
+    });
 
     useEffect(() => {
         let cookie = window.localStorage.getItem('templateData');
         if (cookie) {
             let cookieObject: TemplateState = JSON.parse(cookie);
-            setTemplateList(cookieObject.templatetList);
-        } 
-        // else {
-        //     setTemplateList(InitTemplateData.list);
-        // }
+            cookieObject.templateList && setTemplateList(cookieObject.templateList);
+        }
     }, []);
 
 
     function addTemplate (template: TemplateType) {
         if (!template.imageUrl) {
-            template.imageUrl = 'https://placehold.co/600x400/png'
-        }
-        if (!template.id) {
-            template.id = uuidv4();
-            setTemplateList((prevState) => {
-                const newTemplatets = [...prevState, template];
-                return newTemplatets;
-            });
-        } else {
-            setTemplateList((prevState) => {
-                const newTemplates = [...prevState]
-                const curIndex = newTemplates.findIndex((curTemplate) => curTemplate.id === template.id);
-                if (curIndex >= 0) {
-                    newTemplates[curIndex] = template;
-                }
-                return newTemplates;
-            });
+            template.imageUrl = 'https://www.ancodeai.com/placeholder.svg'
         }
      
+        setTemplateList((prevState) => {
+            const newTemplates = [...prevState]
+            const curIndex = newTemplates.findIndex((curTemplate) => curTemplate.id === template.id);
+            if (curIndex >= 0) {
+                newTemplates[curIndex] = template;
+            } else {
+                template.id = uuidv4();
+                newTemplates.push(template);
+            }
+            return newTemplates;
+        });
     }
 
     function removeTemplate(id: string) {
@@ -124,7 +141,12 @@ export default function TemplatetProvider({ children }: { children: ReactNode })
 
 
     function save() {
+        if (didMountRef.current === false) {
+            didMountRef.current = true;
+            return;
+        }
         let SaveTemplates = cloneDeep(templateList);
+        console.log('**********111', SaveTemplates)
         if (SaveTemplates) {
           window.localStorage.setItem(
             'templateData',
@@ -133,23 +155,24 @@ export default function TemplatetProvider({ children }: { children: ReactNode })
         }
     }
 
+    const saveDebounce = useDebounceFn(save, {
+        wait: 300
+    });
+
     function getTemplateById(id: string) {
         return templateList.find((template) => template.id === id);
     }
 
     useEffect(() => {
-        if (didMountRef.current) {
-            save();
-        } else {
-            didMountRef.current = true;
-        }
-        
+        saveDebounce.run();
       }, [templateList, setTemplateList]);
 
     return (
-      <templatetContext.Provider
+      <TemplateContext.Provider
         value={{
             templateList,
+            debugTemplate,
+            setDebugTemplate,
             save,
             addTemplate,
             removeTemplate,
@@ -157,6 +180,6 @@ export default function TemplatetProvider({ children }: { children: ReactNode })
         }}
       >
         {children}
-      </templatetContext.Provider>
+      </TemplateContext.Provider>
     );
 }

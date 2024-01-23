@@ -27,6 +27,7 @@ import {SettingContext} from './contexts/SettingContext';
 import {HistoryContext} from './contexts/HistoryContext';
 import {EditorContext} from './contexts/EditorContext';
 import NativePreview from './components/NativeMobile';
+import { TemplateContext } from './contexts/TemplateContext';
 import UpdateChatInput from './components/chatInput/Update';
 import dynamic from "next/dynamic";
 import {getPartCodeUid, setUidAnchorPoint} from './compiler';
@@ -81,6 +82,7 @@ function App() {
   const [tabValue, setTabValue] = useState<string>(settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop')
   const [ template, setTemplate ] = useState<any>({});
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const { debugTemplate, templateList } = useContext(TemplateContext);
 
   // Tracks the currently shown version from app history
 
@@ -110,7 +112,18 @@ function App() {
 
   const templateFn = useDebounceFn(() => {
     const slug = nextRouter.query.slug;
-    const template = templates.list.find(item => item.id === slug);
+    let template = templates.list.find(item => item.id === slug);
+    let customTemplate = templateList.find(item => item.id === slug);
+    if (slug?.includes('debug') || customTemplate) {
+      const template = slug?.includes('debug') ? debugTemplate : customTemplate as any;
+      setGeneratedCode(template.code);
+      addHistory("create", updateInstruction, referenceImages, referenceText, template.code, partValue.message);
+      setAppState(AppState.CODE_READY);
+      return;
+    }
+
+    // templateList
+
     if (template) {
       setTemplate(template)
     }
@@ -145,7 +158,7 @@ function App() {
     } else {
       templateFn.run();
     }
-  }, [initCreate, dataUrls, initCreateText]);
+  }, [initCreate, dataUrls, initCreateText, template]);
 
   const takeScreenshot = async (): Promise<string> => {
     const iframeElement = document.querySelector(
@@ -200,8 +213,7 @@ function App() {
     setAppState(AppState.CODING);
 
     // Merge settings with params
-    const updatedParams = { ...params, ...settings, slug: nextRouter.query.slug };
-
+    const updatedParams = { ...params, ...settings, slug: nextRouter.query.slug, template };
     generateCode(
       wsRef,
       updatedParams,

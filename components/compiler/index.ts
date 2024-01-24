@@ -11,6 +11,7 @@ import TS, {
 import Hash from 'object-hash';
 import { generateConsistentUID } from './uid-utils';
 import { GeneratedCodeConfig } from "../types";
+import { get } from 'lodash';
 
 
 let jsxContainerList: any[] = [];
@@ -62,13 +63,42 @@ function parseFunction(initializer: any) {
 }
 
 function parseVariableDeclarationList(declarations: any[]) {
-for (let i = 0; i < declarations.length; i++) {
-        const { initializer, name } = declarations[i];
-        if (initializer.kind === TS.SyntaxKind.ArrowFunction) {
-            parseArrowFunction(initializer, name.escapedText);
-        }
+  for (let i = 0; i < declarations.length; i++) {
+    const { initializer, name } = declarations[i];
+    if (initializer.kind === TS.SyntaxKind.ArrowFunction) {
+        parseArrowFunction(initializer, name.escapedText);
     }
+  }
 }
+
+function parseJsxExpression(node: any) {
+
+    function walk(node: any) {
+      if (node.kind === TS.SyntaxKind.JsxElement) {
+      } else if (node.kind === TS.SyntaxKind.JsxSelfClosingElement) {
+      } else if (node.kind === TS.SyntaxKind.JsxExpression) {
+        const jsxNode = get(node, 'expression.arguments[0].body.expression');
+        if (jsxNode && jsxNode.kind === TS.SyntaxKind.JsxElement) {
+          jsxContainerList.push(jsxNode);
+          parseJsxExpression(jsxNode);
+        }
+      } else {
+        return null;
+      }
+  
+      const { children } = node as any;
+  
+      if (children) {
+        children.reduce((result:any, currNode: any) => {
+          walk(currNode);
+        }, []);
+      }
+  
+    }
+    walk(node)
+}
+
+
 
 function findJsxNode(node: Node) {
     jsxContainerList = [];
@@ -98,6 +128,9 @@ function findJsxNode(node: Node) {
     child.forEach(item => {
       dfs(item);
     });
+    for (let i = 0; i < jsxContainerList.length; i++) {
+      parseJsxExpression(jsxContainerList[i]);
+    }
     return jsxContainerList;
   }
 
@@ -217,6 +250,7 @@ export default function setCodeUid (code: string, anchorUid: string = '', path: 
     alreadyExistingUIDs.set(path, new Set());
     const sourceFile = TS.createSourceFile(path, code, TS.ScriptTarget.ESNext);
     const nodeObject = sourceFile.getChildren()[0];
+
     findJsxNode(nodeObject);
     const cacheJsx = setJsxElementUid(jsxContainerList,sourceFile, anchorUid);
 
@@ -315,154 +349,65 @@ export function setUidAnchorPoint(uid: string, code: string, generatedCodeConfig
 //   const codeHtml = `
 //   <html>
 //   <head>
-//     <title>E-commerce Dashboard</title>
+//     <title>Hacker News Clone</title>
 //     <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
 //     <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
 //     <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
 //     <script src="https://cdn.tailwindcss.com"></script>
-//     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 //     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+//     <style>
+//       body {
+//         font-family: 'Verdana', sans-serif;
+//       }
+//     </style>
 //   </head>
-//   <body>
+//   <body class="bg-gray-200">
 //     <div id="app"></div>
 
-//     <script type="text/babel">
-//       const Dashboard = () => {
-//         return (
-//           <div className="flex h-screen bg-gray-100">
-//             <div className="flex flex-col w-64 bg-white shadow-lg">
-//               <div className="flex items-center justify-center h-20 shadow-md">
-//                 <h1 className="text-3xl uppercase text-indigo-500">Logo</h1>
-//               </div>
-//               <ul className="flex flex-col py-4">
-//                 <li>
-//                   <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
-//                     <i className="fas fa-tachometer-alt pr-2"></i>
-//                     Dashboard
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
-//                     <i className="fas fa-box pr-2"></i>
-//                     Products
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
-//                     <i className="fas fa-users pr-2"></i>
-//                     Customers
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
-//                     <i className="fas fa-file-invoice-dollar pr-2"></i>
-//                     Orders
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
-//                     <i className="fas fa-chart-line pr-2"></i>
-//                     Reports
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className="flex items-center pl-6 p-2 text-gray-600 hover:bg-indigo-500 hover:text-white">
-//                     <i className="fas fa-cog pr-2"></i>
-//                     Settings
-//                   </a>
-//                 </li>
-//               </ul>
-//             </div>
-//             <div className="flex-1 flex flex-col overflow-hidden">
-//               <header className="flex justify-between items-center p-6 bg-white border-b-2 border-gray-200">
-//                 <div className="flex items-center space-x-4">
-//                   <i className="fas fa-bars text-gray-600 text-2xl"></i>
-//                   <h1 className="text-2xl text-gray-700 font-semibold">Dashboard</h1>
-//                 </div>
-//                 <div className="flex items-center space-x-4">
-//                   <i className="fas fa-bell text-gray-600 text-2xl"></i>
-//                   <i className="fas fa-user-circle text-gray-600 text-2xl"></i>
-//                 </div>
-//               </header>
-//               <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
-//                 <div className="container mx-auto px-6 py-8">
-//                   <h3 className="text-gray-700 text-3xl font-medium">Recent Orders</h3>
-//                   <div className="mt-8">
-//                     <div className="flex flex-col">
-//                       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-//                         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-//                           <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-//                             <table className="min-w-full divide-y divide-gray-200">
-//                               <thead className="bg-gray-50">
-//                                 <tr>
-//                                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                                     Order ID
-//                                   </th>
-//                                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                                     Product
-//                                   </th>
-//                                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                                     Customer
-//                                   </th>
-//                                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                                     Status
-//                                   </th>
-//                                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                                     Total
-//                                   </th>
-//                                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                                     Date
-//                                   </th>
-//                                   <th scope="col" className="relative px-6 py-3">
-//                                     <span className="sr-only">Edit</span>
-//                                   </th>
-//                                 </tr>
-//                               </thead>
-//                               <tbody className="bg-white divide-y divide-gray-200">
-//                                 <tr>
-//                                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-//                                     #001
-//                                   </td>
-//                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-//                                     Product Name 1
-//                                   </td>
-//                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-//                                     Customer Name 1
-//                                   </td>
-//                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-green-500">
-//                                     Completed
-//                                   </td>
-//                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-//                                     $100.00
-//                                   </td>
-//                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-//                                     01/01/2021
-//                                   </td>
-//                                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-//                                     <a href="#" className="text-indigo-600 hover:text-indigo-900">Edit</a>
-//                                   </td>
-//                                 </tr>
-//                                 {/* Repeat for each order */}
-//                                 {/* ... other orders ... */}
-//                               </tbody>
-//                             </table>
-//                           </div>
-//                         </div>
-//                       </div>
-//                     </div>
-//                   </div>
-//                 </div>
-//               </main>
-//             </div>
-//           </div>
-//         );
-//       };
+    
 
-//       ReactDOM.render(<Dashboard />, document.getElementById('app'));
-//     </script>
+// <script type="text/babel">
+// const newsItems = [
+//     { id: 1, title: "Czech republic sets IPv4 end date", points: 95, author: "deadbunny", time: "1 hour ago", comments: 39, url: "konecipv4.cz" },
+//     // ... Add all other news items here with the same structure
+//     { id: 20, title: "Depth Anything: Unleashing the Power of Large-Scale Unlabeled Data", points: 9, author: "liheyoung", time: "1 hour ago", comments: 0, url: "github.com/liheyoung" }
+// ];
+// function App() {
+//     return (<div className="bg-white p-4">
+//             <header className="flex justify-between items-center mb-4 bg-orange-400">
+//               <h1 className="text-lg font-bold">Hacker News</h1>
+//               <nav>
+//                 <a href="#" className="text-red-600 hover:underline">new</a> |
+//                 <a href="#" className="hover:underline">past</a> |
+//                 <a href="#" className="hover:underline">comments</a> |
+//                 <a href="#" className="hover:underline">ask</a> |
+//                 <a href="#" className="hover:underline">show</a> |
+//                 <a href="#" className="hover:underline">jobs</a> |
+//                 <a href="#" className="hover:underline">submit</a>
+//               </nav>
+//               <a href="#" className="hover:underline">login</a>
+//             </header>
+//             <main>
+//               <ul>
+//                 {newsItems.map(item => (<li key={item.id} className="mb-2">
+//                     <span className="text-orange-400 mr-2">{item.id}.</span>
+//                     <a href={item.url} className="text-black hover:underline">{item.title}</a>
+//                     <span className="text-gray-600 text-sm ml-2">({item.url})</span>
+//                     <div className="text-gray-600 text-sm">
+//                       {item.points} points by {item.author} {item.time} | <a href="#" className="hover:underline">hide</a> | {item.comments} comments
+//                     </div>
+//                   </li>))}
+//               </ul>
+//             </main>
+//           </div>);
+// }
+// ReactDOM.render(<App />, document.getElementById("app"));
+
+// </script>
+        
+        
 //   </body>
 // </html>
-
 //   `;
 
   

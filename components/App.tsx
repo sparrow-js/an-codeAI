@@ -119,6 +119,9 @@ function App() {
       setGeneratedCode(template.code);
       addHistory("create", updateInstruction, referenceImages, referenceText, template.code, partValue.message);
       setAppState(AppState.CODE_READY);
+      if (template) {
+        setTemplate(template)
+      }
       return;
     }
 
@@ -434,11 +437,13 @@ ${error.stack}
                         </p>
                       </div>
                     ) : (
+                      (referenceImages[0] || template.imageUrl) ? (
                         <img
                           className="w-[340px] border border-gray-200 rounded-md"
                           src={referenceImages[0] || template.imageUrl}
                           alt="Reference"
                         />
+                      ) : <></> 
                     )}
                   </div>
                   <div className="text-gray-400 uppercase text-sm text-center mt-1">

@@ -13,6 +13,8 @@ import { FaGithubSquare } from "react-icons/fa";
 
 import dynamic from "next/dynamic";
 import { GeneratedCodeConfig } from '@/components/types';
+import TemplatePanel from '@/components/components/TemplatePanel';
+
 const Whiteboard = dynamic(
     async () => (await import("../components//components/Whiteboard")),
     {
@@ -180,6 +182,7 @@ export default function Dashboard() {
                                 )
                             })
                         }
+                        <TemplatePanel key={'TemplatePanel'} settings={settings} setSettings={setSettings}/>
                     </div>
                 </div>
                 <div className="mt-[50px] w-[100%] p-2">

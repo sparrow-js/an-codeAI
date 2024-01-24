@@ -141,4 +141,54 @@ function OutputSettingsSection({
   );
 }
 
+// GeneratedCodeConfig {
+//   HTML_TAILWIND = "html_tailwind",
+//   REACT_TAILWIND = "react_tailwind",
+//   REACT_SHADCN_UI = "react_shadcn_ui",
+//   BOOTSTRAP = "bootstrap",
+//   // IONIC_TAILWIND = "ionic_tailwind",
+//   REACT_ANTD = "react_antd",
+//   VUE_TAILWIND = 'vue_tailwind',
+//   VUE_ELEMENT = 'vue_element',
+//   REACT_NATIVE = 'react_native',
+//   // VUE_ELEMENT_SYSTEM_PROMPT
+// }
+
+export const TechnologyStackList = [
+  {
+    label: GeneratedCodeConfig.HTML_TAILWIND,
+    value: 'HTML + tailwind'
+  },
+  {
+    label: GeneratedCodeConfig.REACT_TAILWIND,
+    value: 'react + tailwind'
+  },
+  {
+    label: GeneratedCodeConfig.REACT_SHADCN_UI,
+    value: 'react + shadcn/ui'
+  },
+  {
+    label: GeneratedCodeConfig.REACT_ANTD,
+    value: 'react + antd'
+  },
+  {
+    label: GeneratedCodeConfig.VUE_TAILWIND,
+    value: 'vue + tailwind'
+  },
+  {
+    label: GeneratedCodeConfig.VUE_ELEMENT,
+    value: 'vue + element'
+  },
+  {
+    label: GeneratedCodeConfig.REACT_NATIVE,
+    value: 'react + native'
+  },
+  {
+    label: GeneratedCodeConfig.BOOTSTRAP,
+    value: 'bootstrap'
+  }
+]
+
+
+
 export default OutputSettingsSection;

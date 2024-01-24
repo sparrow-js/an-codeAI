@@ -85,6 +85,9 @@ export async function streamGenerateCode(
       });
     }
   }
+
+  console.log('**************111', prompt_messages);
+
   let completion;
   const SHOULD_MOCK_AI_RESPONSE = params['mockAiResponse'];
   //test: params['generationType'] === 'create'

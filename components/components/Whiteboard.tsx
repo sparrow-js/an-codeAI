@@ -55,7 +55,7 @@ function Whiteboard({doCreate, closeWhiteboard}: Props) {
                      className="hover:bg-slate-200 p-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground mt-[2px]"
                      onClick={exportImg}
                   >
-                  <FaHourglass />
+                    <FaHourglass className="text-fuchsia-800"/>
                   </span>
 
                   <span 

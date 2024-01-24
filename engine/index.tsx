@@ -6,13 +6,15 @@ import useThrottle from "../components/hooks/useThrottle";
 import {setHtmlCodeUid} from '../components/compiler';
 import html2canvas from "html2canvas";
 import {HistoryContext} from '../components/contexts/HistoryContext';
-import {EditorContext} from '../components/contexts/EditorContext';
+import {EditorContext, deviceType} from '../components/contexts/EditorContext';
 import { cloneDeep } from 'lodash';
 import {
     FaBug
 } from "react-icons/fa";
 import filesTemplate from './apps/react-shadcnui/files-template';
 import { useSandpack, SandpackProvider } from "@codesandbox/sandpack-react";
+import { cn } from "../components/lib/utils"
+import classNames from "classnames";
 
 // filesTemplate['/src/Preview.jsx'] = `
 // import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "components/ui/card";
@@ -109,7 +111,7 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
     // const { dispatch, listen } = useSandpack();
 
 
-    const { enableEdit, setEnableEdit } = useContext(EditorContext);
+    const { enableEdit, setEnableEdit, device } = useContext(EditorContext);
     const [filesObj, setFilesObj]= useState<any>(filesTemplate);
 
 
@@ -231,7 +233,9 @@ export default function PreviewBox({ code, appState, sendMessageChange, history,
     };
 
     return (
-        <div className="border-[4px] border-black rounded-[10px] shadow-lg w-full h-full">
+        <div 
+          className="border-[4px] border-black rounded-[10px] shadow-lg h-full w-full"
+        >
             {
                 showDebug && (
                 <span

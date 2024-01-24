@@ -10,6 +10,8 @@ import {
   FaUndo,
   FaCopy,
   FaChevronLeft,
+  FaLaptopCode,
+  FaMobileAlt,
 } from "react-icons/fa";
 
 import { AiFillCodepenCircle } from "react-icons/ai";
@@ -25,7 +27,7 @@ import toast from "react-hot-toast";
 import {UploadFileContext} from './contexts/UploadFileContext';
 import {SettingContext} from './contexts/SettingContext';
 import {HistoryContext} from './contexts/HistoryContext';
-import {EditorContext} from './contexts/EditorContext';
+import {EditorContext, deviceType} from './contexts/EditorContext';
 import NativePreview from './components/NativeMobile';
 import { TemplateContext } from './contexts/TemplateContext';
 import UpdateChatInput from './components/chatInput/Update';
@@ -78,7 +80,7 @@ function App() {
   const {settings, setSettings, initCreate, setInitCreate, initCreateText, setInitCreateText} = useContext(SettingContext);
 
   const {history, addHistory,  currentVersion, setCurrentVersion, resetHistory, updateHistoryCode} = useContext(HistoryContext);
-  const { enableEdit, setEnableEdit } = useContext(EditorContext)
+  const { enableEdit, setEnableEdit, device, setDevice } = useContext(EditorContext)
   const [tabValue, setTabValue] = useState<string>(settings.generatedCodeConfig == GeneratedCodeConfig.REACT_NATIVE ? 'native' : 'desktop')
   const [ template, setTemplate ] = useState<any>({});
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -521,6 +523,25 @@ ${error.stack}
                     <FaDownload />
                   </span>
                   <span
+                    className="hover:bg-slate-200 rounded-sm w-[36px] h-[36px] flex items-center justify-center border-black border-2"
+                    onClick={() => {
+                      if (device === deviceType.PC) {
+                        setDevice(deviceType.MOBILE)
+                      } else {
+                        setDevice(deviceType.PC)
+                      }
+                    }}
+                  >
+                    {
+                      device === deviceType.PC ? (
+                        <FaLaptopCode className="w-[20px]"/>
+                      ) : (
+                        <FaMobileAlt className="h-[20px]"/>
+                      )
+                    }
+                    
+                  </span>
+                  <span
                     className={classNames(
                       "hover:bg-slate-200 rounded-full border-black border-2 w-[36px] h-[36px] flex items-center justify-center",
                       {
@@ -583,11 +604,19 @@ ${error.stack}
              
                <div
                 className={
-                  classNames('h-full', {
+                  classNames('h-full flex justify-center', {
                     'hidden': tabValue !== 'desktop'
                   })
                 }
-               >
+               >      
+                  <div
+                      className={
+                        classNames("h-full", {
+                          "w-full": device === deviceType.PC,
+                          "w-[375px]": device === deviceType.MOBILE
+                        }
+                      )}
+                  >
                       <PreviewBox  
                         code={generatedCode}
                         appState={appState}
@@ -598,6 +627,8 @@ ${error.stack}
                         history={history}
                         fixBug={fixBug}
                       />
+                  </div>
+                   
                       {/* <Preview code={generatedCode} device="desktop" appState={appState} fixBug={fixBug}/> */}
                 </div>
               <div 

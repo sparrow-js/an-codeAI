@@ -85,10 +85,10 @@ export default function Dashboard() {
 
     return (
         <div 
-            {...getRootProps({ style: style as any })}
+            {...getRootProps({ })}
             className="dark:bg-black dark:text-white h-full"
         >
-            <div className='fixed w-full bg-slate-50 z-20'>
+            <div className='fixed w-full bg-slate-50 z-20 top-0'>
                 <Header />
             </div>
             <main className='pb-10'>
@@ -118,7 +118,7 @@ export default function Dashboard() {
                     </div>
                 </div> */}
                 <div className="w-full bg-white dark:bg-gray-800 border-t dark:border-t-gray-600 flex-col flex items-center justify-between p-3">
-                    <div className="relative mt-80 w-[520px] rounded-md shadow-sm">
+                    <div className="flex relative flex-col w-full items-center px-6">
                         <ChatInput
                             openWhiteboard={() => {
                                 setOpenWhiteboard(true);
@@ -126,7 +126,20 @@ export default function Dashboard() {
                             showAnim={showAnim}
                         />
                     </div>
-                    <p className='mt-8 flex justify-center items-center'>
+                    {/* className={classNames(
+                        "fixed w-full h-full top-0 left-0 z-50",
+                        {
+                        'hidden': !openWhiteboard,
+                        }
+                    )} */}
+                    <p 
+                        className={classNames(
+                            "mt-20 flex justify-center items-center p-4 rounded border-2 ",
+                            {   'border-white': !isDragAccept,
+                                'border-dashed border-blue-600': isDragAccept,
+                            }
+                        )}
+                    >
                         <span className='mr-2'>
                         <svg className="icon text-blue-600 w-[35px] h-[35px] fill-current" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5831"><path d="M597.333333 256h85.333334v85.333333h213.333333a42.666667 42.666667 0 0 1 42.666667 42.666667v320L682.666667 554.666667l1.536 343.978666 94.848-91.733333L855.082667 938.666667H384a42.666667 42.666667 0 0 1-42.666667-42.666667v-213.333333H256v-85.333334h85.333333V384a42.666667 42.666667 0 0 1 42.666667-42.666667h213.333333V256z m341.333334 483.754667V896a42.666667 42.666667 0 0 1-2.048 13.098667l-83.626667-144.810667L938.666667 739.754667zM170.666667 597.333333v85.333334H85.333333v-85.333334h85.333334z m0-170.666666v85.333333H85.333333v-85.333333h85.333334z m0-170.666667v85.333333H85.333333V256h85.333334z m0-170.666667v85.333334H85.333333V85.333333h85.333334z m170.666666 0v85.333334H256V85.333333h85.333333z m170.666667 0v85.333334h-85.333333V85.333333h85.333333z m170.666667 0v85.333334h-85.333334V85.333333h85.333334z" p-id="5832"></path></svg>
                         </span>

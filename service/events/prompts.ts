@@ -612,11 +612,28 @@ In terms of libraries,
 - You can use Google Fonts
 - Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
 
+Code can be modified locally,
+
+- Can use the element attribute data-uid="$id" to find the element and modify it.
+- If need to delete, Delete the element use attribute data-uid="$id" like so:
+input:
+<div>
+    <h2>*</h2>
+    <div data-uid="$id">
+      ****
+    </div>
+</div>
+
+output:
+<div>
+    <h2>*</h2>
+</div>
+
 Return only the full code in <html></html> tags.
 Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.
-"""
+`
 
-IMPORTED_CODE_BOOTSTRAP_SYSTEM_PROMPT = """
+const IMPORTED_CODE_BOOTSTRAP_SYSTEM_PROMPT = `
 You are an expert Bootstrap developer.
 
 - Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
@@ -628,6 +645,23 @@ In terms of libraries,
 - Use this script to include Bootstrap: <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 - You can use Google Fonts
 - Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+
+Code can be modified locally,
+
+- Can use the element attribute data-uid="$id" to find the element and modify it.
+- If need to delete, Delete the element use attribute data-uid="$id" like so:
+input:
+<div>
+    <h2>*</h2>
+    <div data-uid="$id">
+      ****
+    </div>
+</div>
+
+output:
+<div>
+    <h2>*</h2>
+</div>
 
 Return only the full code in <html></html> tags.
 Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.
@@ -654,6 +688,23 @@ In terms of libraries,
     </script>
     <script nomodule src="https://cdn.jsdelivr.net/npm/ionicons/dist/esm/ionicons.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/ionicons/dist/collection/components/icon/icon.min.css" rel="stylesheet">
+
+Code can be modified locally,
+
+- Can use the element attribute data-uid="$id" to find the element and modify it.
+- If need to delete, Delete the element use attribute data-uid="$id" like so:
+input:
+<div>
+    <h2>*</h2>
+    <div data-uid="$id">
+      ****
+    </div>
+</div>
+
+output:
+<div>
+    <h2>*</h2>
+</div>
 
 Return only the full code in <html></html> tags.
 Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.
@@ -686,6 +737,23 @@ In terms of libraries,
 - Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
 - You can use Google Fonts
 - Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+
+Code can be modified locally,
+
+- Can use the element attribute data-uid="$id" to find the element and modify it.
+- If need to delete, Delete the element use attribute data-uid="$id" like so:
+input:
+<div>
+    <h2>*</h2>
+    <div data-uid="$id">
+      ****
+    </div>
+</div>
+
+output:
+<div>
+    <h2>*</h2>
+</div>
 
 Return only the full code in <html></html> tags.
 Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.

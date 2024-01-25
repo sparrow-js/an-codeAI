@@ -273,9 +273,9 @@ function TemplatePanel({settings, setSettings}: Props) {
                                     <h3 className="mt-4 text-sm text-gray-700">{item.title}</h3>
                                     <p className="mt-1 text-lg font-medium text-gray-900">{item.description}</p>
                                 </div>
-                                <div className="absolute right-2 flex gap-3 top-1">
+                                <div className="absolute right-2 flex gap-3 top-2">
                                     <span 
-                                        className="cursor-pointer text-xl"
+                                        className="cursor-pointer border-2 border-black p-[2px] text-xs	rounded-sm"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             setShowDialog(true);
@@ -286,7 +286,7 @@ function TemplatePanel({settings, setSettings}: Props) {
                                         <VscDebugAll />
                                     </span>
                                     <span 
-                                        className="cursor-pointer text-xl"
+                                        className="cursor-pointer border-2 border-black p-[2px] text-xs rounded-sm"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             setShowDialog(true);

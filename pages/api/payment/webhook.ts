@@ -1,6 +1,5 @@
 import rawBody from "raw-body";
 import { Readable } from "stream";
-import { headers } from "next/headers";
 import { respData, respErr } from "@/lib/resp";
 import crypto from "crypto";
 import { NextResponse } from "next/server";
@@ -11,10 +10,8 @@ export default async function handler(request: Request) {
   if (request.method === 'POST') {
     console.log('webhook');
     const body = await rawBody(Readable.from(Buffer.from(await request.text())));
-    const headersList = headers();
     const payload = JSON.parse(body.toString());
-
-    const sigString = headersList.get("x-signature");
+    const sigString = request.headers.get("x-signature");
     if (!sigString) {
         console.error(`Signature header not found`);
         return respErr("Signature header not found");

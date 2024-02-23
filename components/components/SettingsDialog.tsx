@@ -44,12 +44,7 @@ function SettingsDialog({ settings, setSettings, openDialog, setOpenDialog }: Pr
       >
       {
         delayShowArrow && !settings?.openAiApiKey && (
-        <>
-            <div 
-              className="absolute top-[46px] right-[-5px] animate-bounce bg-white dark:bg-slate-800 p-2 w-10 h-10 ring-1 ring-slate-900/5 dark:ring-slate-200/20 shadow-lg rounded-full flex items-center justify-center"
-            >
-              <HiArrowUp className="w-6 h-6 text-violet-500"/>
-            </div>
+          <>
             <span 
               className="text-sm font-bold mr-2"
             >Setting Key </span>
@@ -62,25 +57,9 @@ function SettingsDialog({ settings, setSettings, openDialog, setOpenDialog }: Pr
         <DialogHeader>
           <DialogTitle className="mb-4">Settings</DialogTitle>
         </DialogHeader>
-
-        {/* <div className="flex items-center space-x-2">
-          <Label htmlFor="image-generation">
-            <div>DALL-E Placeholder Image Generation</div>
-            <div className="font-light mt-2">
-              More fun with it but if you want to save money, turn it off.
-            </div>
-          </Label>
-          <Switch
-            id="image-generation"
-            checked={settings.isImageGenerationEnabled}
-            onCheckedChange={() =>
-              setSettings((s) => ({
-                ...s,
-                isImageGenerationEnabled: !s.isImageGenerationEnabled,
-              }))
-            }
-          />
-        </div> */}
+        <div>
+          Add your own key to use immediately, no login required.
+        </div>
         <div className="flex flex-col space-y-4">
           <div className="border-b-2 border-black pb-4">
             <RadioGroup onValueChange={(data) => {

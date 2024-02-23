@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { getUserCredits, consumeCredits } from "@/service/order";
 
 
 import {
@@ -133,24 +134,42 @@ export async function streamingOpenAIResponses(
     openAiBaseURL: any;
     llm: string;
     geminiApiKey: any;
-  }
+  },
+  user_email: string| undefined,
 ) {
 
   if (params.llm === "gemini") {
-    const full_response = await useGeminiResponse([messages, callback, params]);
+    const full_response = await useGeminiResponse([messages, callback, params, user_email]);
     return full_response;
   }
 
-  if (!params.openAiApiKey) {
-    callback('No openai key, set it', 'error');
-    return '';
+  let apiKey = params.openAiApiKey || process.env['OPENAI_API_KEY']; // defaults to process.env["OPENAI_API_KEY"]
+  let baseURL = 
+  params.openAiBaseURL ||
+  process.env['OPENAI_BASE_URL'] ||
+  'https://api.openai.com/v1';
+
+  if (user_email) {
+    const user_credits = await getUserCredits(user_email);
+    console.log('**********tttt', user_credits);
+    if (user_credits.left_credits > 0) {
+      apiKey = process.env['OPENAI_KEY'];
+      baseURL = process.env['OPENAI_BASE_URL'];
+      await consumeCredits(user_email);
+    } else {
+      callback('Credits is 0, recharge or exit using your own openAI key', 'error');
+      return;
+    }
+  } else {
+    if (!params.openAiApiKey) {
+      callback('No openai key, set it', 'error');
+      return '';
+    }
   }
+
   const openai = new OpenAI({
-    apiKey: params.openAiApiKey || process.env['OPENAI_API_KEY'], // defaults to process.env["OPENAI_API_KEY"]
-    baseURL:
-      params.openAiBaseURL ||
-      process.env['OPENAI_BASE_URL'] ||
-      'https://api.openai.com/v1',
+    apiKey: apiKey, // defaults to process.env["OPENAI_API_KEY"]
+    baseURL: baseURL,
   });
 
   const stream = await openai.chat.completions.create({

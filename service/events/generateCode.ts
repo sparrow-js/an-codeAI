@@ -27,7 +27,7 @@ const encoder = new TextEncoder();
 export async function streamGenerateCode(
   params: IGenerateCodeParams,
   socket: { enqueue: (v: any) => any },
-  origin?: string,
+  user_email?: string
 ) {
   function noticeHost(data: Record<any, any>) {
     if (socket.enqueue) {
@@ -119,6 +119,7 @@ export async function streamGenerateCode(
           llm: params.llm, // 'Gemini'
           geminiApiKey: params.geminiApiKey,
         },
+        user_email,
       );
     } catch (e) {
       console.log(e);

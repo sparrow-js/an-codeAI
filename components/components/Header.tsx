@@ -9,10 +9,15 @@ import { MdOutlineHelp } from "react-icons/md";
 import { SiBuymeacoffee } from "react-icons/si";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import OnboardingNote from './OnboardingNote';
+import { AppContext } from "../contexts/AppContext";
+import {Button} from './ui/button';
+import User from "../user";
+
 
 export default () => {
   const { settings, setSettings } = useContext(SettingContext);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const { user } = useContext(AppContext);
 
   return (
     <header className="flex items-center p-4 justify-between relative">
@@ -65,10 +70,29 @@ export default () => {
                   <BsGithub className="text-xl" />
                 </a>
             </li>
-            <li className="mx-2">
+            {/* <li className="mx-2">
               <a href="https://www.buymeacoffee.com/sparrowwhtl" target="_blank">
                 <SiBuymeacoffee className="text-xl"/>
               </a>
+            </li> */}
+            <li className="mx-2">
+              <div className="flex items-center">
+                {user === undefined ? (
+                  <>loading...</>
+                ) : (
+                  <>
+                    {user ? (
+                      <>
+                        <User user={user} />
+                      </>
+                    ) : (
+                      <a className="cursor-pointer" href="/sign-in">
+                        <Button>登录</Button>
+                      </a>
+                    )}
+                  </>
+                )}
+              </div>
             </li>
           </ul>
         </div>

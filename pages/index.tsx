@@ -14,6 +14,7 @@ import { FaGithubSquare } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { GeneratedCodeConfig } from '@/components/types';
 import TemplatePanel from '@/components/components/TemplatePanel';
+import Pricing from '@/components/pricing';
 
 const Whiteboard = dynamic(
     async () => (await import("../components//components/Whiteboard")),
@@ -197,6 +198,9 @@ export default function Dashboard() {
                         }
                         <TemplatePanel key={'TemplatePanel'} settings={settings} setSettings={setSettings}/>
                     </div>
+                </div>
+                <div className='mt-6'>
+                    <Pricing />
                 </div>
                 <div className="mt-[50px] w-[100%] p-2">
                     <p className='text-slate-300 text-center'>© Copyright <a className='text-sky-400 hover:text-sky-600' href="https://www.ancodeai.com/">ancodeAI</a> All rights reserved.</p>

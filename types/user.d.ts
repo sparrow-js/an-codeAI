@@ -6,7 +6,7 @@ export interface User {
   avatar_url: string;
   created_at?: string;
   credits?: UserCredits;
-  uuid: string;
+  uuid?: string;
 }
 
 export interface UserCredits {

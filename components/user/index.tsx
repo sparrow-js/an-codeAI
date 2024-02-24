@@ -31,15 +31,51 @@ import {
   UserPlus,
   Users,
 } from "lucide-react"
+import toast from "react-hot-toast";
+import {useContext, useState} from 'react';
+import { AppContext } from "../contexts/AppContext";
 
 interface Props {
   user: User;
 }
 
 export default function User ({ user }: Props) {
+  const { updateCredits } = useContext(AppContext);
+
+
+  const fetchCreditsInfo = async function () {
+    try {
+      const uri = "/api/get-credits-info";
+      const params = {};
+
+      const resp = await fetch(uri, {
+        method: "POST",
+        body: JSON.stringify(params),
+      });
+
+      if (resp.ok) {
+        const res = await resp.json();
+        if (res.credits) {
+          updateCredits(res.credits);
+          return;
+        }
+      }
+
+      // setUser(null);
+    } catch (e) {
+      // setUser(null);
+
+      console.log("get user info failed: ", e);
+      toast.error("get user info failed");
+    }
+  };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu onOpenChange={(isOpen) => {
+      if (isOpen) {
+        fetchCreditsInfo();
+      }
+    }}>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
           <AvatarImage src={user.avatar_url} alt={user.nickname} />

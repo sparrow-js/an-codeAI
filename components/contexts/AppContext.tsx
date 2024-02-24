@@ -1,7 +1,7 @@
 import { ContextProviderProps, ContextProviderValue } from "@/types/context";
 import { createContext, useEffect, useState } from "react";
 
-import { User } from "@/types/user";
+import { User, UserCredits } from "@/types/user";
 import toast from "react-hot-toast";
 
 
@@ -41,8 +41,20 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     fetchUserInfo();
   }, []);
 
+  const updateCredits = (credits: UserCredits) => {
+    setUser((prev) => {
+      if (prev) {
+        const currentUser: User = {...prev, credits};
+        return currentUser;
+      } else {
+        return prev;
+      }
+
+    })    
+  }
+
   return (
-    <AppContext.Provider value={{ user, fetchUserInfo }}>
+    <AppContext.Provider value={{ user, fetchUserInfo, updateCredits }}>
       {children}
     </AppContext.Provider>
   );

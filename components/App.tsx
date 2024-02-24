@@ -663,6 +663,7 @@ ${error.stack}
             settings={settings} 
             setSettings={setSettings}
             openDialog={openDialog}
+            saveJump="/"
             setOpenDialog={setOpenDialog}
         />
       </span>

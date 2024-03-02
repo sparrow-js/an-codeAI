@@ -13,6 +13,7 @@ import Footer from '@/components/footer';
 import Hero from '@/components/hero';
 import HeroWhiteboard from '@/components/hero-whiteboard';
 import HeroText from '@/components/hero-text';
+import Faqs from '@/components/faqs';
 
 import dynamic from "next/dynamic";
 import { GeneratedCodeConfig } from '@/components/types';
@@ -205,6 +206,9 @@ export default function Dashboard() {
                     <Hero />
                     <HeroWhiteboard />
                     <HeroText />
+                </div>
+                <div>
+                    <Faqs />
                 </div>
                 <div className='mt-6'>
                     <Footer />

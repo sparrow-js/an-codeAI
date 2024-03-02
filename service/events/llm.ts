@@ -151,7 +151,6 @@ export async function streamingOpenAIResponses(
 
   if (user_email) {
     const user_credits = await getUserCredits(user_email);
-    console.log('**********tttt', user_credits);
     if (user_credits.left_credits > 0) {
       apiKey = process.env['OPENAI_KEY'];
       baseURL = process.env['OPENAI_BASE_URL'];

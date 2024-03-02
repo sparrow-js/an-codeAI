@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { authMiddleware } from "@clerk/nextjs";
 
 export default authMiddleware({
-  publicRoutes: ["/", "/api/get-user-info", "/api/generateCode", "/editor/(.*)"],
+  publicRoutes: ["/", "/api/get-user-info", "/api/generateCode", "/editor/(.*)", "/api/payment/webhook"],
 
   afterAuth(auth, req, evt) {
     if (!auth.userId && !auth.isPublicRoute) {

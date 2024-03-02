@@ -5,39 +5,65 @@ import crypto from "crypto";
 import { NextResponse } from "next/server";
 import {findOrderByIdentifier, insertOrder} from '@/models/order';
 import {findUserByEmail} from '@/models/user';
+import { buffer } from 'micro'
+import type { NextApiResponse, NextApiRequest } from 'next'
+export interface ResBody extends NextApiRequest {
+  body: {
+    meta: {
+      event_name: 'order_created' | 'order_refunded'
+      custom_data: {
+        // this is where any custom checkout parameters will be accessible
+        // details: https://docs.lemonsqueezy.com/api/checkouts#create-a-checkout
+        userId: string
+      }
+    }
+    data: {
+      id: string
+      attributes: {
+        identifier: string
+      }
+    }
+  }
+}
 
-export default async function handler(request: Request) {
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+}
+
+export default async function handler(request: ResBody, res: NextApiResponse) {
   if (request.method === 'POST') {
     console.log('webhook');
-    const body = await rawBody(Readable.from(Buffer.from(await request.text())));
+    const body = (await buffer(request)).toString('utf-8');
     const payload = JSON.parse(body.toString());
-    const sigString = request.headers.get("x-signature");
+    const sigString = request.headers['x-signature'] as string;
     if (!sigString) {
         console.error(`Signature header not found`);
-        return respErr("Signature header not found");
+        return res.status(403).json({message: "Signature header not found"});
     }
+
 
     const secret = process.env.LEMONS_SQUEEZY_SIGNATURE_SECRET as string;
     const hmac = crypto.createHmac("sha256", secret);
     const digest = Buffer.from(hmac.update(body).digest("hex"), "utf8");
-    const signature = Buffer.from(
-      Array.isArray(sigString) ? sigString.join("") : sigString || "",
-      "utf8"
-    );
+    const signature = Buffer.from(request.headers['x-signature'] as string, 'utf8');
+
 
     // validate signature
     if (!crypto.timingSafeEqual(digest, signature)) {
-        return respErr("Invalid signature");
+        return res.status(403).json({
+          message: "Invalid signature"
+        });
     }
 
     const user_email = payload.meta.custom_data && payload.meta.custom_data.email || '';
 
     if (!user_email) {
-      return NextResponse.json({ message: "No userId provided" }, { status: 403 });
+      return res.status(403).json({ message: "No userId provided" });
     }
     const user = await findUserByEmail(user_email);
-
-    if (!user) return NextResponse.json({ message: "Your account was not found" }, { status: 401 });
+    if (!user) return res.status(403).json({ message: "Your account was not found" });
   
 
     const first_order_item = payload.data.attributes.first_order_item || null;
@@ -49,11 +75,12 @@ export default async function handler(request: Request) {
           first_order_item.product_id !==
           parseInt(process.env.LEMON_SQUEEZY_PRODUCT_ID as string, 10)
         ) {
-          return NextResponse.json({ message: "Invalid product" }, { status: 403 });
+          return res.status(403).json({ message: "Invalid product" });
         }
 
         switch (payload.meta.event_name) {
           case "order_created": {
+
             const identifier = payload.data.attributes.identifier;
             const order = await findOrderByIdentifier(identifier);
 
@@ -79,20 +106,20 @@ export default async function handler(request: Request) {
               });
               console.log('pay_success');
             }
-            return NextResponse.json({ status: 200 });
+            return res.status(200).json({received: true});
           }
           default: {
-            return NextResponse.json({ message: 'event_name not support' }, { status: 400 });
+            return res.status(400).json({ message: 'event_name not support' });
           }
         }
 
         
       } catch(e) {
         console.log('single pay deal', e);
-        return NextResponse.json({ message: 'single pay something wrong' }, { status: 500 });
+        return res.status(500).json({ message: 'single pay something wrong' });
       }
     }
-    return NextResponse.json({ status: 200 });
+    return res.status(200).json({received: true});
   }
    
 }

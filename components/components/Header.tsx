@@ -16,8 +16,9 @@ export default () => {
 
   return (
     <header className="flex items-center p-4 justify-between relative">
-      <div className="flex">
+      <div className="flex items-center">
         <img className="w-[40px] h-[40px] left-5" src="/logo.png" />
+        <span className="ml-2">ancodeai</span>
       </div>
       <div className="flex items-center">
         <div className="flex-1">
@@ -65,11 +66,11 @@ export default () => {
                   <BsGithub className="text-xl" />
                 </a>
             </li>
-            <li className="mx-2">
+            {/* <li className="mx-2">
               <a href="https://www.buymeacoffee.com/sparrowwhtl" target="_blank">
                 <SiBuymeacoffee className="text-xl"/>
               </a>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

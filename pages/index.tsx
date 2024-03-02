@@ -9,7 +9,10 @@ import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import templates from '../templates/templates';
 import { FaGithubSquare } from "react-icons/fa";
-
+import Footer from '@/components/footer';
+import Hero from '@/components/hero';
+import HeroWhiteboard from '@/components/hero-whiteboard';
+import HeroText from '@/components/hero-text';
 
 import dynamic from "next/dynamic";
 import { GeneratedCodeConfig } from '@/components/types';
@@ -198,8 +201,13 @@ export default function Dashboard() {
                         <TemplatePanel key={'TemplatePanel'} settings={settings} setSettings={setSettings}/>
                     </div>
                 </div>
-                <div className="mt-[50px] w-[100%] p-2">
-                    <p className='text-slate-300 text-center'>© Copyright <a className='text-sky-400 hover:text-sky-600' href="https://www.ancodeai.com/">ancodeAI</a> All rights reserved.</p>
+                <div>
+                    <Hero />
+                    <HeroWhiteboard />
+                    <HeroText />
+                </div>
+                <div className='mt-6'>
+                    <Footer />
                 </div>
             </main>
        

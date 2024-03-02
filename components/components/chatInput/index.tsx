@@ -75,7 +75,7 @@ export default function ChatInput({openWhiteboard, showAnim}: props) {
       {/* animate-wiggle */}
       <div 
         className={classNames(
-          "sm:max-w-lg m-auto shadow-lg divide-zinc-600 min-h-12 bg-gray-900 shadow-black/40 rounded-[24px] overflow-hidden max-w-[90%] flex items-center flex-1 min-w-0 px-3 md:pl-4 bg-gray-900 absolute z-10 bottom-0",
+          "sm:max-w-lg m-auto shadow-lg divide-zinc-600 min-h-12 bg-violet-950 shadow-black/40 rounded-[24px] overflow-hidden max-w-[90%] flex items-center flex-1 min-w-0 px-3 md:pl-4 bg-gray-900 absolute z-10 bottom-0",
           {
             "animate-wiggle": showAnim,
           }

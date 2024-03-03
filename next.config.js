@@ -6,7 +6,15 @@ const rewrites = async () => {
     {
       source: '/sandpack',
       destination: '/sandpack/index.html',
-    }
+    },
+    {
+      source: "/plausible/js/script.js",
+      destination: "https://plausible.io/js/script.js",
+    },
+    {
+      source: "/plausible/api/event",
+      destination: "https://plausible.io/api/event",
+    },
   ];
 
   return {

@@ -16,7 +16,8 @@ export default function Document() {
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content="ancodeai - AI-Powered Website Code Creation" />
       <meta name="twitter:description" content="Streamline web design with www.ancodeai.com: Convert ideas and images to HTML code instantly using AI, with Tailwind, React, and Vue support." />
-        <script id="inline-script" dangerouslySetInnerHTML={{ __html: `window.EXCALIDRAW_ASSET_PATH = "/"` }} />
+      <script id="inline-script" dangerouslySetInnerHTML={{ __html: `window.EXCALIDRAW_ASSET_PATH = "/"` }} />
+      <script defer data-domain="ancodeai.com" src="https://plausible.io/js/script.js"></script>
       </Head>
       <body>
         <Main />

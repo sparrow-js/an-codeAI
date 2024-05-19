@@ -95,6 +95,10 @@ async function useGeminiResponse([messages, callback, params]: Parameters<
     modelType = "gemini-pro-vision"
   }
 
+  if (params.modelName) {
+    modelType = params.modelName
+  }
+
   const model = genAI.getGenerativeModel({ model:  modelType});
 
   const result = await model.generateContentStream({
@@ -133,6 +137,7 @@ export async function streamingOpenAIResponses(
     openAiBaseURL: any;
     llm: string;
     geminiApiKey: any;
+    modelName: any;
   }
 ) {
 
@@ -153,8 +158,13 @@ export async function streamingOpenAIResponses(
       'https://api.openai.com/v1',
   });
 
+  let modelName = 'gpt-4-vision';
+  if (params.modelName) {
+    modelName = params.modelName;
+  }
+
   const stream = await openai.chat.completions.create({
-    model: 'gpt-4-vision-preview',
+    model: modelName,
     temperature: 0,
     max_tokens: 4096,
     messages,

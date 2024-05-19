@@ -26,6 +26,7 @@ const initialValue = {
         init: false,
         llm: 'openai',
         geminiApiKey: '',
+        modelName: '',
     },
     initCreate: false,
     setSettings: () => {},

@@ -32,6 +32,7 @@ export interface Settings {
   init: boolean;
   llm: string;
   geminiApiKey: string;
+  modelName: string | null;
 }
 
 export enum AppState {

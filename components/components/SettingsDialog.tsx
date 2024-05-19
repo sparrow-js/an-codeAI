@@ -99,6 +99,22 @@ function SettingsDialog({ settings, setSettings, openDialog, setOpenDialog }: Pr
                 <RadioGroupItem  value="gemini" id="gemini-llm"/>
               </Label>
             </RadioGroup>
+            <div>
+              <Label >
+                Model Name (optional)
+              </Label>
+              <Input
+                  id="model-name"
+                  placeholder="Model Name"
+                  value={settings?.modelName || ""}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      modelName: e.target.value,
+                    })
+                  }
+                />
+            </div>
           </div>
           {
             settings.llm === 'openai' ? (

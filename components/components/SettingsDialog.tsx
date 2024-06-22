@@ -94,9 +94,9 @@ function SettingsDialog({ settings, setSettings, openDialog, setOpenDialog }: Pr
                 <span className="mr-2">OpenAI</span>
                 <RadioGroupItem value="openai" id="openai-llm"/>
               </Label>
-              <Label className="flex item-center" htmlFor="gemini-llm">
-                <span className="mr-2">Gemini</span>
-                <RadioGroupItem  value="gemini" id="gemini-llm"/>
+              <Label className="flex item-center" htmlFor="Anthropic-llm">
+                <span className="mr-2">Anthropic</span>
+                <RadioGroupItem  value="anthropic" id="Anthropic-llm"/>
               </Label>
             </RadioGroup>
           </div>
@@ -149,26 +149,48 @@ function SettingsDialog({ settings, setSettings, openDialog, setOpenDialog }: Pr
 
             ) : (
               <>
-                <p className="text-rose-500">The output effect is not good and it will not be maintained for the time being.</p>
-                <Label htmlFor="openai-api-key">
-                  <div>Gemini API key</div>
-                  <div className="font-light mt-2 leading-relaxed">
-                    Only stored in your browser. Never stored on servers. Overrides
-                    your .env config.
-                  </div>
-                </Label>
+              <Label htmlFor="Anthropic-api-key">
+                <div>Anthropic API key</div>
+                <div className="font-light mt-2 leading-relaxed">
+                  Only stored in your browser. Never stored on servers. Overrides
+                  your .env config.
+                  <button 
+                    className="inline-flex items-center justify-center ml-2">
+                     <OnboardingNote/>
+                  </button>
+                </div>
+              </Label>
 
-                <Input
-                  id="Gemini-api-key"
-                  placeholder="Gemini API key"
-                  value={settings?.geminiApiKey || ""}
-                  onChange={(e) =>
-                    setSettings({
-                      ...settings,
-                      geminiApiKey: e.target.value,
-                    })
-                  }
-                />
+              <Input
+                id="anthropic-api-key"
+                placeholder="Anthropic API key"
+                value={settings?.anthropicApiKey || ""}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    anthropicApiKey: e.target.value,
+                  })
+                }
+              />
+
+              <Label htmlFor="anthropic-api-key">
+                <div>Anthropic Base URL (optional)</div>
+                <div className="font-light mt-2 leading-relaxed">
+                  Replace with a proxy URL if you don't want to use the default.
+                </div>
+              </Label>
+
+              <Input
+                id="anthropic-base-url"
+                placeholder="Anthropic Base URL"
+                value={settings?.anthropicBaseURL || ""}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    anthropicBaseURL: e.target.value,
+                  })
+                }
+              />
               </>
             )
           }

@@ -21,6 +21,8 @@ export interface IGenerateCodeParams {
   llm: string;
   geminiApiKey: string;
   slug?: string;
+  anthropicApiKey: string;
+  anthropicBaseURL: string;
 }
 
 const encoder = new TextEncoder();
@@ -118,6 +120,8 @@ export async function streamGenerateCode(
           openAiBaseURL: params.openAiBaseURL,
           llm: params.llm, // 'Gemini'
           geminiApiKey: params.geminiApiKey,
+          anthropicApiKey: params.anthropicApiKey,
+          anthropicBaseURL: params.anthropicBaseURL
         },
       );
     } catch (e) {

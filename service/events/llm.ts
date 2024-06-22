@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 
 
 import {
@@ -133,13 +134,66 @@ export async function streamingOpenAIResponses(
     openAiBaseURL: any;
     llm: string;
     geminiApiKey: any;
+    anthropicApiKey: any;
+    anthropicBaseURL: any
   }
 ) {
-
   if (params.llm === "gemini") {
     const full_response = await useGeminiResponse([messages, callback, params]);
     return full_response;
   }
+  if (params.llm === "anthropic") {
+      const options: {
+        apiKey: string;
+        baseURL?: string;
+      } = {
+        apiKey: params.anthropicApiKey, // This is the default and can be omitted
+      }
+      if (params.anthropicBaseURL) {
+        options.baseURL = params.anthropicBaseURL
+      }
+      const anthropic = new Anthropic(options);
+      const systemMessage = messages.splice(0, 1)[0];
+      const aMessages = messages.map((message: any) => {
+        const {content} = message;
+        if (Array.isArray(content)) {
+          message.content = content.map((item) => {
+            let temp = item;
+            // console.log(item.image_url.url)
+            if (item.type === 'image_url') {
+              const imageUrl = item.image_url.url
+              temp = {
+                type: "image",
+                source: {
+                  type: "base64",
+                    media_type: imageUrl.split(";")[0].split(":")[1],
+                    data: imageUrl.split(",")[1],
+                },
+              }
+            }
+            return temp;
+          })
+
+        }
+        return message;
+      })
+
+      const stream = anthropic.messages
+      .stream({
+        model: 'claude-3-5-sonnet-20240620',
+        max_tokens: 4096,
+        system: systemMessage.content,
+        messages: aMessages
+      })
+      .on('text', (text) => {
+        callback(text);
+      });
+
+    const message = await stream.finalMessage();
+    return message;
+  }
+
+
 
   if (!params.openAiApiKey) {
     callback('No openai key, set it', 'error');

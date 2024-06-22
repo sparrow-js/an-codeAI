@@ -11,6 +11,7 @@
   "dependencies": {
     "@alifd/next": "^1.26.37",
     "@alilc/lowcode-datasource-types": "^1.1.4",
+    "@anthropic-ai/sdk": "^0.24.0",
     "@codesandbox/sandpack-react": "^2.11.2",
     "@codesandbox/sandpack-themes": "^2.0.21",
     "@excalidraw/excalidraw": "0.17.2",

@@ -34,11 +34,11 @@ export default () => {
                   }
                 />
             </li>
-            <li>
+            {/* <li>
               <span className="hover:bg-slate-200 rounded-sm p-2 relative flex justify-center items-center">
                 <OnboardingNote />
               </span>
-            </li>
+            </li> */}
             <li className="mx-2">
               <span>
                 <SettingsDialog 

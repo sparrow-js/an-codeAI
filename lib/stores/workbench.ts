@@ -19,8 +19,11 @@ import Cookies from 'js-cookie';
 import { createSampler } from '@/utils/sampler';
 import type { ActionAlert } from '@/types/actions';
 import type { Template } from '@/types/template';
+import { astStore } from '@/lib/stores';
+import type { ArtifactSnapshot } from '@/lib/persistence/types';
 
 import { appId} from '@/lib/persistence/useChatHistory'
+import { parseRouterPaths, type RouteInfo } from '@/utils/parseRouter';
 
 // Destructure saveAs from the CommonJS module
 const { saveAs } = fileSaver;
@@ -37,7 +40,7 @@ export type ArtifactUpdateState = Pick<ArtifactState, 'title' | 'closed'>;
 
 type Artifacts = MapStore<Record<string, ArtifactState>>;
 
-export type WorkbenchViewType = 'code' | 'preview';
+export type WorkbenchViewType = 'code' | 'preview' | 'Cloud';
 
 
 export class WorkbenchStore {
@@ -45,6 +48,7 @@ export class WorkbenchStore {
   #filesStore = new FilesStore(webcontainer);
   #editorStore = new EditorStore(this.#filesStore);
   #terminalStore = new TerminalStore(webcontainer);
+  #astStore = astStore;
 
   #reloadedMessages = new Set<string>();
   #pendingFileUpdates = new Map<string, string>(); // 缓存待更新的文件
@@ -67,11 +71,24 @@ export class WorkbenchStore {
   installDependencies: WritableAtom<string> = atom('');
 
   showWorkbench: WritableAtom<boolean> = atom(false);
-  currentView: WritableAtom<WorkbenchViewType> = atom('code');
+  currentView: WritableAtom<WorkbenchViewType> = atom('preview');
   unsavedFiles: WritableAtom<Set<string>> = atom(new Set<string>());
   actionAlert: WritableAtom<ActionAlert | undefined> = atom<ActionAlert | undefined>(undefined);
   modifiedFiles = new Set<string>();
   artifactIdList: string[] = [];
+  forceRefreshPreview: WritableAtom<boolean> = atom(false);
+  environment: WritableAtom<string> = atom('preview');
+  installDependenciesStatus: WritableAtom<string> = atom('');
+
+  previewDeploymentStatus: WritableAtom<string> = atom('');
+
+  routerList: WritableAtom<RouteInfo[]> = atom([]);
+
+  shortUrl: WritableAtom<string> = atom('');
+  
+  // Global editing state management
+  globalEditingState: WritableAtom<{ type: string; id?: string } | null> = atom(null);
+  
   #globalExecutionQueue = Promise.resolve();
   constructor() {}
 
@@ -158,7 +175,6 @@ export class WorkbenchStore {
 
     const originalContent = this.#filesStore.getFile(filePath)?.content;
     const unsavedChanges = originalContent !== undefined && originalContent !== newContent;
-
     this.#editorStore.updateFile(filePath, newContent);
 
     const currentDocument = this.currentDocument.get();
@@ -246,6 +262,31 @@ export class WorkbenchStore {
     this.isFileSaving.set(false);
   }
 
+
+  async saveFileByFileList(fileList: { path: string, content: string }[]) {
+
+    this.isFileSaving.set(true);
+
+    const result = await fetch('/api/save-file', {
+      method: 'POST',
+      body: JSON.stringify({
+        files: fileList,
+        appId: appId.get(),
+      }),
+    });
+
+    if (!result.ok) {
+      console.error('Error saving file:', result.statusText);
+    }
+
+    fileList.forEach(file => {
+      this.#editorStore.updateFile(`/home/project/${file.path}`, file.content);
+    });
+
+    // await Promise.all(fileList.map(file => this.saveFile(file.path)));
+    this.isFileSaving.set(false);
+  }
+
   resetCurrentDocument() {
     const currentDocument = this.currentDocument.get();
 
@@ -297,6 +338,122 @@ export class WorkbenchStore {
     this.#reloadedMessages = new Set(messages);
   }
 
+  // 新增：创建 Artifact 快照
+  createArtifactSnapshots(): ArtifactSnapshot[] {
+    const snapshots: ArtifactSnapshot[] = [];
+    const artifacts = this.artifacts.get();
+
+    for (const [messageId, artifact] of Object.entries(artifacts)) {
+      const actions = artifact.runner.actions.get();
+      const serializableActions: Record<string, any> = {};
+
+      // 序列化 actions，排除不可序列化的属性和过滤 /home/project 路径
+      for (const [actionId, action] of Object.entries(actions)) {
+        // 过滤掉 filePath 开头包含 /home/project 的 action
+        if (action.type === 'file' && action.filePath && action.filePath.startsWith('/home/project')) {
+          continue;
+        }
+        const { abort, abortSignal, ...serializableAction } = action;
+        serializableActions[actionId] = serializableAction;
+      }
+
+      // 创建快照，排除 runner
+      const { runner, ...serializableArtifact } = artifact;
+      snapshots.push({
+        messageId,
+        artifact: serializableArtifact,
+        actions: serializableActions,
+      });
+    }
+
+    return snapshots;
+  }
+
+  // 新增：从快照恢复 Artifacts
+  restoreFromSnapshots(snapshots: ArtifactSnapshot[]) {
+    // 清除现有的 artifacts
+    this.resetArtifacts();
+
+    for (const snapshot of snapshots) {
+      const { messageId, artifact, actions } = snapshot;
+
+      // 创建新的 ActionRunner
+      const runner = new ActionRunner(
+        webcontainer,
+        () => this.boltTerminal,
+        (alert) => {
+          if (this.#reloadedMessages.has(messageId)) {
+            return;
+          }
+          this.actionAlert.set(alert);
+        },
+      );
+
+      // 恢复 artifact
+      this.artifacts.setKey(messageId, {
+        ...artifact,
+        runner,
+      });
+
+      // 恢复 actions 和文件内容
+      for (const [actionId, actionData] of Object.entries(actions)) {
+        const abortController = new AbortController();
+        
+        // 根据 action 类型创建正确的 ActionState
+        const restoredAction = {
+          ...actionData,
+          abort: () => {
+            abortController.abort();
+            // 使用公共方法更新 action 状态
+            const currentActions = runner.actions.get();
+            const currentAction = currentActions[actionId];
+            if (currentAction) {
+              runner.actions.setKey(actionId, { ...currentAction, status: 'aborted' });
+            }
+          },
+          abortSignal: abortController.signal,
+        } as any; // 使用 any 来避免复杂的类型检查
+
+        runner.actions.setKey(actionId, restoredAction);
+
+        // 新增：如果是文件 action，恢复文件内容
+        if (actionData.type === 'file' && actionData.content && 'filePath' in actionData && actionData.filePath) {
+          
+          if (actionData.filePath.toString().startsWith('/home/project')) {
+            continue;
+          }
+          const fullPath = `/home/project/${actionData.filePath}`;
+          
+          // 恢复文件到 files store
+          this.#filesStore.files.setKey(fullPath, {
+            type: 'file',
+            content: actionData.content,
+            isBinary: false,
+          });
+
+          // 恢复文件到 editor store
+          this.#editorStore.updateFile(fullPath, actionData.content);
+          
+          // 标记为生成的文件
+          this.#filesStore.setGeneratedFile(fullPath);
+          // if (fullPath.includes('src/App.tsx')) {
+          //   this.setRouterList(actionData.content);
+          // }
+        }
+      }
+
+      // 添加到 artifactIdList
+      if (!this.artifactIdList.includes(messageId)) {
+        this.artifactIdList.push(messageId);
+      }
+    }
+
+    // 如果有 artifacts，显示工作台
+    if (snapshots.length > 0) {
+      this.showWorkbench.set(true);
+    }
+  }
+
   addArtifact({ messageId, title, id, type }: ArtifactCallbackData) {
     const artifact = this.#getArtifact(messageId);
 
@@ -336,6 +493,12 @@ export class WorkbenchStore {
 
     this.artifacts.setKey(messageId, { ...artifact, ...state });
   }
+
+  resetArtifacts() {
+    this.artifactIdList = [];
+    this.artifacts.set({});
+  }
+
   addAction(data: ActionCallbackData) {
     // this._addAction(data);
 
@@ -394,9 +557,9 @@ export class WorkbenchStore {
           this.setSelectedFile(fullPath);
         }
   
-        if (this.currentView.value !== 'code' && this.hasSendLLM.get()) {
-          this.currentView.set('code');
-        }
+        // if (this.currentView.value !== 'code' && this.hasSendLLM.get()) {
+        //   this.currentView.set('code');
+        // }
       });
 
       const doc = this.#editorStore.documents.get()[fullPath];
@@ -621,11 +784,10 @@ export class WorkbenchStore {
       workbenchStore.previews.set([{
         port: 3000,
         ready: true,
-        baseUrl: `https://${appId.get()}.fly.dev/`,
+        baseUrl: `https://${appId.get()?.replace('app-', '')}.fly.dev/`,
         isLoading: true,
         loadingProgress: 0
       }]);
-      
       this.setIsFirstDeploy(false);
     }
 
@@ -677,7 +839,7 @@ export class WorkbenchStore {
               isLoading: true,
               loadingProgress: 0
             }]);
-            
+            debugger;
             this.setIsFirstDeploy(false);
           }
 
@@ -761,6 +923,47 @@ export class WorkbenchStore {
         // this.#filesStore.setGeneratedFile(filePath);
       }
     }, 50); // 50ms 批处理间隔
+  }
+
+
+  getRouterList() {
+    return this.routerList.get();
+  }
+
+  setRouterList(content?: string) {
+    // 如果传入了 content，使用传入的内容解析路由
+    if (content) {
+      this.routerList.set(parseRouterPaths(content));
+      return this.routerList.get();
+    }
+    
+    // 否则尝试从 app.tsx 文件中解析路由
+    const file = this.files.get()['/home/project/src/App.tsx'];
+    if (file && file.type === 'file' && file.content) {
+      this.routerList.set(parseRouterPaths(file.content as string));
+      return this.routerList.get();
+    }
+    
+    // 如果都没有找到内容，返回空数组
+    this.routerList.set([]);
+    return this.routerList.get();
+  }
+
+  reset () {
+    // this.currentView.set('code');
+    this.showWorkbench.set(false);
+    this.previews.set([]);
+    this.tmpFiles.set([]);
+    this.templateData.set(null);
+    this.genType.set('');
+    this.isFileSaving.set(false);
+    this.deploymentStatus.set(null);
+    this.#filesStore.reset();
+    this.#editorStore.reset();
+    description.set('');
+    this.artifactIdList = [];
+    this.modifiedFiles.clear();
+    this.unsavedFiles.set(new Set<string>());
   }
 }
 

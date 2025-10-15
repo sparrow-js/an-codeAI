@@ -1,0 +1,22 @@
+# Robots.txt for needware
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://needware.com/sitemap.xml
+
+# Block crawling of API routes and admin areas
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /temp-repo/
+
+# Allow crawling of important pages
+Allow: /
+Allow: /login
+Allow: /pricing
+Allow: /privacy-policy
+Allow: /terms
+
+# Crawl delay (optional - helps prevent overloading)
+Crawl-delay: 1

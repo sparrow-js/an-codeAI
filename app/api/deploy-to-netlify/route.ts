@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 
         let siteId = chatRecord?.siteId;
 
-        if (!chatRecord) {
+        if (chatRecord?.hostingStatus === 'init') {
             const response = await createNetlifySite(siteName);
             siteId = response.id;
             if (!response?.id) {
@@ -65,14 +65,13 @@ export async function POST(request: Request) {
 
         // Create a record in the deploy table
             await withDb(db => 
-                db.insert(deploy).values({
-                    userId,
-                    chatId: appId,
-                    siteName,
+                db.update(deploy)
+                .set({
                     siteId: response.id,
-                    status: 'pending',
+                    hostingStatus: 'pending',
                     url: response.url,
                 })
+                .where(eq(deploy.chatId, appId))
             );
 
             chatRecord = {
@@ -80,15 +79,14 @@ export async function POST(request: Request) {
                 chatId: appId,
                 siteName,
                 siteId: response.id,
-                status: 'pending',
+                hostingStatus: 'pending',
                 url: response.url,
             } as any;
         } else {
             await withDb(db => 
-                db.update(deploy).set({ status: 'pending' }).where(eq(deploy.chatId, appId))
+                db.update(deploy).set({ hostingStatus: 'pending' }).where(eq(deploy.chatId, appId))
             );
         }
-
 
 
        if (!siteId) {
@@ -98,9 +96,7 @@ export async function POST(request: Request) {
         );
        }
 
-
         const deployResponse = await deployToNetlify(githubToken, netlifyToken, repo, siteId, appId);
-        
         // Add GitHub response status to the response
 
         return NextResponse.json({

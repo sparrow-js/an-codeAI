@@ -1,4 +1,5 @@
 import { gzip } from 'pako';
+import { installDependenciesAction } from '@/lib/deploy';
 
 // import { promisify } from 'util';
 // import { gzip, gunzip } from 'zlib';
@@ -112,7 +113,7 @@ export const createMachine = async (appId: string, machineName: string) => {
         body: JSON.stringify({
             name: machineName,
             config: {
-            image: 'registry.fly.io/ancodeai-app:latest',
+            image: 'registry.fly.io/needware-app:latest',
             env: {
                 FLY_PROCESS_GROUP: 'app',
                 PRIMARY_REGION: 'ord',
@@ -237,13 +238,13 @@ export const getMachine = async (appName: string) => {
     }
     
     // 找到第一个 state 不为 'destroyed' 的机器
-    const activeMachine = machines.find((machine: Machine) => !['destroying', 'destroyed'].includes(machine.state));
-    if (!activeMachine) {
+    const activeMachines = machines.filter((machine: Machine) => !['destroying', 'destroyed'].includes(machine.state));
+    if (!activeMachines.length) {
         console.error('未找到活跃的机器');
         return null;
     }
     
-    return activeMachine;
+    return activeMachines;
 };
 
 
@@ -424,10 +425,8 @@ export const updateFileList = async (
         for (let i = 0; i < batches.length; i++) {
             console.log(`Processing batch ${i+1}/${batches.length}`);
             try {
-                console.log(`Processing ********** time: ${new Date().toISOString()}`);
                 const result = await processBatch(batches[i]);
                 batchResults.push(result);
-                console.log('batchResults **********', result, batches[i].map((file: any) => file.path));
                 
                 // 在批次之间添加延迟，避免API限制
                 if (i < batches.length - 1) {
@@ -479,12 +478,16 @@ export const updateFileList = async (
 const ensureMachineReady = async (appName: string) => {
   const maxRetries = 12;
   let retryCount = 0;
+  appName = appName.replace('app-', '');
   
   while (retryCount < maxRetries) {
-    const machine = await getMachine(appName);
-    console.log('machine **********', machine);
-    
-    switch (machine.state) {
+    const machines = await getMachine(appName);
+    if (machines.length > 1) {
+      continue;
+    }
+
+    for (const machine of machines) {
+      switch (machine.state) {
       case 'started':
         console.log('Machine is started, returning it');
         return machine;
@@ -516,6 +519,7 @@ const ensureMachineReady = async (appName: string) => {
       default:
         console.log(`Unexpected machine state: ${machine.state}`);
         throw new Error(`Unexpected machine state: ${machine.state}`);
+    }
     }
   }
   
@@ -657,6 +661,7 @@ export const startMachine = async (appId: string, machineId: string) => {
 
 
 export const executeCommand = async (appId: string, machineId: string, command: string[]) => {
+  console.log('executeCommand **********', appId, machineId, command, `https://api.machines.dev/v1/apps/${appId}/machines/${machineId}/exec`);
   try {
     const response = await fetch(`https://api.machines.dev/v1/apps/${appId}/machines/${machineId}/exec`, {
       method: 'POST',
@@ -684,25 +689,26 @@ export const executeCommand = async (appId: string, machineId: string, command: 
 
 export const reinstallDependencies = async (appId: string, installDependencies: string, hasPackageJson: boolean, machine: any) => {
   try {
-    // Execute npm install with retry logic
+    // Execute pnpm install with retry logic
     let installResult: any;
     
     try {
       // First navigate to the app directory
       const cdResult = await executeCommand(appId, machine.id, ['sh', '-c', 'cd /app']);
       console.log('Changed to app directory:', cdResult);
-      let installCommand = 'npm install';
-      if (!hasPackageJson && installDependencies && installDependencies !== 'npm install') {
-        installCommand = installDependencies;
+      let installCommand = 'pnpm install';
+      if (!hasPackageJson && installDependencies && installDependencies !== 'pnpm install') {
+        installCommand = `${installDependencies} && git config user.email "needwareofficial@gmail.com" && git config user.name "needware" && git add package.json pnpm-lock.yaml && git commit -m "Update package.json dependencies" && git push --set-upstream origin main`;
       }
+      installCommand = `${installCommand}`;
 
       console.log('installCommand', ['sh', '-c', `cd /app && ${installCommand}`]);
-      // Run npm install in the app directory
+      // Run install command and commit package.json in one command
       installResult = await executeCommand(appId, machine.id, ['sh', '-c', `cd /app && ${installCommand}`]);
             
       // If we get here, the command succeeded or had non-fatal warnings
     } catch (error) {
-      console.error("npm install attempt failed:", error);
+      console.error("pnpm install attempt failed:", error);
     }
     
     console.log('Reinstall dependencies result:', installResult);
@@ -716,9 +722,9 @@ export const reinstallDependencies = async (appId: string, installDependencies: 
   }
 };
 
-export const gitPullOriginMain = async (appId: string, isReInstall: boolean) => {
+export const gitPullOriginMain = async (appId: string, isReInstall: boolean, installDependencies?: string) => {
   try {
-
+    appId = appId.replace('app-', '');
     const machine = await ensureMachineReady(appId);
 
     if (!machine) {
@@ -726,9 +732,20 @@ export const gitPullOriginMain = async (appId: string, isReInstall: boolean) => 
     }
 
     // Execute git pull origin main
-    const gitPullResult = await executeCommand(appId, machine.id, ['sh', '-c', `cd /app && git fetch origin && git reset --hard origin/main ${isReInstall ? '&& npm install' : ''}`]);
+    const gitPullResult = await executeCommand(appId, machine.id, ['sh', '-c', `cd /app && git fetch origin && git reset --hard origin/main`]);
     
     console.log('Git pull result:', gitPullResult);
+    if (isReInstall) {
+      const reinstallResult = await reinstallDependencies(appId, 'pnpm install', true, machine);
+      console.log('Reinstall dependencies result:', reinstallResult);
+    }
+
+    if (installDependencies) {
+      const installDependenciesResult = await installDependenciesAction(appId, installDependencies.replace('npm install ', ''));
+      // const reinstallResult = await reinstallDependencies(appId, installDependencies.replace('npm install', 'pnpm install'), false, machine);
+      console.log('Reinstall dependencies result:', installDependenciesResult);
+
+    }
 
     if (gitPullResult.exit_code !== 0) {
       throw new Error(`Git pull failed: ${gitPullResult.stderr}`);
@@ -746,4 +763,60 @@ export const gitPullOriginMain = async (appId: string, isReInstall: boolean) => 
     };
   }
 };
+
+export const deleteFlyApp = async (appName: string) => {
+  try {
+    const response = await fetch(`https://api.machines.dev/v1/apps/${appName}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${flyToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    // 明确判断状态码 202 表示删除成功
+    if (response.status === 202) {
+      console.log(`Fly app ${appName} deletion accepted (202)`);
+      return { success: true, message: 'App deletion accepted', status: 202 };
+    } else if (!response.ok) {
+      throw new Error(`Failed to delete app: ${response.status} - ${response.statusText}`);
+    } else {
+      // 其他成功状态码（如 200）也认为删除失败，因为期望的是 202
+      throw new Error(`Unexpected response status: ${response.status} - Expected 202 Accepted`);
+    }
+  } catch (error) {
+    console.error('Error deleting Fly app:', error);
+    throw error;
+  }
+};
+
+// 获取所有应用列表 - 使用REST API
+export const getAllApps = async (orgSlug: string = 'needware') => {
+  try {
+    const url = `https://api.machines.dev/v1/apps?org_slug=${orgSlug}`;
+    console.log(`Fetching apps from: ${url}`);
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${flyToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`API Error: ${response.status} - ${errorText}`);
+      throw new Error(`Failed to fetch apps: ${response.status} - ${errorText}`);
+    }
+
+    const apps = await response.json();
+    console.log(`Found ${apps.length} apps for org: ${orgSlug}`);
+    return apps || [];
+  } catch (error: any) {
+    console.error('Error fetching apps:', error);
+    throw new Error(`获取应用列表失败: ${error.message}`);
+  }
+};
+
 

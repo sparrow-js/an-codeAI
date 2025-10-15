@@ -1,0 +1,461 @@
+/* Bolt-specific Tailwind CSS utilities */
+@layer utilities {
+  /* Background utilities */
+  .bg-bolt-elements-background-depth-1 {
+    background-color: var(--bolt-elements-bg-depth-1);
+  }
+  
+  .bg-bolt-elements-background-depth-2 {
+    background-color: var(--bolt-elements-bg-depth-2);
+  }
+  
+  .bg-bolt-elements-background-depth-3 {
+    background-color: var(--bolt-elements-bg-depth-3);
+  }
+  
+  .bg-bolt-elements-background-depth-4 {
+    background-color: var(--bolt-elements-bg-depth-4);
+  }
+  
+  .bg-bolt-elements-actions-background {
+    background-color: var(--bolt-elements-actions-background);
+  }
+  
+  .bg-bolt-elements-actions-code-background {
+    background-color: var(--bolt-elements-actions-code-background);
+  }
+  
+  .bg-bolt-elements-artifacts-background {
+    background-color: var(--bolt-elements-artifacts-background);
+  }
+  
+  .bg-bolt-elements-artifacts-backgroundHover {
+    background-color: var(--bolt-elements-artifacts-backgroundHover);
+  }
+  
+  .bg-bolt-elements-messages-background {
+    background-color: var(--bolt-elements-messages-background);
+  }
+  
+  .bg-bolt-elements-messages-code-background {
+    background-color: var(--bolt-elements-messages-code-background);
+  }
+  
+  .bg-bolt-elements-messages-inlineCode-background {
+    background-color: var(--bolt-elements-messages-inlineCode-background);
+  }
+  
+  .bg-bolt-elements-terminals-background {
+    background-color: var(--bolt-elements-terminals-background);
+  }
+  
+  .bg-bolt-elements-terminals-buttonBackground {
+    background-color: var(--bolt-elements-terminals-buttonBackground);
+  }
+  
+  .bg-bolt-elements-code-background {
+    background-color: var(--bolt-elements-code-background);
+  }
+  
+  .bg-bolt-elements-prompt-background {
+    background-color: var(--bolt-elements-prompt-background);
+  }
+  
+  .bg-bolt-elements-cta-background {
+    background-color: var(--bolt-elements-cta-background);
+  }
+  
+  .bg-bolt-elements-loader-background {
+    background-color: var(--bolt-elements-loader-background);
+  }
+  
+  .bg-bolt-elements-sidebar-buttonBackgroundDefault {
+    background-color: var(--bolt-elements-sidebar-buttonBackgroundDefault);
+  }
+  
+  .bg-bolt-elements-sidebar-buttonBackgroundHover {
+    background-color: var(--bolt-elements-sidebar-buttonBackgroundHover);
+  }
+  
+  .bg-bolt-elements-preview-addressBar-background {
+    background-color: var(--bolt-elements-preview-addressBar-background);
+  }
+  
+  .bg-bolt-elements-preview-addressBar-backgroundHover {
+    background-color: var(--bolt-elements-preview-addressBar-backgroundHover);
+  }
+  
+  .bg-bolt-elements-preview-addressBar-backgroundActive {
+    background-color: var(--bolt-elements-preview-addressBar-backgroundActive);
+  }
+  
+  /* Button backgrounds */
+  .bg-bolt-elements-button-primary-background {
+    background-color: var(--bolt-elements-button-primary-background);
+  }
+  
+  .bg-bolt-elements-button-primary-backgroundHover {
+    background-color: var(--bolt-elements-button-primary-backgroundHover);
+  }
+  
+  .bg-bolt-elements-button-secondary-background {
+    background-color: var(--bolt-elements-button-secondary-background);
+  }
+  
+  .bg-bolt-elements-button-secondary-backgroundHover {
+    background-color: var(--bolt-elements-button-secondary-backgroundHover);
+  }
+  
+  .bg-bolt-elements-button-danger-background {
+    background-color: var(--bolt-elements-button-danger-background);
+  }
+  
+  .bg-bolt-elements-button-danger-backgroundHover {
+    background-color: var(--bolt-elements-button-danger-backgroundHover);
+  }
+  
+  /* Item backgrounds */
+  .bg-bolt-elements-item-backgroundDefault {
+    background-color: var(--bolt-elements-item-backgroundDefault);
+  }
+  
+  .bg-bolt-elements-item-backgroundActive {
+    background-color: var(--bolt-elements-item-backgroundActive);
+  }
+  
+  .bg-bolt-elements-item-backgroundAccent {
+    background-color: var(--bolt-elements-item-backgroundAccent);
+  }
+  
+  .bg-bolt-elements-item-backgroundDanger {
+    background-color: var(--bolt-elements-item-backgroundDanger);
+  }
+  
+  /* Text colors */
+  .text-bolt-elements-textPrimary {
+    color: var(--bolt-elements-textPrimary);
+  }
+  
+  .text-bolt-elements-textSecondary {
+    color: var(--bolt-elements-textSecondary);
+  }
+  
+  .text-bolt-elements-textTertiary {
+    color: var(--bolt-elements-textTertiary);
+  }
+  
+  .text-bolt-elements-code-text {
+    color: var(--bolt-elements-code-text);
+  }
+  
+  .text-bolt-elements-button-primary-text {
+    color: var(--bolt-elements-button-primary-text);
+  }
+  
+  .text-bolt-elements-button-secondary-text {
+    color: var(--bolt-elements-button-secondary-text);
+  }
+  
+  .text-bolt-elements-button-danger-text {
+    color: var(--bolt-elements-button-danger-text);
+  }
+  
+  .text-bolt-elements-item-contentDefault {
+    color: var(--bolt-elements-item-contentDefault);
+  }
+  
+  .text-bolt-elements-item-contentActive {
+    color: var(--bolt-elements-item-contentActive);
+  }
+  
+  .text-bolt-elements-item-contentAccent {
+    color: var(--bolt-elements-item-contentAccent);
+  }
+  
+  .text-bolt-elements-item-contentDanger {
+    color: var(--bolt-elements-item-contentDanger);
+  }
+  
+  .text-bolt-elements-messages-linkColor {
+    color: var(--bolt-elements-messages-linkColor);
+  }
+  
+  .text-bolt-elements-messages-inlineCode-text {
+    color: var(--bolt-elements-messages-inlineCode-text);
+  }
+  
+  .text-bolt-elements-artifacts-inlineCode-text {
+    color: var(--bolt-elements-artifacts-inlineCode-text);
+  }
+  
+  .text-bolt-elements-sidebar-buttonText {
+    color: var(--bolt-elements-sidebar-buttonText);
+  }
+  
+  .text-bolt-elements-preview-addressBar-text {
+    color: var(--bolt-elements-preview-addressBar-text);
+  }
+  
+  .text-bolt-elements-preview-addressBar-textActive {
+    color: var(--bolt-elements-preview-addressBar-textActive);
+  }
+  
+  .text-bolt-elements-cta-text {
+    color: var(--bolt-elements-cta-text);
+  }
+  
+  /* Icon colors */
+  .text-bolt-elements-icon-success {
+    color: var(--bolt-elements-icon-success);
+  }
+  
+  .text-bolt-elements-icon-error {
+    color: var(--bolt-elements-icon-error);
+  }
+  
+  .text-bolt-elements-icon-primary {
+    color: var(--bolt-elements-icon-primary);
+  }
+  
+  .text-bolt-elements-icon-secondary {
+    color: var(--bolt-elements-icon-secondary);
+  }
+  
+  .text-bolt-elements-icon-tertiary {
+    color: var(--bolt-elements-icon-tertiary);
+  }
+  
+  /* Border colors */
+  .border-bolt-elements-borderColor {
+    border-color: var(--bolt-elements-borderColor);
+  }
+  
+  .border-bolt-elements-borderColorActive {
+    border-color: var(--bolt-elements-borderColorActive);
+  }
+  
+  .border-bolt-elements-artifacts-borderColor {
+    border-color: var(--bolt-elements-artifacts-borderColor);
+  }
+  
+  .border-bolt-elements-dividerColor {
+    border-color: var(--bolt-elements-dividerColor);
+  }
+  
+  /* Hover variants */
+  .hover\:bg-bolt-elements-artifacts-backgroundHover:hover {
+    background-color: var(--bolt-elements-artifacts-backgroundHover);
+  }
+  
+  .hover\:bg-bolt-elements-button-primary-backgroundHover:hover {
+    background-color: var(--bolt-elements-button-primary-backgroundHover);
+  }
+  
+  .hover\:bg-bolt-elements-button-secondary-backgroundHover:hover {
+    background-color: var(--bolt-elements-button-secondary-backgroundHover);
+  }
+  
+  .hover\:bg-bolt-elements-button-danger-backgroundHover:hover {
+    background-color: var(--bolt-elements-button-danger-backgroundHover);
+  }
+  
+  .hover\:bg-bolt-elements-item-backgroundActive:hover {
+    background-color: var(--bolt-elements-item-backgroundActive);
+  }
+  
+  .hover\:bg-bolt-elements-sidebar-buttonBackgroundHover:hover {
+    background-color: var(--bolt-elements-sidebar-buttonBackgroundHover);
+  }
+  
+  .hover\:bg-bolt-elements-preview-addressBar-backgroundHover:hover {
+    background-color: var(--bolt-elements-preview-addressBar-backgroundHover);
+  }
+  
+  .hover\:text-bolt-elements-textPrimary:hover {
+    color: var(--bolt-elements-textPrimary);
+  }
+  
+  .hover\:text-bolt-elements-item-contentActive:hover {
+    color: var(--bolt-elements-item-contentActive);
+  }
+  
+  .hover\:text-bolt-elements-item-contentAccent:hover {
+    color: var(--bolt-elements-item-contentAccent);
+  }
+  
+  /* Group hover variants */
+  .group-hover\:text-bolt-elements-item-contentActive:hover {
+    color: var(--bolt-elements-item-contentActive);
+  }
+  
+  .group:hover .group-hover\:text-bolt-elements-item-contentActive {
+    color: var(--bolt-elements-item-contentActive);
+  }
+  
+  /* Progress bar */
+  .bg-bolt-elements-loader-progress {
+    background-color: var(--bolt-elements-loader-progress);
+  }
+  
+  /* Shadow utilities */
+  .shadow-bolt-elements-sidebar-dropdownShadow {
+    box-shadow: var(--bolt-elements-sidebar-dropdownShadow);
+  }
+  
+  /* Custom utilities from UnoCSS */
+  .max-w-chat {
+    max-width: var(--chat-max-width);
+  }
+  
+  .w-workbench {
+    width: var(--workbench-width);
+  }
+  
+  .w-workbench-inner {
+    width: var(--workbench-inner-width);
+  }
+  
+  .left-workbench {
+    left: var(--workbench-left);
+  }
+  
+  .h-header {
+    height: var(--header-height);
+  }
+  
+  .top-header {
+    top: var(--header-height);
+  }
+  
+  /* Transition utilities */
+  .transition-theme {
+    transition-property: background-color, border-color, color;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4,0,0.2,1);
+  }
+  
+  /* Keyboard shortcut display */
+  .kdb {
+    background-color: var(--bolt-elements-code-background);
+    color: var(--bolt-elements-code-text);
+    padding: 0.25rem 0.375rem;
+    border-radius: 0.375rem;
+  }
+  
+  /* Scrollbar hiding */
+  .scrollbar-hide {
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Animation utilities */
+  .animate-in {
+    animation-fill-mode: both;
+  }
+  
+  .animate-duration-100 {
+    animation-duration: 100ms;
+  }
+  
+  .fade-in-0 {
+    animation-name: fade-in;
+  }
+  
+  .zoom-in-98 {
+    animation-name: zoom-in-98;
+  }
+  
+  /* Custom layout utilities */
+  .ws-nowrap {
+    white-space: nowrap;
+  }
+  
+  .z-context-menu {
+    z-index: 1000;
+  }
+  
+  .z-logo {
+    z-index: 10;
+  }
+  
+  /* Custom spacing utilities */
+  .gap-1-5 {
+    gap: 0.375rem;
+  }
+  
+  .py-0-5 {
+    padding-top: 0.125rem;
+    padding-bottom: 0.125rem;
+  }
+  
+  .px-1-5 {
+    padding-left: 0.375rem;
+    padding-right: 0.375rem;
+  }
+  
+  .py-1-5 {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+  }
+  
+  .mr-1-5 {
+    margin-right: 0.375rem;
+  }
+  
+  .-mr-1-5 {
+    margin-right: -0.375rem;
+  }
+  
+  .border-b-px {
+    border-bottom-width: 1px;
+  }
+  
+  .scale-68 {
+    transform: scale(0.68);
+  }
+  
+  .scale-110 {
+    transform: scale(1.1);
+  }
+  
+  /* Text utilities */
+  .text-faded {
+    opacity: 0.6;
+  }
+  
+  .text-accent {
+    color: var(--accent-primary);
+  }
+  
+  /* Icon utilities - basic styles for phosphor icons */
+  .i-ph-sidebar-simple-duotone {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+  }
+  
+  .i-ph-check-bold {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+  }
+  
+  .i-ph-pencil-fill {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+  }
+  
+  .i-ph-circle-fill {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+  }
+} 

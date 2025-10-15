@@ -3,6 +3,7 @@ import type { FileMap } from '@/lib/stores/files';
 import { classNames } from '@/utils/classNames';
 import { createScopedLogger, renderLogger } from '@/utils/logger';
 import * as ContextMenu from '@radix-ui/react-context-menu';
+import { FileIcon, ChevronRight, ChevronDown, LoaderCircle } from 'lucide-react';
 
 const logger = createScopedLogger('FileTree');
 
@@ -44,9 +45,21 @@ export const FileTree = memo(
     }, [files, rootFolder, hideRoot, computedHiddenFiles]);
 
     const [collapsedFolders, setCollapsedFolders] = useState(() => {
-      return collapsed
-        ? new Set(fileList.filter((item) => item.kind === 'folder').map((item) => item.fullPath))
-        : new Set<string>();
+      const initialCollapsed = new Set<string>();
+      
+      // Add all folders if collapsed prop is true
+      if (collapsed) {
+        fileList.filter((item) => item.kind === 'folder').forEach((item) => {
+          initialCollapsed.add(item.fullPath);
+        });
+      }
+      
+      // Always initially collapse 'ui' directories
+      fileList.filter((item) => item.kind === 'folder' && item.name === 'ui').forEach((item) => {
+        initialCollapsed.add(item.fullPath);
+      });
+      
+      return initialCollapsed;
     });
 
     useEffect(() => {
@@ -59,8 +72,11 @@ export const FileTree = memo(
         const newCollapsed = new Set<string>();
 
         for (const folder of fileList) {
-          if (folder.kind === 'folder' && prevCollapsed.has(folder.fullPath)) {
-            newCollapsed.add(folder.fullPath);
+          if (folder.kind === 'folder') {
+            // Keep previously collapsed folders or always collapse 'ui' directories
+            if (prevCollapsed.has(folder.fullPath) || folder.name === 'ui') {
+              newCollapsed.add(folder.fullPath);
+            }
           }
         }
 
@@ -237,10 +253,7 @@ function Folder({ folder, collapsed, selected = false, onCopyPath, onCopyRelativ
           'bg-bolt-elements-item-backgroundAccent text-bolt-elements-item-contentAccent': selected,
         })}
         depth={folder.depth}
-        iconClasses={classNames({
-          'i-ph:caret-right scale-98': collapsed,
-          'i-ph:caret-down scale-98': !collapsed,
-        })}
+        icon={collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         onClick={onClick}
       >
         {folder.name}
@@ -275,9 +288,7 @@ function File({
           'bg-bolt-elements-item-backgroundAccent text-bolt-elements-item-contentAccent': selected,
         })}
         depth={depth}
-        iconClasses={classNames('i-ph:file-duotone scale-98', {
-          'group-hover:text-bolt-elements-item-contentActive': !selected,
-        })}
+        icon={<FileIcon className="w-3 h-3" />}
         onClick={onClick}
       >
         <div
@@ -286,7 +297,7 @@ function File({
           })}
         >
           <div className="flex-1 truncate pr-2">{name}</div>
-          {unsavedChanges && <span className="i-ph:circle-fill scale-68 shrink-0 text-orange-500" />}
+          {unsavedChanges && <div className="w-2 h-2 bg-orange-500 rounded-full shrink-0" />}
         </div>
       </NodeButton>
     </FileContextMenu>
@@ -295,13 +306,13 @@ function File({
 
 interface ButtonProps {
   depth: number;
-  iconClasses: string;
+  icon: ReactNode;
   children: ReactNode;
   className?: string;
   onClick?: () => void;
 }
 
-function NodeButton({ depth, iconClasses, onClick, className, children }: ButtonProps) {
+function NodeButton({ depth, icon, onClick, className, children }: ButtonProps) {
   return (
     <button
       className={classNames(
@@ -311,7 +322,9 @@ function NodeButton({ depth, iconClasses, onClick, className, children }: Button
       style={{ paddingLeft: `${6 + depth * NODE_PADDING_LEFT}px` }}
       onClick={() => onClick?.()}
     >
-      <div className={classNames('scale-120 shrink-0', iconClasses)}></div>
+      <div className="scale-120 shrink-0 flex items-center justify-center">
+        {icon}
+      </div>
       <div className="truncate w-full text-left">{children}</div>
     </button>
   );

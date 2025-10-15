@@ -1,4 +1,4 @@
-export type ActionType = 'file' | 'shell';
+export type ActionType = 'file' | 'shell' | 'supabase';
 
 export interface BaseAction {
   content: string;
@@ -17,7 +17,14 @@ export interface StartAction extends BaseAction {
   type: 'start';
 }
 
-export type BoltAction = FileAction | ShellAction | StartAction;
+export interface SupabaseAction extends BaseAction {
+  type: 'supabase';
+  operation: 'migration' | 'query';
+  filePath?: string;
+  projectId?: string;
+}
+
+export type BoltAction = FileAction | ShellAction | StartAction | SupabaseAction;
 
 export type BoltActionData = BoltAction | BaseAction;
 

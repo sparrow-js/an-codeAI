@@ -1,0 +1,1 @@
+ALTER TABLE "chats" ADD COLUMN "status" text DEFAULT 'init';

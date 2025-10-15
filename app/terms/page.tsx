@@ -1,4 +1,14 @@
 import './markdown.css';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Terms of Service',
+  description: 'Read needware\'s Terms of Service. Understand your rights and responsibilities when using our AI-powered software development platform.',
+  robots: {
+    index: true,
+    follow: false,
+  },
+};
 
 export default function TermsPage() {
   return (
@@ -9,8 +19,8 @@ export default function TermsPage() {
 
         <h2>Introduction</h2>
         <p>
-          These terms constitute a legal agreement between you and Genfly Labs
-          Incorporated ("Genfly," "we," or "us"). Your use of genfly.dev (the
+          These terms constitute a legal agreement between you and needware Labs
+          Incorporated ("needware," "we," or "us"). Your use of needware.dev (the
           "Site") and the services made available on the Site ("Services") is
           subject to these Terms of Service (these "Terms"). By using the Site and
           any of our Services, you:
@@ -18,7 +28,7 @@ export default function TermsPage() {
         <ul>
           <li>Acknowledge that you have read and understood these Terms</li>
           <li>Agree to be bound by these Terms</li>
-          <li>Agree to our Privacy Policy (genfly.dev/privacy-policy)</li>
+          <li>Agree to our Privacy Policy (needware.dev/privacy-policy)</li>
           <li>Commit to comply with all applicable laws and regulations</li>
         </ul>
 
@@ -32,14 +42,14 @@ export default function TermsPage() {
 
         <h2>Intellectual property rights</h2>
         <h3>Our rights</h3>
-        <p>Genfly Labs Incorporated owns and retains all rights, title, and interest in and to:</p>
+        <p>needware Labs Incorporated owns and retains all rights, title, and interest in and to:</p>
         
         <h4>Brand elements</h4>
         <ul>
-          <li>The "Genfly" name and brand</li>
-          <li>The "Genfly.dev" domain name and all related domains and variants</li>
+          <li>The "needware" name and brand</li>
+          <li>The "needware.dev" domain name and all related domains and variants</li>
           <li>The "GPT Engineer" trademark and brand and variants</li>
-          <li>All Genfly logos, designs, and visual elements</li>
+          <li>All needware logos, designs, and visual elements</li>
           <li>All marketing materials and website content</li>
         </ul>
 
@@ -54,7 +64,7 @@ export default function TermsPage() {
 
         <h4>Website content</h4>
         <ul>
-          <li>All text, graphics, and media on genfly.dev</li>
+          <li>All text, graphics, and media on needware.dev</li>
           <li>Blog posts, documentation, and guides</li>
           <li>Marketing materials and promotional content</li>
           <li>Interface elements and design components</li>
@@ -67,7 +77,7 @@ export default function TermsPage() {
 
         <h3>Clear distinction of rights</h3>
         <p>
-          To be explicitly clear, while Genfly owns all rights to the platform
+          To be explicitly clear, while needware owns all rights to the platform
           and brand elements described above, this ownership is entirely separate
           from and does not extend to:
         </p>
@@ -78,13 +88,13 @@ export default function TermsPage() {
           <li>Custom configurations and implementations</li>
           <li>Modified or derivative works created from generated code</li>
           <li>
-            Your own code commits and changes made outside of Genfly but
+            Your own code commits and changes made outside of needware but
             committed or visible in any way
           </li>
         </ul>
 
         <h3>User rights</h3>
-        <p>Genfly makes no claim to ownership of:</p>
+        <p>needware makes no claim to ownership of:</p>
         <ul>
           <li>All code generated using our Services</li>
           <li>Applications and solutions built using our platform</li>
@@ -105,19 +115,19 @@ export default function TermsPage() {
 
         <p>To be explicitly clear:</p>
         <ul>
-          <li>Genfly places no restrictions on your use of generated code</li>
+          <li>needware places no restrictions on your use of generated code</li>
           <li>
             You are free to use, modify, and distribute generated code without
             attribution requirements
           </li>
           <li>
-            No licenses or royalties are owed by Genfly users to Genfly for
+            No licenses or royalties are owed by needware users to needware for
             using generated code
           </li>
           <li>Your implementations and modifications are yours to control</li>
           <li>
             You can combine generated code with other sources without needing
-            approval from Genfly
+            approval from needware
           </li>
         </ul>
 
@@ -215,7 +225,7 @@ export default function TermsPage() {
 
         <p>
           For complete details about data collection, processing, and your privacy
-          rights, please refer to our Privacy policy at genfly.dev/privacy-policy.
+          rights, please refer to our Privacy policy at needware.dev/privacy-policy.
         </p>
 
         <h2>User accounts and content</h2>
@@ -247,8 +257,8 @@ export default function TermsPage() {
         <h2>Services and pricing</h2>
         <h3>Plans and limits</h3>
         <ul>
-          <li>Free plan: 5 messages per day, 30 messages per month</li>
-          <li>Paid plans: As described at https://genfly.dev/pricing</li>
+          <li>Free plan: 5 free trials</li>
+          <li>Paid plans: As described at https://needware.dev/pricing</li>
           <li>Message limits reset at the start of each month</li>
           <li>We reserve the right to modify plans and pricing at any time</li>
         </ul>
@@ -256,7 +266,7 @@ export default function TermsPage() {
         <h3>Support services</h3>
         <ul>
           <li>Available only to Scale and Enterprise plan subscribers</li>
-          <li>Contact via genflyai@gmail.com</li>
+          <li>Contact via needwareofficial@gmail.com</li>
           <li>Limited to platform-related issues</li>
           <li>Does not include application debugging services</li>
           <li>Subject to our capacity and availability</li>
@@ -278,7 +288,7 @@ export default function TermsPage() {
           </li>
           <li>You will receive login credentials via email</li>
           <li>
-            If you experience any issues with access, contact genflyai@gmail.com
+            If you experience any issues with access, contact needwareofficial@gmail.com
           </li>
         </ul>
 
@@ -340,7 +350,7 @@ export default function TermsPage() {
         <p>
           We respect intellectual property rights and comply with the Digital
           Millennium Copyright Act (DMCA). For any DMCA-related issues, contact us
-          at genflyai@gmail.com with:
+          at needwareofficial@gmail.com with:
         </p>
         <ul>
           <li>Identification of the copyrighted work claimed to be infringed</li>
@@ -363,10 +373,10 @@ export default function TermsPage() {
           <li>Attempt to overwhelm or crash our systems</li>
         </ul>
         <p>
-          Genfly may never be used to develop anything subjected to sanctions or
+          needware may never be used to develop anything subjected to sanctions or
           other export restrictions, or are in any other way not compliant with
-          the laws of the jurisdiction that Genfly or the user operates in.
-          Genfly may also never be used by in regions, or by anyone subject to
+          the laws of the jurisdiction that needware or the user operates in.
+          needware may also never be used by in regions, or by anyone subject to
           sanctions or export restrictions.
         </p>
 
@@ -389,15 +399,15 @@ export default function TermsPage() {
 
         <h2>Disclaimer of warranties</h2>
         <p className="uppercase">
-          YOUR USE OF THE SITE, SERVICES AND ALL GENFLY CONTENT IS ENTIRELY AT
+          YOUR USE OF THE SITE, SERVICES AND ALL needware CONTENT IS ENTIRELY AT
           YOUR OWN RISK. THE PLATFORM, SERVICES, AND ALL CONTENT ARE PROVIDED "AS
           IS" AND "AS AVAILABLE" WITHOUT ANY GUARANTEES. TO THE FULLEST EXTENT
-          PERMITTED BY LAW, GENFLY AND OUR SUPPLIERS AND LICENSORS EXPLICITLY
+          PERMITTED BY LAW, needware AND OUR SUPPLIERS AND LICENSORS EXPLICITLY
           DISCLAIM ALL WARRANTIES, WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT
           LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
           PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. WE MAKE NO GUARANTEES
           REGARDING THE ACCURACY, RELIABILITY, OR USEFULNESS OF THE PLATFORM,
-          SERVICES, OR ANY GENFLY CONTENT, AND YOUR USE OF THESE IS ENTIRELY AT
+          SERVICES, OR ANY needware CONTENT, AND YOUR USE OF THESE IS ENTIRELY AT
           YOUR OWN RISK. ANY MATERIALS OR CODE YOU DOWNLOAD OR ACCESS THROUGH OUR
           PLATFORM OR SERVICES IS OBTAINED AT YOUR OWN DISCRETION AND RISK, AND
           YOU WILL BE SOLELY RESPONSIBLE FOR ANY SYSTEM DAMAGE OR DATA LOSS THAT
@@ -410,20 +420,20 @@ export default function TermsPage() {
 
         <h2>Limitation of liability</h2>
         <p className="uppercase">
-          GENFLY, ALONG WITH ITS AFFILIATES, AGENTS, OFFICERS, EMPLOYEES,
+          needware, ALONG WITH ITS AFFILIATES, AGENTS, OFFICERS, EMPLOYEES,
           SUPPLIERS AND LICENSORS, SHALL NOT BE LIABLE FOR ANY DAMAGES, WHETHER
           DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR EXEMPLARY,
           INCLUDING BUT NOT LIMITED TO DAMAGES FOR LOST PROFITS, GOODWILL, DATA,
           USE, OR OTHER INTANGIBLE LOSSES (EVEN IF ADVISED OF SUCH POSSIBILITY),
           ARISING FROM YOUR USE OF OR INABILITY TO USE OUR PLATFORM, SERVICES, OR
-          GENFLY CONTENT. UNDER NO CIRCUMSTANCES WILL GENFLY BE HELD
+          needware CONTENT. UNDER NO CIRCUMSTANCES WILL needware BE HELD
           RESPONSIBLE FOR ANY DAMAGES OR LOSSES RESULTING FROM UNAUTHORIZED
           ACCESS, SECURITY BREACHES, OR INTERFERENCE WITH OUR PLATFORM, SERVICES,
           OR YOUR ACCOUNT.
         </p>
 
         <p className="uppercase">
-          TO THE MAXIMUM EXTENT ALLOWED BY LAW, GENFLY ACCEPTS NO LIABILITY OR
+          TO THE MAXIMUM EXTENT ALLOWED BY LAW, needware ACCEPTS NO LIABILITY OR
           RESPONSIBILITY FOR:
         </p>
 
@@ -506,7 +516,7 @@ export default function TermsPage() {
         </ul>
 
         <p className="uppercase">
-          THIS LIST IS NOT EXHAUSTIVE, AND GENFLY'S LIMITATION OF LIABILITY
+          THIS LIST IS NOT EXHAUSTIVE, AND needware'S LIMITATION OF LIABILITY
           EXTENDS TO ALL POSSIBLE ISSUES, WHETHER LISTED HERE OR NOT, ARISING FROM
           THE USE OF OUR AI-POWERED PLATFORM AND SERVICES.
         </p>
@@ -514,7 +524,7 @@ export default function TermsPage() {
         <p className="uppercase">
           IN NO EVENT SHALL OUR TOTAL LIABILITY AND THAT OF OUR SUPPLIERS AND
           LICENSORS, ARISING FROM OR RELATING TO YOUR USE OF THE PLATFORM,
-          SERVICES, AND GENFLY CONTENT (INCLUDING WARRANTY CLAIMS), REGARDLESS OF
+          SERVICES, AND needware CONTENT (INCLUDING WARRANTY CLAIMS), REGARDLESS OF
           THE TYPE OF CLAIM OR LEGAL THEORY, EXCEED THE AMOUNT YOU HAVE PAID TO
           US FOR THE SERVICES IN THE TWELVE MONTHS PRECEDING THE CLAIM. IF YOU
           RESIDE IN CALIFORNIA, YOU WAIVE CALIFORNIA CIVIL CODE §1542, WHICH
@@ -527,7 +537,7 @@ export default function TermsPage() {
 
         <h2>Indemnification</h2>
         <p>
-          You agree to defend, indemnify, and hold harmless Genfly, including
+          You agree to defend, indemnify, and hold harmless needware, including
           our officers, directors, employees, agents, licensors, affiliates, and
           representatives, from and against any claims, liabilities, damages,
           judgments, awards, losses, costs, or expenses (including reasonable
@@ -565,7 +575,7 @@ export default function TermsPage() {
 
         <h2>Contact information</h2>
         <p>For any questions regarding these Terms, contact us at:</p>
-        <p>Email: genflyai@gmail.com</p>
+        <p>Email: needwareofficial@gmail.com</p>
       </section>
     </main>
   );

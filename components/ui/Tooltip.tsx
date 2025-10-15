@@ -36,8 +36,8 @@ const WithTooltip = forwardRef(
             side={position}
             className={`
               z-[2000]
-              px-2.5
-              py-1.5
+              px-2-5
+              py-1-5
               max-h-[300px]
               select-none
               rounded-md

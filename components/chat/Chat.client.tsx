@@ -5,7 +5,7 @@
  */
 import { useStore } from '@nanostores/react';
 import type { Message } from 'ai';
-import { useChat } from 'ai/react';
+// import { useChat } from 'ai/react';
 import { useAnimate } from 'framer-motion';
 import { memo, useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { cssTransition, toast, ToastContainer } from 'react-toastify';
@@ -17,6 +17,7 @@ import { DEFAULT_MODEL, DEFAULT_PROVIDER, PROMPT_COOKIE_KEY, PROVIDER_LIST } fro
 import { cubicEasingFn } from '@/utils/easings';
 import { createScopedLogger, renderLogger } from '@/utils/logger';
 import { BaseChat } from './BaseChat';
+import { ChatSkeleton } from './ChatSkeleton';
 import Cookies from 'js-cookie';
 import { debounce } from '@/utils/debounce';
 import { useSettings } from '@/lib/hooks/useSettings';
@@ -29,9 +30,18 @@ import { appId, chatId } from '@/lib/persistence/useChatHistory'
 import type { ProgressAnnotation } from '@/types/context';
 import { STARTER_TEMPLATES } from '@/utils/constants';
 
+import { useChat } from '@/lib/use-chat';
+import type { ArtifactSnapshot } from '@/lib/persistence/types';
+import { workspaceStore } from '@/lib/stores/workspace';
+import { useSession } from "next-auth/react"
+
+
 
 import { v4 as uuidv4 } from 'uuid';
+import { parseRouterPaths } from '@/utils/parseRouter';
 
+
+  
 
 const toastAnimation = cssTransition({
   enter: 'animated fadeInRight',
@@ -42,22 +52,29 @@ const logger = createScopedLogger('Chat');
 
 export function Chat() {
   renderLogger.trace('Chat');
-  const { ready, initialMessages, storeMessageHistory, importChat, exportChat } = useChatHistory();
+  const { ready, initialMessages, storeMessageHistory, importChat, exportChat, chatStatus, setChatStatus } = useChatHistory();
   const title = useStore(description);
+  const { restoreFromSnapshots } = useMessageParser();
+
   useEffect(() => {
     workbenchStore.setReloadedMessages(initialMessages.map((m) => m.id));
   }, [initialMessages]);
 
   return (
     <>
-      {ready && (
+      {ready ? (
         <ChatImpl
           description={title}
           initialMessages={initialMessages}
           exportChat={exportChat}
           storeMessageHistory={storeMessageHistory}
           importChat={importChat}
+          chatStatus={chatStatus}
+          setChatStatus={setChatStatus}
+          restoreFromSnapshots={restoreFromSnapshots}
         />
+      ) : (
+        <ChatSkeleton />
       )}
       <ToastContainer
         closeButton={({ closeToast }) => {
@@ -113,10 +130,13 @@ interface ChatProps {
   importChat: (description: string, messages: Message[]) => Promise<void>;
   exportChat: () => void;
   description?: string;
+  chatStatus: string | undefined;
+  setChatStatus: (status: string) => void;
+  restoreFromSnapshots: (snapshots: ArtifactSnapshot[]) => void;
 }
 
 export const ChatImpl = memo(
-  ({ description, initialMessages, storeMessageHistory, importChat, exportChat }: ChatProps) => {
+  ({ description, initialMessages, storeMessageHistory, importChat, exportChat, chatStatus, setChatStatus, restoreFromSnapshots }: ChatProps) => {
     useShortcuts();
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -128,8 +148,8 @@ export const ChatImpl = memo(
     const files = useStore(workbenchStore.files);
     const actionAlert = useStore(workbenchStore.alert);
     const { activeProviders, promptId, autoSelectTemplate, contextOptimizationEnabled } = useSettings();
-    const [progressAnnotations, setProgressAnnotations] = useState<ProgressAnnotation[]>([]);
     const [streamStatus, setStreamStatus] = useState<string | null>('start');
+    const genType = useStore(workbenchStore.genType);
 
     const [model, setModel] = useState(() => {
       const savedModel = Cookies.get('selectedModel');
@@ -143,8 +163,13 @@ export const ChatImpl = memo(
     const { showChat } = useStore(chatStore);
 
     const [animationScope, animate] = useAnimate();
+    const { data: session } = useSession();
+
 
     const [apiKeys, setApiKeys] = useState<Record<string, string>>({});
+  
+    // 使用 ref 来跟踪最新的 messages，确保总是能获取到最新数据
+    const messagesRef = useRef<any[]>([]);
   
     const {
       messages,
@@ -160,13 +185,14 @@ export const ChatImpl = memo(
       data: chatData,
       setData,
     } = useChat({
-      api: '/api/chat',
+      api: '/api/supervisor',
       body: {
         apiKeys,
         files,
         promptId,
         contextOptimization: contextOptimizationEnabled,
-        appId: appId.get() || ''
+        appId: appId.get() || '',
+        workspaceId: workspaceStore.getCurrentWorkspaceId() || ''
       },
       sendExtraMessageFields: true,
       onError: (e) => {
@@ -220,26 +246,44 @@ export const ChatImpl = memo(
 
             console.log('uploadedFiles length', validFiles.length);
 
-            // setMessages(messages.map(msg => 
-            //   msg.id === messages[messages.length - 1].id 
-            //     ? { ...msg, commitSha: 'xuv112342341241341' }
-            //     : msg
-            // ));
-
-            // workbenchStore.uploadFilesTomachine(validFiles, workbenchStore.installDependencies.get());
             workbenchStore.saveAllFiles();
 
-            if (workbenchStore.genType.get() === 'fix-error') {
-              workbenchStore.genType.set('');
-              workbenchStore.reloadPreview();
-            }
+           
           }
+          const currentGenType = workbenchStore.genType.get();
+
+          if (currentGenType === 'fix-error') {
+            workbenchStore.genType.set('');
+            workbenchStore.reloadPreview();
+          }
+
         }, 1000);
       },
       initialMessages,
       initialInput: Cookies.get(PROMPT_COOKIE_KEY) || '',
     });
 
+    // 同步 messages 到 ref，确保 messagesRef.current 总是最新的
+    useEffect(() => {
+      messagesRef.current = messages;
+    }, [messages]);
+
+    // 创建一个包装的 setMessages 函数，立即更新 messagesRef
+    const setMessagesWithRef = useCallback((updater: any) => {
+      setMessages((prev: any) => {
+        const newMessages = typeof updater === 'function' ? updater(prev) : updater;
+        // 立即同步更新 messagesRef
+        messagesRef.current = newMessages;
+        return newMessages;
+      });
+    }, [setMessages]);
+
+    useEffect(() => {
+      if (chatStatus === 'init') {
+        setChatStatus('running');
+        reload();
+      }
+    }, [chatStatus]);
     
     const TEXTAREA_MAX_HEIGHT = chatStarted ? 400 : 200;
 
@@ -247,6 +291,7 @@ export const ChatImpl = memo(
       if (chatStarted) {
         return;
       }
+
 
       await Promise.all([
         animate('#examples', { opacity: 0, display: 'none' }, { duration: 0.1 }),
@@ -268,46 +313,50 @@ export const ChatImpl = memo(
           content: [
             {
               type: 'text',
-              text: `[Model: ${model}]\n\n[Provider: ${provider.name}]\n\n${prompt}`,
+              text: `${prompt}`,
             },
           ] as any, // Type assertion to bypass compiler check
         });
       }
     }, [model, provider, searchParams, append, runAnimation]);
 
-    useEffect(() => {
-      if (chatData) {
-        const progressList = chatData.filter(
-          (x) => typeof x === 'object' && (x as any).type === 'progress',
-        ) as ProgressAnnotation[];
-        setProgressAnnotations(progressList);
-      }
-    }, [chatData]);
 
 
-
-    const saveChat = async (messageId?: string) => {
+    const saveChat = async (messageId?: string, storeMessage: boolean = true) => {
       try {
+        // 使用 messagesRef.current 获取最新的 messages（总是最新的，即使 SWR 状态还没更新）
+        const latestMessages = messagesRef.current;
+
+        console.log('=== saveChat Debug Info ===');
+        console.log('messageId:', messageId);
+        console.log('latestMessages length:', latestMessages.length);
+        console.log('latestMessages:', latestMessages);
+        console.log('SWR messages length:', messages.length);
+        console.log('SWR messages:', messages);
+        console.log('========================');
 
         // Find the index of the current message
-        const currentMessageIndex = messages.findIndex(m => m.id === messageId);
+        const currentMessageIndex = latestMessages.findIndex(m => m.id === messageId);
                                   
-        let truncatedMessages: Message[] = messages;
+        let truncatedMessages = latestMessages;
         // If found, keep only messages up to and including the current message
         if (currentMessageIndex !== -1 && currentMessageIndex >= 2) {
-            truncatedMessages = messages.slice(0, currentMessageIndex - 1);
+            truncatedMessages = latestMessages.slice(0, currentMessageIndex - 1);
         }
+
 
         await fetch('/api/chats', {
           method: 'POST',
           body: JSON.stringify({
             id: chatId.get(),
-            messages: truncatedMessages,
+            ...(storeMessage ? { messages: truncatedMessages } : {}),
             urlId: appId.get(),
             description: description,
+            artifactSnapshots: workbenchStore.createArtifactSnapshots(),
             metadata: {
               streamStatus,
-            },  
+            },
+            status: 'completed',
           }),
         });
       } catch (error) {
@@ -315,15 +364,50 @@ export const ChatImpl = memo(
       }
     };
     
-
+    const triggerScreenshot = useCallback(async () => {
+      try {
+        await fetch('/api/screenshot', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            projectId: chatId.get(),
+            planId: 'screenshot',
+            orgId: workspaceStore.getCurrentWorkspaceId(),
+            userId: session?.user?.id,
+            previewUrl: `https://${chatId.get()}.fly.dev/`,
+          }),
+        });
+      } catch (e) {
+        console.error('Failed to trigger screenshot service:', e);
+      }
+    }, []);
 
     useEffect(() => {
       if (streamStatus === 'completed') {
-        saveChat();
+        saveChat(undefined, false);
         workbenchStore.switchToPreview('complete');
+        triggerScreenshot();
       }
     }, [streamStatus]);
 
+    // Add beforeunload event listener when streaming
+    useEffect(() => {
+      const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+        if (isLoading || fakeLoading) {
+          e.preventDefault();
+          e.returnValue = '';
+          return '';
+        }
+      };
+
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }, [isLoading, fakeLoading]);
 
     const { enhancingPrompt, promptEnhanced, enhancePrompt, resetEnhancer } = usePromptEnhancer();
     const { parsedMessages, parseMessages } = useMessageParser();
@@ -334,7 +418,7 @@ export const ChatImpl = memo(
 
     const processMessages = useCallback(() => {
       processSampledMessages({
-        messages,
+        messages: messages as Message[],
         initialMessages,
         isLoading,
         parseMessages,
@@ -382,6 +466,8 @@ export const ChatImpl = memo(
 
     const sendMessage = useCallback(async (_event: React.UIEvent, messageInput?: string) => {
       const messageContent = messageInput || input;
+      console.log('messageContent ****************', messageContent);
+
       if (!messageContent?.trim()) {
         return;
       }
@@ -395,79 +481,16 @@ export const ChatImpl = memo(
       runAnimation();
       workbenchStore.startStreaming.set(false);
       workbenchStore.hasSendLLM.set(true);
-      setProgressAnnotations([]);
       setStreamStatus('start');
 
       if (!chatStarted) {
         setFakeLoading(true);
+        const newId = uuidv4();
+        const appName = `app-${newId}`;
+        appId.set(appName);
+        workbenchStore.resetArtifacts();
+        workbenchStore.reset();
 
-        if (autoSelectTemplate) {
-          const { template, title } = await selectStarterTemplate({
-            message: messageContent,
-            model,
-            provider,
-          });
-
-          const templateData = STARTER_TEMPLATES.find(t => t.name === template);
-
-          workbenchStore.templateData.set(templateData || null);
-
-          if (template !== 'blank') {
-            const temResp = await getTemplates(template, title).catch((e) => {
-              if (e.message.includes('rate limit')) {
-                toast.warning('Rate limit exceeded. Skipping starter template\n Continuing with blank template');
-              } else {
-                toast.warning('Failed to import starter template\n Continuing with blank template');
-              }
-
-              return null;
-            });
-
-            if (temResp) {
-              const { assistantMessage, userMessage } = temResp;
-              setMessages([
-                {
-                  id: `${new Date().getTime()}`,
-                  role: 'user',
-                  // content: messageContent,
-                  content: [
-                    {
-                      type: 'text',
-                      text: messageContent,
-                    },
-                    ...imageDataList.map((imageData) => ({
-                      type: 'image',
-                      image: imageData,
-                    })),
-                  ] as any,
-
-                },
-                {
-                  id: `${new Date().getTime()}`,
-                  role: 'assistant',
-                  content: assistantMessage,
-                },
-                {
-                  id: `${new Date().getTime()}`,
-                  role: 'user',
-                  content: `[Model: ${model}]\n\n[Provider: ${provider.name}]\n\n${userMessage}`,
-                  annotations: ['hidden'],
-                },
-              ]);
-
-              const newId = uuidv4();
-              const appName = `app-${newId}`;
-              appId.set(appName);
-              Promise.resolve().then(() => {
-                reload();
-                setFakeLoading(false);
-                setImageDataList([]);
-              });
-
-              return;
-            }
-          }
-        }
 
         // If autoSelectTemplate is disabled or template selection failed, proceed with normal message
         setMessages([
@@ -477,18 +500,22 @@ export const ChatImpl = memo(
             content: [
               {
                 type: 'text',
-                text: `[Model: ${model}]\n\n[Provider: ${provider.name}]\n\n${messageContent}`,
+                text: `${messageContent}`,
               },
               ...imageDataList.map((imageData) => ({
-                type: 'image',
-                image: imageData,
+                type: 'image_url',
+                image_url: {
+                  url: imageData
+                }
               })),
             ] as any,
           },
         ]);
-        reload();
-        setFakeLoading(false);
-        setImageDataList([]);
+        Promise.resolve().then(() => {
+          reload();
+          setFakeLoading(false);
+          setImageDataList([]);
+        });
 
         return;
       }
@@ -507,7 +534,7 @@ export const ChatImpl = memo(
           content: [
             {
               type: 'text',
-              text: `[Model: ${model}]\n\n[Provider: ${provider.name}]\n\n${messageContent}`,
+              text: `${messageContent}`,
             },
             ...imageDataList.map((imageData) => ({
               type: 'image',
@@ -523,11 +550,13 @@ export const ChatImpl = memo(
           content: [
             {
               type: 'text',
-              text: `[Model: ${model}]\n\n[Provider: ${provider.name}]\n\n${messageContent}`,
+              text: `${messageContent}`,
             },
             ...imageDataList.map((imageData) => ({
-              type: 'image',
-              image: imageData,
+              type: 'image_url',
+              image_url: {
+                url: imageData
+              }
             })),
           ] as any,
         });
@@ -630,6 +659,7 @@ export const ChatImpl = memo(
         enhancingPrompt={enhancingPrompt}
         promptEnhanced={promptEnhanced}
         sendMessage={sendMessage}
+        setMessages={setMessagesWithRef}
         model={model}
         setModel={handleModelChange}
         provider={provider}
@@ -645,7 +675,7 @@ export const ChatImpl = memo(
         description={description}
         importChat={importChat}
         exportChat={exportChat}
-        messages={processedMessages}
+        messages={processedMessages as Message[]}
         enhancePrompt={enhancePromptCallback}
         uploadedFiles={uploadedFiles}
         setUploadedFiles={setUploadedFiles}

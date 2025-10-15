@@ -87,4 +87,9 @@ export class EditorStore {
       });
     }
   }
+
+  reset() {
+    this.documents.set({});
+    this.selectedFile.set(undefined);
+  }
 }

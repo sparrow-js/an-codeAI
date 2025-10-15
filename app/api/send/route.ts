@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     });
 
     await withDb(db => 
-      db.update(deploy).set({ status }).where(eq(deploy.chatId, clientId))
+      db.update(deploy).set({ hostingStatus: status }).where(eq(deploy.chatId, clientId))
     );
 
     return new Response(JSON.stringify({ success: true }), {

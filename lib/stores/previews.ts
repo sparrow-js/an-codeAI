@@ -300,10 +300,16 @@ export class PreviewsStore {
     // this.#refreshTimeouts.set(previewId, timeout);
   }
   reloadPreview() {
-    const preview: HTMLIFrameElement | null = document.getElementById('preview') as HTMLIFrameElement;
-    if (preview) {
-      preview.src = preview.src;
-    }
+    // const preview: HTMLIFrameElement | null = document.getElementById('preview') as HTMLIFrameElement;
+    const reloadButton: HTMLButtonElement | null = document.getElementById('reload-preview') as HTMLButtonElement;
+    // if (preview) {
+    //   preview.src = preview.src;
+    // }
+    setTimeout(() => {
+      if (reloadButton) {
+        reloadButton.click();
+      }
+    }, 1000);
   }
 
   setLoadingState(loading: boolean, progress: number = 0) {
@@ -321,6 +327,10 @@ export class PreviewsStore {
       previews[0].loadingProgress = progress;
       this.previews.set([...previews]);
     }
+  }
+
+  clearPreviews() {
+    this.previews.set([]);
   }
 }
 

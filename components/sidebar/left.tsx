@@ -8,7 +8,7 @@ export const SidebarLeft = () => {
         {session?.user?.image && (
             <img src={session.user.image} alt="user" className="w-6 h-6 rounded-full mb-2" />
         )}
-        <div className="i-ph:sidebar-simple-duotone text-xl" />
+        <div className="i-ph-sidebar-simple-duotone text-xl" />
       </div>
     )
 }

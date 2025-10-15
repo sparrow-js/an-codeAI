@@ -17,3 +17,18 @@ export function extractAllFilePathsAndContents(text: string) {
     
     return matches;
   }
+
+
+  export function extractNpmInstall(text: string) {
+    // 匹配 boltAction type="shell" 中的 npm install 命令
+    const regex = /<boltAction type="shell">npm install\s+([^<]+)<\/boltAction>/;
+    
+    const match = text.match(regex);
+    
+    if (match && match[1]) {
+      // 返回完整的 npm install 命令字符串
+      return `npm install ${match[1].trim()}`.replace(' --yes', '');
+    }
+    
+    return "";
+  }

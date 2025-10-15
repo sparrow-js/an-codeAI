@@ -7,70 +7,73 @@ import { workbenchStore } from '@/lib/stores/workbench';
 import { logStore } from '@/lib/stores/logs';
 import { nanoid } from 'nanoid';
 import { v4 as uuidv4 } from 'uuid';
-import type { IChatMetadata } from './types';
-import { debounce } from 'lodash-es';
+import type { IChatMetadata, ArtifactSnapshot } from './types';
 
 export interface ChatHistoryItem {
   id: string;
+  shortId?: string;
   urlId?: string;
   description?: string;
   messages: Message[];
   timestamp: string;
   metadata?: IChatMetadata;
+  status?: string;
+  artifactSnapshots?: ArtifactSnapshot[]; // 新增：Artifact 快照数组
 }
 
-
+// 导出全局状态
 export const chatId = atom<string | undefined>(undefined);
 export const appId = atom<string | undefined>(undefined);
 export const description = atom<string | undefined>(undefined);
 export const chatMetadata = atom<IChatMetadata | undefined>(undefined);
 
-
-const debouncedSaveChat = debounce(async (params: {
-  id: string | undefined;
-  messages: Message[];
-  urlId: string | undefined;
-  description: string | undefined;
-  metadata: IChatMetadata | undefined;
-}) => {
-  try {
-    await fetch('/api/chats', {
-      method: 'POST',
-      body: JSON.stringify(params),
-    });
-  } catch (error) {
-    console.error('Failed to save chat:', error);
-    // 不在这里显示 toast，避免频繁弹出错误提示
-  }
-}, 2000);
-
 export function useChatHistory() {
-  // 替换 useNavigate
-  const router = useRouter();
-  
-  // 替换 useLoaderData
-  const params = useParams();
-  const mixedId = params?.id as string | undefined;
-  
   const searchParams = useSearchParams();
-
+  const router = useRouter();
+  const params = useParams();
+  const [ready, setReady] = useState(false);
   const [initialMessages, setInitialMessages] = useState<Message[]>([]);
-  const [ready, setReady] = useState<boolean>(false);
-  const [urlId, setUrlId] = useState<string | undefined>();
-  // 添加消息缓存，用于比较是否需要保存
+  const [urlId, setUrlId] = useState<string>('');
+  const [chatStatus, setChatStatus] = useState<string>('running');
+  const [artifactSnapshots, setArtifactSnapshots] = useState<ArtifactSnapshot[]>([]); // 新增：存储快照数据
   const lastSavedMessagesRef = useRef<string>('');
 
-  useEffect(() => {
+  const mixedId = params?.id as string;
 
+  useEffect(() => {
     if (mixedId) {
       fetch(`/api/chats/${mixedId}`)
         .then(async (response) => {
           if (!response.ok) {
-            throw new Error('Failed to load chat');
+            throw new Error('Failed to fetch chat');
           }
-          return response.json();
+          const data = await response.json();
+          if (data.cloudflareDeploymentStatus) {
+            workbenchStore.previewDeploymentStatus.set(data.cloudflareDeploymentStatus.status);
+          }
+          return data.chat;
         })
         .then((storedMessages: ChatHistoryItem) => {
+          if (storedMessages) {
+            setChatStatus(storedMessages.status || 'running');
+          }
+          if (storedMessages && storedMessages.status === 'init' && storedMessages.messages.length > 0) {
+            workbenchStore.reset();
+            const filteredMessages = storedMessages.messages;
+
+            setInitialMessages(filteredMessages);
+            setUrlId(storedMessages.urlId || '');
+            chatId.set(storedMessages.id);
+            appId.set(`app-${storedMessages.id}`);
+            workbenchStore.shortUrl.set(storedMessages.shortId || '');
+            workbenchStore.setIsFirstDeploy(true);
+            // 新增：保存快照数据
+            // setArtifactSnapshots(storedMessages.artifactSnapshots || []);
+            // workbenchStore.setDeploymentStatus('completed');
+            // chatMetadata.set(storedMessages.metadata);
+            setReady(true);
+            return;
+          }
           if (storedMessages && storedMessages.messages.length > 0) {
             const rewindId = searchParams?.get?.('rewindTo');
             const filteredMessages = rewindId
@@ -78,19 +81,27 @@ export function useChatHistory() {
               : storedMessages.messages;
 
             setInitialMessages(filteredMessages);
-            setUrlId(storedMessages.urlId);
-            description.set(storedMessages.description);
+            setUrlId(storedMessages.urlId || '');
+            description.set(storedMessages.description || '');
             chatId.set(storedMessages.id);
             appId.set(`app-${storedMessages.id}`);
+            workbenchStore.shortUrl.set(storedMessages.shortId || '');
+            // 新增：保存快照数据
+            setArtifactSnapshots(storedMessages.artifactSnapshots || []);
             workbenchStore.setDeploymentStatus('completed');
             workbenchStore.previews.set([{
               port: 3000,
               ready: true,
-              baseUrl: `https://${appId.get()}.fly.dev/`,
+              baseUrl: `https://${appId.get()?.replace('app-', 'preview--')}.pages.dev/`,
               isLoading: true,
               loadingProgress: 0
             }]);
             chatMetadata.set(storedMessages.metadata);
+
+            // 新增：如果有快照，恢复 artifacts
+            // if (storedMessages.artifactSnapshots && storedMessages.artifactSnapshots.length > 0) {
+            //   workbenchStore.restoreFromSnapshots(storedMessages.artifactSnapshots);
+            // }
           } else {
             router.push('/');
           }
@@ -104,10 +115,12 @@ export function useChatHistory() {
     }
   }, [mixedId]);
 
-
   return {
     ready: !mixedId || ready,
     initialMessages,
+    chatStatus,
+    setChatStatus,
+    artifactSnapshots, // 新增：返回快照数据
     updateChatMestaData: async (metadata: IChatMetadata) => {
       const id = chatId.get();
       if (!id) return;
@@ -143,49 +156,29 @@ export function useChatHistory() {
       try {
         if (!urlId && firstArtifact?.id) {
           const urlId = nanoid();
-          navigateChat(urlId);
-          setUrlId(urlId);
-        }
-
-        if (!description.get() && firstArtifact?.title) {
-          description.set(firstArtifact?.title);
-        }
-
-        if (initialMessages.length === 0 && !currentId) {
-      
+          // navigateChat(appId.get() || '');
+          setUrlId(appId.get() || '');
           chatId.set(appId.get()?.replace('app-', '') || '');
-
-          workbenchStore.setDeploymentStatus('pending');
-
-          const templateData = workbenchStore.templateData.get();
-          
-          await fetch('/api/deploy', {
-            method: 'POST',
-            body: JSON.stringify({ 
-              appName: appId.get(),
-              sourceRepoUrl: `https://github.com/${templateData?.githubRepo}`,
-              dockerImage: templateData?.name.includes('next') ? "registry.fly.io/fly-deploy-next:latest" : "registry.fly.io/ancodeai-app:latest"
-            }),
-          });
-          
-          workbenchStore.setDeploymentStatus('completed');
-          workbenchStore.setIsFirstDeploy(true);
-
-          if (!urlId) {
-            navigateChat(chatId.get() || '');
-          }
+          // workbenchStore.currentView.set('code');
         }
 
-        const saveParams = {
-          id: chatId.get(),
-          messages,
-          urlId,
-          description: description.get(),
-          metadata: chatMetadata.get()
-        };
+        // if (!description.get() && firstArtifact?.title) {
+        //   description.set(firstArtifact?.title);
+        // }
 
-        
-        // await debouncedSaveChat(saveParams);
+        // if (initialMessages.length === 0 && !currentId) {
+
+        //   chatId.set(appId.get()?.replace('app-', '') || '');
+
+        //   workbenchStore.setDeploymentStatus('pending');
+          
+        //   workbenchStore.setDeploymentStatus('completed');
+        //   workbenchStore.setIsFirstDeploy(true);
+
+        //   if (!urlId) {
+        //     navigateChat(chatId.get() || '');
+        //   }
+        // }
       } catch (error) {
         toast.error('Failed to save chat');
         console.error(error);
@@ -210,39 +203,47 @@ export function useChatHistory() {
         console.error(error);
       }
     },
-    importChat: async (description: string, messages: Message[], metadata?: IChatMetadata) => {
+    importChat: async (description: string, messages: Message[]) => {
       try {
-        const response = await fetch('/api/chats/import', {
+        const newId = uuidv4();
+        const urlId = nanoid();
+
+        // 创建新的聊天记录
+        await fetch('/api/chats', {
           method: 'POST',
-          body: JSON.stringify({ description, messages, metadata }),
+          body: JSON.stringify({
+            id: newId,
+            messages,
+            urlId,
+            description,
+            metadata: {},
+            status: 'running',
+          }),
         });
-        
-        if (!response.ok) throw new Error('Failed to import chat');
-        const { urlId: newId } = await response.json();
-        
-        window.location.href = `/chat/${newId}`;
+
+        router.push(`/chat/${urlId}`);
         toast.success('Chat imported successfully');
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : 'Failed to import chat');
+        toast.error('Failed to import chat');
+        console.error(error);
       }
     },
-    exportChat: async (id = urlId) => {
-      if (!id) return;
-
+    exportChat: async () => {
       try {
-        const response = await fetch(`/api/chats/export/${id}`);
+        const response = await fetch(`/api/chats/export/${mixedId}`);
         if (!response.ok) throw new Error('Failed to export chat');
         
-        const chatData = await response.json();
-        const blob = new Blob([JSON.stringify(chatData, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `chat-${new Date().toISOString()}.json`;
+        a.download = `chat-${mixedId}.json`;
         document.body.appendChild(a);
         a.click();
+        window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        
+        toast.success('Chat exported successfully');
       } catch (error) {
         toast.error('Failed to export chat');
         console.error(error);

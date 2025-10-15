@@ -9,6 +9,13 @@ export const runtime = 'edge';
 
 export async function GET(request: Request) {
     try {
+        const url = new URL(request.url);
+        const workspaceId = url.searchParams.get('workspaceId');
+
+        if (!workspaceId) {
+            return new NextResponse("Workspace ID is required", { status: 400 });
+        }
+
         const session = await auth();
         if (!session?.user) {
             return new NextResponse("Unauthorized", { status: 401 });
@@ -25,12 +32,12 @@ export async function GET(request: Request) {
         try {
             const userCredits = await withDb(db => db.select({
                 id: credits.id,
-                userId: credits.userId,
-                credits: credits.credits,
+                workspaceId: credits.workspaceId,
+                totalCredits: credits.totalCredits,
                 createdAt: credits.createdAt,
-                usage: credits.usage
+                usedCredits: credits.usedCredits
             }).from(credits)
-            .where(eq(credits.userId, userId))
+            .where(eq(credits.workspaceId, workspaceId))
             .limit(1)
             );
             
@@ -38,7 +45,11 @@ export async function GET(request: Request) {
                 return NextResponse.json({ credits: 0 });
             }
             
-            return NextResponse.json({ credits: userCredits[0].credits - userCredits[0].usage });
+            return NextResponse.json({ 
+                credits: userCredits[0].totalCredits - userCredits[0].usedCredits,
+                totalCredits: userCredits[0].totalCredits,
+                usage: userCredits[0].usedCredits
+             });
         } catch (error) {
             console.error('Failed to fetch credits:', error);
             return NextResponse.json({ error: 'Failed to fetch credits' }, { status: 500 });

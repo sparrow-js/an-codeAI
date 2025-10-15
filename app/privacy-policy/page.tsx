@@ -1,4 +1,14 @@
 import './markdown.css';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: 'Learn how needware protects your privacy and handles your data. Our commitment to transparency and data security.',
+  robots: {
+    index: true,
+    follow: false,
+  },
+};
 
 export default function PrivacyPolicy() {
   return (
@@ -9,7 +19,7 @@ export default function PrivacyPolicy() {
 
         <h2>Introduction</h2>
         <p>
-          This privacy policy explains how Genfly Labs Incorporated ("Genfly," "we," or "us") collects, uses, and protects your information when you use our website (genfly.dev) and services. This policy applies to all users of our platform and services and should be read in conjunction with our Terms of service ("Terms"), which contain additional important information about how we handle your data and content.
+          This privacy policy explains how needware Labs Incorporated ("needware," "we," or "us") collects, uses, and protects your information when you use our website (needware.dev) and services. This policy applies to all users of our platform and services and should be read in conjunction with our Terms of service ("Terms"), which contain additional important information about how we handle your data and content.
         </p>
 
         <h2>Data Collection and Use</h2>
@@ -109,7 +119,7 @@ export default function PrivacyPolicy() {
         </ul>
 
         <p>
-          For complete details about our data usage practices, training procedures, and especially Enterprise plan exceptions, please refer to the "Data usage, training, and learning" section in our Terms of service at genfly.dev/terms.
+          For complete details about our data usage practices, training procedures, and especially Enterprise plan exceptions, please refer to the "Data usage, training, and learning" section in our Terms of service at needware.dev/terms.
         </p>
 
         <h2>Data Sharing and Processing</h2>
@@ -142,7 +152,7 @@ export default function PrivacyPolicy() {
           <li>Opt out of certain processing</li>
           <li>Withdraw consent</li>
         </ul>
-        <p>Contact genflyai@gmail.com to exercise these rights.</p>
+        <p>Contact needwareofficial@gmail.com to exercise these rights.</p>
 
         <h2>Security Measures</h2>
         <p>We implement industry-standard security measures:</p>
@@ -180,7 +190,7 @@ export default function PrivacyPolicy() {
 
         <h2>User Content Visibility</h2>
         <p>
-          The content and code you generate using our services, including prompts and project files, are private and only accessible to you and Genfly's authorized employees, contractors, and partners as necessary to provide support and maintain platform functionality.
+          The content and code you generate using our services, including prompts and project files, are private and only accessible to you and needware's authorized employees, contractors, and partners as necessary to provide support and maintain platform functionality.
         </p>
         <p>
           If your project is set to "public," then the prompts and code can be visible to other users. Your public project can also be remixed and used as a starting point for other projects. Private projects are not remixable, and their code and prompts are not visible to other users.
@@ -221,17 +231,17 @@ export default function PrivacyPolicy() {
         <h2>Contact Details</h2>
         <h3>General Contact Information</h3>
         <p>
-          Company name: Genfly Labs Incorporated<br />
-          Website: https://genfly.dev
+          Company name: needware Labs Incorporated<br />
+          Website: https://needware.dev
         </p>
 
         <h3>Contact Us For</h3>
         <ul>
-          <li>Privacy questions: genflyai@gmail.com</li>
-          <li>Support (Enterprise & Scale plans): genflyai@gmail.com</li>
-          <li>DMCA and legal issues: genflyai@gmail.com</li>
-          <li>General feedback: genflyai@gmail.com</li>
-          <li>Job applications: genflyai@gmail.com</li>
+          <li>Privacy questions: needwareofficial@gmail.com</li>
+          <li>Support (Enterprise & Scale plans): needwareofficial@gmail.com</li>
+          <li>DMCA and legal issues: needwareofficial@gmail.com</li>
+          <li>General feedback: needwareofficial@gmail.com</li>
+          <li>Job applications: needwareofficial@gmail.com</li>
         </ul>
 
         <h3>Response Times</h3>
@@ -243,7 +253,7 @@ export default function PrivacyPolicy() {
 
         <h2>Additional Resources</h2>
         <ul>
-          <li>Terms of service: https://genfly.dev/terms</li>
+          <li>Terms of service: https://needware.dev/terms</li>
         </ul>
 
         <p>

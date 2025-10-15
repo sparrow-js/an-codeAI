@@ -4,27 +4,19 @@ import { DEFAULT_MODEL, DEFAULT_PROVIDER, PROVIDER_LIST } from '@/utils/constant
 import { extractCurrentContext, extractPropertiesFromMessage, simplifyBoltActions } from './utils';
 import { createScopedLogger } from '@/utils/logger';
 import { LLMManager } from '@/lib/modules/llm/manager';
+import { createOpenAI } from '@ai-sdk/openai';
 
 const logger = createScopedLogger('create-summary');
 
 export async function createSummary(props: {
   messages: Message[];
-  env?: Record<string, string>;
-  apiKeys?: Record<string, string>;
-  providerSettings?: Record<string, IProviderSetting>;
-  promptId?: string;
-  contextOptimization?: boolean;
   onFinish?: (resp: GenerateTextResult<Record<string, CoreTool<any, any>>, never>) => void;
 }) {
-  const { messages, env: serverEnv, apiKeys, providerSettings, onFinish } = props;
-  let currentModel = DEFAULT_MODEL;
-  let currentProvider = DEFAULT_PROVIDER.name;
+  const { messages, onFinish } = props;
+
   const processedMessages = messages.map((message) => {
     if (message.role === 'user') {
-      const { model, provider, content } = extractPropertiesFromMessage(message);
-      currentModel = model;
-      currentProvider = provider;
-
+      const { content } = extractPropertiesFromMessage(message);
       return { ...message, content };
     } else if (message.role == 'assistant') {
       let content = message.content;
@@ -39,34 +31,7 @@ export async function createSummary(props: {
     return message;
   });
 
-  const provider = PROVIDER_LIST.find((p) => p.name === currentProvider) || DEFAULT_PROVIDER;
-  const staticModels = LLMManager.getInstance().getStaticModelListFromProvider(provider);
-  let modelDetails = staticModels.find((m) => m.name === currentModel);
 
-  if (!modelDetails) {
-    const modelsList = [
-      ...(provider.staticModels || []),
-      ...(await LLMManager.getInstance().getModelListFromProvider(provider, {
-        apiKeys,
-        providerSettings,
-        serverEnv: serverEnv as any,
-      })),
-    ];
-
-    if (!modelsList.length) {
-      throw new Error(`No models found for provider ${provider.name}`);
-    }
-
-    modelDetails = modelsList.find((m) => m.name === currentModel);
-
-    if (!modelDetails) {
-      // Fallback to first model
-      logger.warn(
-        `MODEL [${currentModel}] not found in provider [${provider.name}]. Falling back to first model. ${modelsList[0].name}`,
-      );
-      modelDetails = modelsList[0];
-    }
-  }
 
   let slicedMessages = processedMessages;
   const { summary } = extractCurrentContext(processedMessages);
@@ -98,6 +63,12 @@ ${summary.summary}`;
     Array.isArray(message.content)
       ? (message.content.find((item) => item.type === 'text')?.text as string) || ''
       : message.content;
+
+      const anthropic = createOpenAI({
+        apiKey: process.env.OPEN_ROUTER_API_KEY,
+        baseURL: "https://openrouter.ai/api/v1",
+      });
+
 
   // select files from the list of code file from the project that might be useful for the current request from the user
   const resp = await generateText({
@@ -179,12 +150,7 @@ ${slicedMessages
 
 Please provide a summary of the chat till now including the hitorical summary of the chat.
 `,
-    model: provider.getModelInstance({
-      model: currentModel,
-      serverEnv,
-      apiKeys,
-      providerSettings,
-    }),
+    model: anthropic('anthropic/claude-3.7-sonnet')
   });
 
   const response = resp.text;

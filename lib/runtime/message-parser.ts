@@ -1,4 +1,4 @@
-import type { ActionType, BoltAction, BoltActionData, FileAction, ShellAction } from '@/types/actions';
+import type { ActionType, BoltAction, BoltActionData, FileAction, ShellAction, SupabaseAction } from '@/types/actions';
 import type { BoltArtifactData } from '@/types/artifact';
 import { createScopedLogger } from '@/utils/logger';
 import { unreachable } from '@/utils/unreachable';
@@ -71,10 +71,26 @@ function cleanEscapedTags(content: string) {
 export class StreamingMessageParser {
   #messages = new Map<string, MessageState>();
   #tagCache = new Map<string, string>(); // 缓存已解析的标签
+  #restoredMessages = new Set<string>(); // 新增：跟踪已恢复的消息
 
   constructor(private _options: StreamingMessageParserOptions = {}) {}
 
+  // 新增：标记消息为已恢复，跳过解析
+  markAsRestored(messageId: string) {
+    this.#restoredMessages.add(messageId);
+  }
+
+  // 新增：检查消息是否已恢复
+  isRestored(messageId: string): boolean {
+    return this.#restoredMessages.has(messageId);
+  }
+
   parse(messageId: string, input: string) {
+    // 如果消息已恢复，直接返回空字符串，跳过解析
+    if (this.isRestored(messageId)) {
+      return '';
+    }
+
     let state = this.#messages.get(messageId);
 
     if (!state) {
@@ -327,6 +343,7 @@ export class StreamingMessageParser {
 
   reset() {
     this.#messages.clear();
+    this.#restoredMessages.clear(); // 新增：清除已恢复消息的跟踪
   }
 
   #parseActionTag(input: string, actionOpenIndex: number, actionEndIndex: number) {
@@ -339,7 +356,27 @@ export class StreamingMessageParser {
       content: '',
     };
 
-    if (actionType === 'file') {
+    if (actionType === 'supabase') {
+      const operation = this.#extractAttribute(actionTag, 'operation');
+
+      if (!operation || !['migration', 'query'].includes(operation)) {
+        logger.warn(`Invalid or missing operation for Supabase action: ${operation}`);
+        throw new Error(`Invalid Supabase operation: ${operation}`);
+      }
+
+      (actionAttributes as SupabaseAction).operation = operation as 'migration' | 'query';
+
+      if (operation === 'migration') {
+        const filePath = this.#extractAttribute(actionTag, 'filePath');
+
+        if (!filePath) {
+          logger.warn('Migration requires a filePath');
+          throw new Error('Migration requires a filePath');
+        }
+
+        (actionAttributes as SupabaseAction).filePath = filePath;
+      }
+    } else if (actionType === 'file') {
       const filePath = this.#extractAttribute(actionTag, 'filePath') as string;
 
       if (!filePath) {

@@ -1,7 +1,7 @@
 import { useStore } from '@nanostores/react';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { chatId as chatIdStore, description as descriptionStore, type ChatHistoryItem } from '@/lib/persistence';
+import { description as descriptionStore, type ChatHistoryItem } from '@/lib/persistence';
 
 interface EditChatDescriptionOptions {
   initialDescription?: string;
@@ -38,14 +38,14 @@ export function useEditChatDescription({
   customChatId,
   syncWithGlobalStore,
 }: EditChatDescriptionOptions): EditChatDescriptionHook {
-  const chatIdFromStore = useStore(chatIdStore);
+  // const chatIdFromStore = useStore(chatIdStore);
   const [editing, setEditing] = useState(false);
   const [currentDescription, setCurrentDescription] = useState(initialDescription);
   const [chatId, setChatId] = useState<string>();
 
-  useEffect(() => {
-    setChatId(customChatId || chatIdFromStore);
-  }, [customChatId, chatIdFromStore]);
+  // useEffect(() => {
+  //   setChatId(customChatId || chatIdFromStore);
+  // }, [customChatId, chatIdFromStore]);
 
   useEffect(() => {
     setCurrentDescription(initialDescription);

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import type { ProgressAnnotation } from '@/types/context';
 import { classNames } from '@/utils/classNames';
 import { cubicEasingFn } from '@/utils/easings';
+import { CheckIcon, Loader2Icon } from 'lucide-react';
 
 export default function ProgressCompilation({ data }: { data?: ProgressAnnotation[] }) {
   const [progressList, setProgressList] = React.useState<ProgressAnnotation[]>([]);
@@ -98,9 +99,9 @@ const ProgressItem = ({ progress }: { progress: ProgressAnnotation }) => {
       <div className="flex items-center gap-1.5 ">
         <div>
           {progress.status === 'in-progress' ? (
-            <div className="i-svg-spinners:90-ring-with-bg"></div>
+            <Loader2Icon className="w-4 h-4 animate-spin" />
           ) : progress.status === 'complete' ? (
-            <div className="i-ph:check"></div>
+            <CheckIcon className="w-4 h-4" />
           ) : null}
         </div>
         {/* {x.label} */}

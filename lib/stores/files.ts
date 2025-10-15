@@ -218,6 +218,12 @@ export class FilesStore {
   getModifiedFiles() {
     return this.#modifiedFiles;
   }
+
+  reset() {
+    this.#modifiedFiles.clear();
+    this.#generatedFiles.clear();
+    this.files.set({});
+  }
 }
 
 // function isBinaryFile(buffer: Uint8Array | undefined) {

@@ -1,6 +1,7 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
 import { memo, useEffect, useRef, useState } from 'react';
+import { ChevronRight } from 'lucide-react';
 import type { FileMap } from '@/lib/stores/files';
 import { classNames } from '@/utils/classNames';
 import { WORK_DIR } from '@/utils/constants';
@@ -101,7 +102,7 @@ export const FileBreadcrumb = memo<FileBreadcrumbProps>(({ files, pathSegments =
                   {segment}
                 </span>
               </DropdownMenu.Trigger>
-              {index > 0 && !isLast && <span className="i-ph:caret-right inline-block mx-1" />}
+              {index > 0 && !isLast && <ChevronRight className="inline-block mx-1" size={16} />}
               <AnimatePresence>
                 {isActive && (
                   <DropdownMenu.Portal>

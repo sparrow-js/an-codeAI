@@ -20,6 +20,7 @@ import { FileBreadcrumb } from './FileBreadcrumb';
 import { FileTree } from './FileTree';
 import { DEFAULT_TERMINAL_SIZE, TerminalTabs } from './terminal/TerminalTabs';
 import { workbenchStore } from '@/lib/stores/workbench';
+import { workspaceStore } from '@/lib/stores/workspace';
 
 interface EditorPanelProps {
   files?: FileMap;
@@ -57,6 +58,7 @@ export const EditorPanel = memo(
 
     const theme = useStore(themeStore);
     const showTerminal = useStore(workbenchStore.showTerminal);
+    const currentWorkspace = useStore(workspaceStore.currentWorkspace);
 
     const activeFileSegments = useMemo(() => {
       if (!editorDocument) {

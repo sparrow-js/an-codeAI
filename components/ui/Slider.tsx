@@ -46,7 +46,7 @@ const SliderButton = memo(({ selected, children, setSelected }: SliderButtonProp
     <button
       onClick={setSelected}
       className={classNames(
-        'bg-transparent text-sm px-2.5 py-0.5 rounded-full relative',
+        'bg-transparent text-sm px-2-5 py-0-5 rounded-full relative',
         selected
           ? 'text-bolt-elements-item-contentAccent'
           : 'text-bolt-elements-item-contentDefault hover:text-bolt-elements-item-contentActive',

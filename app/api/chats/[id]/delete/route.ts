@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { db } from '@/db';
-import { chats } from "@/db/schema";
+import { chats, deploy } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { auth } from "auth";
+import { deleteFlyApp } from "@/utils/machines";
+
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> } // 类型定义
@@ -43,6 +45,23 @@ export async function POST(
 
   if (!deletedChat || deletedChat.length === 0) {
     return new NextResponse("Failed to delete chat", { status: 500 });
+  }
+
+  // 检查并删除对应的 Fly 应用
+  try {
+    // 从 metadata 中获取 Fly 应用名称，或者使用 chatId 作为应用名称
+    const flyAppName = `${chatId}`;
+
+    
+    // 尝试删除 Fly 应用
+    const res = await deleteFlyApp(flyAppName);
+    await db.update(deploy)
+    .set({ machineStatus: 'delete' })
+    .where(eq(deploy.chatId, chatId));
+    console.log(`Successfully deleted Fly app: ${flyAppName}`, res);
+  } catch (flyError) {
+    // 如果删除 Fly 应用失败，记录错误但不影响聊天删除的成功
+    console.warn(`Failed to delete Fly app for chat ${chatId}:`, flyError);
   }
 
   return NextResponse.json(deletedChat[0]);

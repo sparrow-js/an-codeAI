@@ -1,6 +1,6 @@
 {
-  "version": "7",
-  "dialect": "postgresql",
+  "version": "5",
+  "dialect": "pg",
   "entries": [
     {
       "idx": 0,
@@ -98,6 +98,41 @@
       "version": "7",
       "when": 1743775241431,
       "tag": "0013_complete_darkstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1752551380916,
+      "tag": "0014_gorgeous_cerebro",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1752765783605,
+      "tag": "0015_fair_king_bedlam",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1752765783606,
+      "tag": "0016_add_artifact_snapshots",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "5",
+      "when": 1710669600000,
+      "tag": "0017_mature_night_nurse",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1710669700000,
+      "tag": "0018_add_deploy_metadata",
       "breakpoints": true
     }
   ]

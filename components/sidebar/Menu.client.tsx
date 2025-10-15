@@ -16,6 +16,7 @@ import { useStore } from '@nanostores/react';
 import { profileStore } from '@/lib/stores/profile';
 import { useSession, signOut } from "next-auth/react"
 import { Button } from '../ui/Button';
+import { workspaceStore } from '@/lib/stores/workspace';
 
 
 const menuVariants = {
@@ -82,7 +83,8 @@ export const Menu = () => {
   
   
   const getCredits = async () => {
-    const responseCredits = await fetch('/api/usage/get-credits');
+    const workspaceId = workspaceStore.getCurrentWorkspaceId();
+    const responseCredits = await fetch(`/api/usage/get-credits?workspaceId=${workspaceId}`);
     if (!responseCredits.ok) throw new Error('Failed to fetch credits');
     const creditsData = await responseCredits.json();
     setCredits(creditsData.credits);
@@ -119,10 +121,10 @@ export const Menu = () => {
 
       await loadEntries();
 
-      if (chatId.get() === item.id) {
-        // hard page navigation to clear the stores
-        window.location.pathname = '/';
-      }
+      // if (appId.get()?.replace('app-', '') === item.id) {
+      //   // hard page navigation to clear the stores
+      //   window.location.pathname = '/';
+      // }
     } catch (error) {
       toast.error('Failed to delete conversation');
       logger.error(error);
@@ -253,13 +255,13 @@ export const Menu = () => {
                   decoding="sync"
                 />
               ) : (
-                <div className="i-ph:user-fill text-lg" />
+                <div className="i-ph-user-fill text-lg" />
               )}
             </div>
           </div>
         </div>
         <CurrentDateTime />
-        <div className="flex-1 flex flex-col h-full w-full overflow-hidden">
+        <div className="flex-1 flex flex-col w-full overflow-hidden">
           <div className="p-4 space-y-3">
             <a
               href="/"
@@ -348,10 +350,10 @@ export const Menu = () => {
                   variant="ghost"
                   onClick={() => {}}
                 >
-                  <span className="i-ph:coin text-lg" />
+                  <span className="i-ph-coin text-lg" />
                   <div className="flex justify-between w-full">
                     <span>Credits</span>
-                    <span className="text-sm font-medium bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
+                    <span className="text-sm font-medium bg-gray-100 dark:bg-gray-800 px-2 py-0-5 rounded-full">
                       {credits}
                     </span>
                   </div>
@@ -367,7 +369,7 @@ export const Menu = () => {
                   variant="ghost"
                   onClick={() => signOut()}
                 >
-                  <span className="i-ph:sign-out text-lg" />
+                  <span className="i-ph-sign-out text-lg" />
                   Sign Out
                 </Button>
               </div>

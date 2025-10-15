@@ -20,13 +20,15 @@ export async function POST(request: Request) {
         const result = await pushFiles({
             token: process.env.NEXT_PUBLIC_GITHUB_TOKEN || '',
             owner: 'wordixai',
-            repo: `genfly-${appId}`,
+            repo: `repo-${appId.replace('app-', '')}`,
             files: files,
             message: 'Update files',
         });
+
+        const isReInstall = files.some((x: { path: string }) => x.path.includes('package.json'));
     
     
-        const resultFly =  await gitPullOriginMain(appId, false);
+        const resultFly =  await gitPullOriginMain(appId, isReInstall);
     } catch (error) {
         console.error('Error saving file:', error);
         return NextResponse.json({ error: 'Failed to save file' }, { status: 500 });

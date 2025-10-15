@@ -2,7 +2,22 @@ import Image from "next/image";
 import { Suspense } from "react";
 import LoginGithubButton from "./login-git-button";
 import LoginGoogleButton from "./login-google-button";
+import type { Metadata } from 'next';
 // import LoginNotionButton from "./login-notion-button";
+
+export const metadata: Metadata = {
+  title: 'Sign In',
+  description: 'Sign in to needware and start building amazing software with AI. Access your development workspace and transform ideas into code.',
+  openGraph: {
+    title: 'Sign In | needware',
+    description: 'Sign in to needware and start building amazing software with AI. Access your development workspace.',
+    type: 'website',
+  },
+  twitter: {
+    title: 'Sign In | needware',
+    description: 'Sign in to needware and start building amazing software with AI. Access your development workspace.',
+  },
+};
 
 export default function LoginPage() {
   return (
@@ -16,7 +31,7 @@ export default function LoginPage() {
           <div className="mb-12 flex justify-center">
             <div className="p-3 bg-white/5 rounded-full border border-white/10 backdrop-blur-sm shadow-lg">
               <img 
-                src="/logo-04.png" 
+                src="/logo.png" 
                 alt="gently logo" 
                 className="h-10 transition-all duration-300 hover:opacity-80" 
               />
@@ -77,9 +92,9 @@ export default function LoginPage() {
           <div></div>
           <div className="max-w-md">
             <div className="mb-2 text-indigo-400 font-medium">AI-POWERED DEVELOPMENT</div>
-            <h2 className="text-5xl font-bold mb-6 text-white leading-tight">Fast-track your idea to reality</h2>
+            <h2 className="text-5xl font-bold mb-6 text-white leading-tight">What would you build today?</h2>
             <p className="text-xl text-gray-300 leading-relaxed">
-              You ask, gently builds — instantly transform your ideas into production-ready code with AI assistance.
+              You ask, needware builds — instantly transform your ideas into production-ready code with AI assistance.
             </p>
             
           </div>

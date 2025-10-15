@@ -101,7 +101,7 @@ ${escapeBoltTags(file.content)}
             messages.push(commandsMessage);
           }
 
-          await importChat(`Git Project:${repoUrl.split('/').slice(-1)[0]}`, messages, { gitUrl: repoUrl });
+          await importChat(`Git Project:${repoUrl.split('/').slice(-1)[0]}`, messages);
         }
       } catch (error) {
         console.error('Error during import:', error);

@@ -1,4 +1,3 @@
-// app/api/chats/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { withDb } from '@/db'; // Adjusted import path
 import { chats } from '@/db/schema'; // Adjusted import path
@@ -35,7 +34,7 @@ export async function GET(request: NextRequest,
       .from(chats)
       .where(
         and(
-          isUUID(id) ? eq(chats.id, id) : eq(chats.urlId, id),
+          isUUID(id) ? eq(chats.id, id) : eq(chats.shortId, id),
           eq(chats.userId, userId)
         )
       )

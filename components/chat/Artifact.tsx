@@ -3,11 +3,15 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { computed } from 'nanostores';
 import { memo, useEffect, useRef, useState } from 'react';
 import { createHighlighter, type BundledLanguage, type BundledTheme, type HighlighterGeneric } from 'shiki';
+import { Files, Loader2, Terminal, Circle, Check, X, ChevronUp, ChevronDown, ChevronRight, Database } from 'lucide-react';
 import type { ActionState } from '@/lib/runtime/action-runner';
 import { workbenchStore } from '@/lib/stores/workbench';
 import { classNames } from '@/utils/classNames';
 import { cubicEasingFn } from '@/utils/easings';
 import { WORK_DIR } from '@/utils/constants';
+import type { SupabaseAction } from '@/types/actions';
+import { chatId } from '@/lib/persistence/useChatHistory';
+import { toast } from 'react-toastify';
 
 const highlighterOptions = {
   langs: ['shell'],
@@ -66,11 +70,21 @@ export const Artifact = memo(({ messageId }: ArtifactProps) => {
         >
           {artifact.type == 'bundled' && (
             <>
-              <div className="p-4">
+              <div className="p-4 flex items-center justify-center">
                 {allActionFinished ? (
-                  <div className={'i-ph:files-light'} style={{ fontSize: '2rem' }}></div>
+                  <Files className='w-5 h-5'/>
                 ) : (
-                  <div className={'i-svg-spinners:90-ring-with-bg'} style={{ fontSize: '2rem' }}></div>
+                  <motion.div
+                    animate={{ rotate: [0, 360] }}
+                    transition={{ 
+                      duration: 1, 
+                      repeat: Infinity, 
+                      ease: "linear",
+                      repeatType: "loop"
+                    }}
+                  >
+                    <Loader2 className='w-5 h-5'/>
+                  </motion.div>
                 )}
               </div>
               <div className="bg-bolt-elements-artifacts-borderColor w-[1px]" />
@@ -78,7 +92,7 @@ export const Artifact = memo(({ messageId }: ArtifactProps) => {
           )}
           <div className="px-5 p-3.5 w-full text-left">
             <div className="w-full text-bolt-elements-textPrimary font-medium leading-5 text-sm">{artifact?.title}</div>
-            <div className="w-full w-full text-bolt-elements-textSecondary text-xs mt-0.5">Click to open Workbench</div>
+            <div className="w-full text-bolt-elements-textSecondary text-xs mt-0.5">Click to open Workbench</div>
           </div>
         </button>
         <div className="bg-bolt-elements-artifacts-borderColor w-[1px]" />
@@ -93,7 +107,7 @@ export const Artifact = memo(({ messageId }: ArtifactProps) => {
               onClick={toggleActions}
             >
               <div className="p-4">
-                <div className={showActions ? 'i-ph:caret-up-bold' : 'i-ph:caret-down-bold'}></div>
+                {showActions ? <ChevronUp /> : <ChevronDown />}
               </div>
             </motion.button>
           )}
@@ -149,12 +163,160 @@ const actionVariants = {
 };
 
 function openArtifactInWorkbench(filePath: any) {
-  if (workbenchStore.currentView.get() !== 'code') {
-    workbenchStore.currentView.set('code');
-  }
-
   workbenchStore.setSelectedFile(`${WORK_DIR}/${filePath}`);
 }
+
+
+interface SupabaseActionCardProps {
+  action: ActionState & SupabaseAction;
+  isLast: boolean;
+}
+
+const SupabaseActionCard = memo(({ action, isLast }: SupabaseActionCardProps) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [executionMode, setExecutionMode] = useState<'ask' | 'auto'>('ask');
+  const [isExecuting, setIsExecuting] = useState(false);
+  
+  const handleAllow = async () => {
+    const currentChatId = chatId.get();
+    
+    if (!currentChatId) {
+      toast.error('Chat ID not found');
+      return;
+    }
+
+    setIsExecuting(true);
+
+    try {
+      const response = await fetch('/api/supabase/execute', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: action.content,
+          chatId: currentChatId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to execute SQL query');
+      }
+
+      toast.success('SQL query executed successfully');
+      console.log('Execution result:', data);
+    } catch (error: any) {
+      console.error('Error executing Supabase action:', error);
+      toast.error(error.message || 'Failed to execute SQL query');
+    } finally {
+      setIsExecuting(false);
+    }
+  };
+
+  return (
+    <div className={classNames('w-full', { 'mb-3.5': !isLast })}>
+      {/* Main Card */}
+      <div className="border border-bolt-elements-borderColor rounded-lg overflow-hidden bg-bolt-elements-artifacts-background">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 bg-bolt-elements-artifacts-background border-b border-bolt-elements-borderColor">
+          <div className="flex items-center gap-2">
+            <Database className="w-4 h-4 text-bolt-elements-textSecondary" />
+            <span className="text-sm font-medium text-bolt-elements-textPrimary">
+              Modify database
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleAllow}
+              disabled={isExecuting}
+              className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white text-sm rounded-md transition-colors flex items-center gap-1"
+            >
+              {isExecuting ? (
+                <>
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                  <span>Executing...</span>
+                </>
+              ) : (
+                <span>Allow</span>
+              )}
+            </button>
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="p-1.5 hover:bg-bolt-elements-artifacts-backgroundHover rounded transition-colors"
+            >
+              <ChevronDown
+                className={classNames('w-4 h-4 text-bolt-elements-textSecondary transition-transform', {
+                  'rotate-180': isExpanded,
+                })}
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-4">
+          {/* SQL Content with gradient mask */}
+          <div className="relative">
+            <div 
+              className={classNames(
+                'bg-bolt-elements-background rounded-md border border-bolt-elements-borderColor overflow-hidden',
+                { 'max-h-32': !isExpanded }
+              )}
+            >
+              <ShellCodeBlock code={action.content} />
+            </div>
+            
+            {/* Gradient mask overlay when collapsed */}
+            {!isExpanded && (
+              <div 
+                className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(to bottom, transparent, var(--bolt-elements-background))'
+                }}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between px-4 py-3 bg-bolt-elements-artifacts-background border-t border-bolt-elements-borderColor">
+          <div className="flex items-center gap-2">
+            <select
+              value={executionMode}
+              onChange={(e) => setExecutionMode(e.target.value as 'ask' | 'auto')}
+              className="text-sm bg-transparent border border-bolt-elements-borderColor rounded px-2 py-1 text-bolt-elements-textPrimary cursor-pointer hover:bg-bolt-elements-artifacts-backgroundHover"
+            >
+              <option value="ask">Ask each time</option>
+              <option value="auto">Run automatically</option>
+            </select>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-bolt-elements-textSecondary">
+            <Database className="w-3 h-3" />
+            <span>Cloud</span>
+            {action.status === 'complete' && <Check className="w-3 h-3 text-bolt-elements-icon-success" />}
+            {action.status === 'running' && <Loader2 className="w-3 h-3 animate-spin" />}
+            {action.status === 'failed' && <X className="w-3 h-3 text-bolt-elements-icon-error" />}
+          </div>
+        </div>
+      </div>
+
+      {/* File Path Link (if exists) */}
+      {action.filePath && (
+        <div className="mt-2 text-xs text-bolt-elements-textSecondary flex items-center gap-1">
+          <span>Migration file:</span>
+          <code
+            className="bg-bolt-elements-artifacts-inlineCode-background text-bolt-elements-artifacts-inlineCode-text px-1.5 py-0.5 rounded text-bolt-elements-item-contentAccent hover:underline cursor-pointer"
+            onClick={() => openArtifactInWorkbench(action.filePath)}
+          >
+            {action.filePath}
+          </code>
+        </div>
+      )}
+    </div>
+  );
+});
 
 const ActionList = memo(({ actions }: ActionListProps) => {
   return (
@@ -163,6 +325,24 @@ const ActionList = memo(({ actions }: ActionListProps) => {
         {actions.map((action, index) => {
           const { status, type, content } = action;
           const isLast = index === actions.length - 1;
+
+          // Use the new SupabaseActionCard for supabase actions
+          if (type === 'supabase') {
+            return (
+              <motion.li
+                key={index}
+                variants={actionVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{
+                  duration: 0.2,
+                  ease: cubicEasingFn,
+                }}
+              >
+                <SupabaseActionCard action={action as ActionState & SupabaseAction} isLast={isLast} />
+              </motion.li>
+            );
+          }
 
           return (
             <motion.li
@@ -180,17 +360,27 @@ const ActionList = memo(({ actions }: ActionListProps) => {
                   {status === 'running' ? (
                     <>
                       {type !== 'start' ? (
-                        <div className="i-svg-spinners:90-ring-with-bg"></div>
+                        <motion.div
+                          animate={{ rotate: [0, 360] }}
+                          transition={{ 
+                            duration: 1, 
+                            repeat: Infinity, 
+                            ease: "linear",
+                            repeatType: "loop"
+                          }}
+                        >
+                          <Loader2 className='w-4 h-4'/>
+                        </motion.div>
                       ) : (
-                        <div className="i-ph:terminal-window-duotone"></div>
+                        <Terminal className='w-4 h-4'/>
                       )}
                     </>
                   ) : status === 'pending' ? (
-                    <div className="i-ph:circle-duotone"></div>
+                    <Circle className='w-4 h-4'/>
                   ) : status === 'complete' ? (
-                    <div className="i-ph:check"></div>
+                    <Check className='w-4 h-4'/>
                   ) : status === 'failed' || status === 'aborted' ? (
-                    <div className="i-ph:x"></div>
+                    <X className='w-4 h-4'/>
                   ) : null}
                 </div>
                 {type === 'file' ? (

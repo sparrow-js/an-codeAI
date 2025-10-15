@@ -3,6 +3,8 @@ import { useCallback, useState, useRef } from 'react';
 import { StreamingMessageParser } from '@/lib/runtime/message-parser';
 import { workbenchStore } from '@/lib/stores/workbench';
 import { createScopedLogger } from '@/utils/logger';
+import type { ArtifactSnapshot } from '@/lib/persistence/types';
+import { description } from '../persistence/useChatHistory';
 
 const logger = createScopedLogger('useMessageParser');
 const tmpPath = new Set();
@@ -48,6 +50,9 @@ const messageParser = new StreamingMessageParser({
     onArtifactClose: (data) => {
       logger.trace('onArtifactClose');
       workbenchStore.updateArtifact(data, { closed: true });
+      if (!description.get()) {
+        description.set(data?.title);
+      }
     },
     onActionOpen: (data) => {
       logger.trace('onActionOpen', data.action);
@@ -61,6 +66,10 @@ const messageParser = new StreamingMessageParser({
       if (data.action.type !== 'file') {
         workbenchStore.addAction(data);
       }
+
+      // if (data.action.type === 'file' && data.action.filePath.includes('src/App.tsx')) {
+      //   workbenchStore.setRouterList(data.action.content);
+      // }
 
       workbenchStore.runAction(data);
     },
@@ -89,6 +98,21 @@ export function useMessageParser() {
   // 使用 ref 来跟踪最后一次解析的内容，避免不必要的状态更新
   const lastParsedRef = useRef<{ [key: number]: string }>({});
 
+  // 新增：从快照恢复 Artifacts
+  const restoreFromSnapshots = useCallback((snapshots: ArtifactSnapshot[]) => {
+    if (snapshots.length === 0) return;
+
+    // 标记所有快照中的消息为已恢复，跳过解析
+    for (const snapshot of snapshots) {
+      messageParser.markAsRestored(snapshot.messageId);
+    }
+
+    // 从快照恢复 artifacts
+    workbenchStore.restoreFromSnapshots(snapshots);
+
+    logger.trace('Restored artifacts from snapshots', snapshots.length);
+  }, []);
+
   const parseMessages = useCallback((messages: Message[], isLoading: boolean) => {
     let reset = false;
     let updates: { [key: number]: string } = {};
@@ -101,7 +125,7 @@ export function useMessageParser() {
     }
 
     for (const [index, message] of messages.entries()) {
-      if (message.role === 'assistant') {
+      if (message.role === 'assistant' || message.annotations?.includes('manually_edited')) {
         const newParsedContent = messageParser.parse(message.id, message.content);
         
         // 计算新内容
@@ -127,5 +151,5 @@ export function useMessageParser() {
     }
   }, []);
 
-  return { parsedMessages, parseMessages };
+  return { parsedMessages, parseMessages, restoreFromSnapshots };
 }

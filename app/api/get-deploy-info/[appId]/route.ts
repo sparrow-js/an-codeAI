@@ -35,6 +35,12 @@ export async function GET(
       })
     );
 
+    const chat = await withDb(db => 
+      db.query.chats.findFirst({
+        where: (chats, { eq }) => eq(chats.id, appId)
+      })
+    );
+
 
     if (!deployRecord) {
       return NextResponse.json(
@@ -45,8 +51,8 @@ export async function GET(
     return NextResponse.json({
       siteName: deployRecord.siteName,
       siteId: deployRecord.siteId,
-      status: deployRecord.status,
-      url: deployRecord.url,
+      status: deployRecord.hostingStatus,
+      url: chat?.shortId,
       createdAt: deployRecord.createdAt,
       updatedAt: deployRecord.updatedAt
     });

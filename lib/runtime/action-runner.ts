@@ -7,6 +7,7 @@ import { unreachable } from '@/utils/unreachable';
 import type { ActionCallbackData } from './message-parser';
 import type { BoltShell } from '@/utils/shell';
 import { workbenchStore } from '@/lib/stores/workbench';
+import type { SupabaseAction } from '@/types/actions';
 
 const logger = createScopedLogger('ActionRunner');
 
@@ -159,6 +160,68 @@ export class ActionRunner {
     return;
   }
 
+  async handleSupabaseAction(action: SupabaseAction) {
+    const { operation, content, filePath } = action;
+    logger.debug('[Supabase Action]:', { operation, filePath, content });
+
+    switch (operation) {
+      case 'migration':
+        if (!filePath) {
+          throw new Error('Migration requires a filePath');
+        }
+
+        // Show alert for migration action
+        // this.onSupabaseAlert?.({
+        //   type: 'info',
+        //   title: 'Supabase Migration',
+        //   description: `Create migration file: ${filePath}`,
+        //   content,
+        //   source: 'supabase',
+        // });
+
+        console.log('**********8', filePath, content);
+        
+        // 直接创建文件并更新编辑器（不使用 #runFileAction 避免异步延迟）
+        // 去掉 filePath 前面的斜杠（如果有的话）避免路径中出现双斜杠
+        const normalizedFilePath = filePath.startsWith('/') ? filePath.slice(1) : filePath;
+        const fullPath = `/home/project/${normalizedFilePath}`;
+        
+        // 1. 写入文件到 files store
+        workbenchStore.files.setKey(fullPath, { 
+          type: 'file', 
+          content, 
+          isBinary: false 
+        });
+        
+        logger.debug(`File written ${fullPath}`);
+        
+        // 2. 更新编辑器文档
+        workbenchStore.setDocuments(workbenchStore.files.get());
+        
+        // 3. 选中并打开文件
+        workbenchStore.setSelectedFile(fullPath);
+        
+        return { success: true };
+
+      case 'query': {
+        // Always show the alert and let the SupabaseAlert component handle connection state
+        // this.onSupabaseAlert?.({
+        //   type: 'info',
+        //   title: 'Supabase Query',
+        //   description: 'Execute database query',
+        //   content,
+        //   source: 'supabase',
+        // });
+
+        // The actual execution will be triggered from SupabaseChatAlert
+        return { pending: true };
+      }
+
+      default:
+        throw new Error(`Unknown operation: ${operation}`);
+    }
+  }
+
   async #executeAction(actionId: string, isStreaming: boolean = false) {
     const action = this.actions.get()[actionId];
 
@@ -171,7 +234,23 @@ export class ActionRunner {
           break;
         }
         case 'file': {
+          console.log('**********8', action);
           await this.#runFileAction(action);
+          break;
+        }
+        case 'supabase': {
+          try {
+            await this.handleSupabaseAction(action as SupabaseAction);
+          } catch (error: any) {
+            // Update action status
+            this.#updateAction(actionId, {
+              status: 'failed',
+              error: error instanceof Error ? error.message : 'Supabase action failed',
+            });
+
+            // Return early without re-throwing
+            return;
+          }
           break;
         }
         case 'start': {

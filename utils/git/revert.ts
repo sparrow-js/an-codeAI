@@ -29,7 +29,7 @@ export async function revertCommit({
           inputs: {
             commit_sha: commitSha,
             branch: branch,
-            repo_name: `genfly-${appName}`,
+            repo_name: `repo-${appName.replace('app-', '')}`,
             github_token: process.env.NEXT_PUBLIC_GITHUB_TOKEN,
             fly_app_name: appName
           }

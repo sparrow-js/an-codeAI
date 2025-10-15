@@ -1,6 +1,8 @@
+"use client"
 import { useStore } from '@nanostores/react';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import WithTooltip from '@/components/ui/Tooltip';
+import { Skeleton } from '@/components/shadui/skeleton';
 import { useEditChatDescription } from '@/lib/hooks';
 import { description as descriptionStore } from '@/lib/persistence';
 
@@ -13,13 +15,13 @@ export function ChatDescription() {
       syncWithGlobalStore: true,
     });
 
-  if (!initialDescription) {
-    // doing this to prevent showing edit button until chat description is set
-    return null;
-  }
+  // if (!initialDescription) {
+  //   // doing this to prevent showing edit button until chat description is set
+  //   return null;
+  // }
 
   return (
-    <div className="flex items-center justify-center text-bolt-elements-item-contentAccent">
+    <div className="flex items-center justify-center text-bolt-elements-item-contentAccent text-sm">
       {editing ? (
         <form onSubmit={handleSubmit} className="flex items-center justify-center z-10">
           <input
@@ -45,10 +47,10 @@ export function ChatDescription() {
         </form>
       ) : (
         <>
-          <span className="text-bolt-elements-item-contentAccent z-10">
-            {currentDescription}
+          <span className="inline-block mr-1 text-bolt-elements-textPrimary text-xl font-semibold z-10">
+            {currentDescription || <Skeleton className="h-8 w-32 bg-gray-700/60 dark:bg-gray-800/60" />}
           </span>
-          <TooltipProvider>
+          {/* <TooltipProvider>
             <WithTooltip tooltip="Rename chat">
               <div className="flex justify-between items-center p-2 rounded-md bg-bolt-elements-item-backgroundAccent ml-2">
                 <button
@@ -61,7 +63,7 @@ export function ChatDescription() {
                 />
               </div>
             </WithTooltip>
-          </TooltipProvider>
+          </TooltipProvider> */}
         </>
       )}
     </div>
